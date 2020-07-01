@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Hello World</title>
+    <url>/2020/06/30/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>数据结构与算法 - 开篇</title>
+    <url>/2020/06/30/%E6%95%B0%E6%8D%AE%E6%9C%BA%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><h3 id="为什么要学习数据结构与算法？"><a href="#为什么要学习数据结构与算法？" class="headerlink" title="为什么要学习数据结构与算法？"></a>为什么要学习数据结构与算法？</h3><pre><code>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！
+
+有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？
+
+于是问题来了：为什么还要学习数据结构与算法呢？
+
+理由一：
+    面试的时候，千万不要被数据结构与算法拖了后腿
+理由二：
+    你真的愿意做一辈子CRUD吗
+理由三：
+    不想写出开源框架，中间件的工程师，不是好厨子</code></pre><a id="more"></a>
+
+<h3 id="如何系统化学习数据结构与算法？"><a href="#如何系统化学习数据结构与算法？" class="headerlink" title="如何系统化学习数据结构与算法？"></a>如何系统化学习数据结构与算法？</h3><h4 id="学习方法"><a href="#学习方法" class="headerlink" title="学习方法"></a>学习方法</h4><ol>
+<li>从基础开始，系统化学习</li>
+<li>多动手，每一种数据结构与算法，都自己用代码实现出来</li>
+<li>思路更重要：理解实现思想，不要背代码</li>
+<li>与日常开发结合，对应应用场景</li>
+</ol>
+<h4 id="学习内容："><a href="#学习内容：" class="headerlink" title="学习内容："></a>学习内容：</h4><p>原则：数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法。</p>
+<ol>
+<li>数据结构的定义</li>
+<li>算法的定义</li>
+<li>复杂度分析</li>
+<li>常用数据结构<ul>
+<li>数组、链表、栈、队列</li>
+<li>散列表、二叉树、堆</li>
+<li>跳表、图</li>
+</ul>
+</li>
+<li>常用算法<ul>
+<li>递归、排序、二分查找</li>
+<li>搜索、哈希、贪心、分治</li>
+<li>动态规划、字符串匹配</li>
+</ul>
+</li>
+</ol>
+<h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><ol>
+<li>你能用自己的话给数据结构下定义吗？</li>
+<li>你能用自己的话给算法下定义吗？</li>
+<li>你知道复杂度分析吗？</li>
+<li>你知道时间复杂度分析吗？</li>
+<li>你知道空间复杂度分析吗？</li>
+<li>你知道大O表示法的含义吗？</li>
+</ol>
+<h3 id="分享"><a href="#分享" class="headerlink" title="分享"></a>分享</h3><ol>
+<li><p>你能用自己的话给数据结构下定义吗？</p>
+<ul>
+<li>数据结构，就是【存储数据】的结构</li>
+<li>比如：图书馆将书籍分类、按照规律编号存储</li>
+<li>那么按照规律编号，就是“书籍数据”的存储结构</li>
+</ul>
+</li>
+<li><p>你能用自己的话给算法下定义吗？</p>
+<ul>
+<li>算法，就是【操作数据】的方法</li>
+<li>比如：你要找书，一本一本的找是算法</li>
+<li>比如：你要找书，根据书籍的分类找也是算法</li>
+</ul>
+</li>
+<li><p>你知道复杂度分析吗？</p>
+<ul>
+<li>数据结构与算法核心二字决：快、省</li>
+<li>快，是指执行效率要高</li>
+<li>省，是指消耗的空间要少</li>
+<li>通过复杂度分析，可以衡量算法的执行效率</li>
+<li>通过复杂度分析，可以衡量算法的空间消耗</li>
+</ul>
+</li>
+<li><p>你知道时间复杂度分析吗？</p>
+<ul>
+<li>【时间】复杂度分析，用于衡量算法的执行效率</li>
+</ul>
+</li>
+<li><p>你知道空间复杂度分析吗？</p>
+<ul>
+<li>【空间】复杂度分析，用于衡量算法的空间消耗</li>
+</ul>
+</li>
+<li><p>你知道大O表示法的含义吗？</p>
+<ul>
+<li><p>大O表示法：时间复杂度，表示数据规模的增长，与算法执行时间的增长趋势</p>
+</li>
+<li><p>大O表示法：空间复杂度，表示数据规模的增长，与算法存储空间的增长趋势</p>
+</li>
+<li><p>大O表示法公式：T(n)=O(f(n))</p>
+</li>
+<li><p>公式解读：</p>
+<ul>
+<li>T(n)：代表代码执行时间</li>
+<li>n：代表数据规模</li>
+<li>f(n)：代表每行代码执行的次数总和</li>
+<li>O：表示代码执行时间T(n)，与代码执行次数f(n)成正比</li>
+</ul>
+</li>
+<li><p>案例：</p>
+ <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sum</span><span class="params">(int n)</span>:</span></span><br><span class="line">    sum = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">        sum += i</span><br><span class="line">    <span class="keyword">return</span> sum</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>以上代码时间复杂度是：O(n)</li>
+<li>大O表示法公式：T(n)=O(f(n))</li>
+<li>由于f(n)是一个线性函数，推导出：T(n)=O(n)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
+    <title>数据结构与算法 - 复杂度</title>
+    <url>/2020/07/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%A4%8D%E6%9D%82%E5%BA%A6/</url>
+    <content><![CDATA[<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><a id="more"></a>
+
+<h2 id="表示法"><a href="#表示法" class="headerlink" title="表示法"></a>表示法</h2><h2 id="常用原则"><a href="#常用原则" class="headerlink" title="常用原则"></a>常用原则</h2><h2 id="度量级"><a href="#度量级" class="headerlink" title="度量级"></a>度量级</h2>]]></content>
+  </entry>
+</search>
