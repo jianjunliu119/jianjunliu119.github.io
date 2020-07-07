@@ -11,7 +11,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    Tag: 数据结构与算法 |  印记
+    数据结构与算法 - 队列 |  印记
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -45,284 +45,198 @@
       
     <main class="content on">
       <section class="outer">
-  <article class="articles">
+  <article
+  id="post-数据结构与算法-队列"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
     
-    
-    <h1 class="page-type-title">#&nbsp数据结构与算法</h1>
-    
-    
-  
-  
-  
-  
-  
-  
-  <div class="archives-wrap">
-    <div class="archive-year-wrap">
-      <a href="/archives/2020" class="archive-year">2020</a>
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  数据结构与算法 - 队列
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%98%9F%E5%88%97/" class="article-date">
+  <time datetime="2020-07-06T00:57:00.000Z" itemprop="datePublished">2020-07-06</time>
+</a>  
     </div>
-    <div class="archives">
       
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F/" class="archive-article-date">
-  <time datetime="2020-07-07T05:11:00.000Z" itemprop="datePublished">07/07</time>
-</a>
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
        
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F/"
-    >数据结构与算法 - 选择排序</a> 
-</h2>
+  <p>1.引子<br>1.1.为什么要学习数据结构与算法？<br>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！</p>
+<p>有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？</p>
+<p>于是问题来了：为什么还要学习数据结构与算法呢？</p>
+<p>复制代码<br>#理由一：<br>    面试的时候，千万不要被数据结构与算法拖了后腿<br>#理由二：<br>    你真的愿意做一辈子CRUD Boy吗<br>#理由三：<br>    不想写出开源框架，中间件的工程师，不是好厨子<br>复制代码<br>1.2.如何系统化学习数据结构与算法？<br>我想好了，还是需要学习数据结构与算法。但是我有两个困惑：</p>
+<p>1.如何着手学习呢？</p>
+<p>2.有哪些内容要学习呢？</p>
+<p>学习方法推荐：</p>
+<p>#学习方法<br>1.从基础开始，系统化学习<br>2.多动手，每一种数据结构与算法，都自己用代码实现出来<br>3.思路更重要：理解实现思想，不要背代码<br>4.与日常开发结合，对应应用场景<br>学习内容推荐：</p>
+<p>数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法</p>
+<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>你还记得在数组那一篇中，我们说过基于线性表的数据结构有哪些吗？它们是：数组、链表、栈、队列。</p>
+<p>上一篇【数据结构与算法系列六（栈）】中，我们已经详细了解了栈这种数据结构：栈是一种操作受限的数据结构。队列是基于线性表的数据结构中，最后一种了，很巧！它也是一种操作受限的数据结构。</p>
+<p>队列同样可以基于数组实现：顺序队列；也可以基于链表实现：链式队列。</p>
+<p>那么问题来了：具体如何实现一个队列呢？它都有哪些应用场景呢？</p>
+<p>复制代码<br>#考考你：<br>1.你能用自己的话描述队列吗？<br>2.你知道常见的队列分类吗？<br>3.你知道队列代码实现的关键吗？<br>4.你知道如何实现一个循环队列吗？<br>5.你知道队列的常见的应用场景吗？<br>复制代码<br>3.案例<br>3.1.队列的定义<br>队列是一种基于线性表的数据结构，与栈一样，都是操作受限的数据结构。栈的特点是后进先出，而队列的特点是先进先出（FIFO），就像我们平常在火车站排队候车一样。</p>
+<p>队列有两头：队头，和队尾。从队头出队元素，在队尾入队新的元素。</p>
+<p>3.2.代码实现<br>顺序队列代码：</p>
+<p>复制代码<br>package com.anan.struct.linetable;</p>
+<p>/**</p>
+<ul>
+<li><p>顺序队列：基于数组实现</p>
+</li>
+<li><p>@param <E></p>
+</li>
+<li><p>/<br>public class ArrayQueue<E> {<br>  private Object[] items;<br>  private  int n;</p>
+<p>  // 队列需要两个下标：对头下标索引、队尾下标索引<br>  private int head;<br>  private int tail;</p>
+<p>  public ArrayQueue(int capacity){</p>
+<pre><code>this.items = new Object[capacity];
+this.n = capacity;</code></pre><p>  }</p>
+<p>  /**</p>
+<ul>
+<li><p>入队操作：</p>
+</li>
+<li><p>/<br>public boolean enqueue(E e){<br>  // 检查队列是否满<br>  // 队列满条件 tail==n &amp;&amp; head == 0<br>  if(tail == n){</p>
+<pre><code>// 检查对头是否没有出队
+if(head == 0){
+    return false;
+}
+
+// 如果已经有元素出队，则向对头移动数据
+for (int i = head; i &lt; tail ; i++) {
+    items[i - head] = items[i];
+}
+
+tail = tail - head;
+head = 0;</code></pre><p>  }</p>
+<p>  // 入队<br>  items[tail] = e;<br>  tail ++;</p>
+<p>  return true;<br>}</p>
+<p>/**</p>
+</li>
+<li><p>出队操作：</p>
+</li>
+<li><p>/<br>public E dequeue(){<br>  // 检查队列是否空<br>  // 队列空条件：head == tail<br>  if(head == tail){</p>
+<pre><code>return null;</code></pre><p>  }</p>
+<p>  // 出队<br>  E e = (E)items[head];<br>  head ++;</p>
+<p>  return e;<br>}</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>}<br>复制代码<br>测试代码：</p>
+<p>复制代码<br>package com.anan.struct.linetable;</p>
+<p>/**</p>
+<ul>
+<li><p>测试队列</p>
+</li>
+<li><p>/<br>public class ArrayQueueTest {</p>
+<p>  public static void main(String[] args) {</p>
+<pre><code>// 1.创建队列
+int capacity = 10;
+ArrayQueue&lt;Integer&gt; queue = new ArrayQueue&lt;Integer&gt;(capacity);
+System.out.println(&quot;1.创建队列---------队列容量：&quot; + capacity);
+
+// 2.入队操作
+System.out.println(&quot;2.入队操作---------&quot;);
+int count = 5;
+for (int i = 0; i &lt; count; i++) {
+    queue.enqueue(i);
+    System.out.println(&quot;入队元素：&quot; + i);
+}</code></pre></li>
+</ul>
+<pre><code>    // 3.出队操作
+    System.out.println(&quot;3.出队操作---------&quot;);
+    for (int i = 0; i &lt; count; i++) {
+        System.out.println(&quot;出队元素：&quot; + queue.dequeue());
+    }
+
+}</code></pre><p>}<br>复制代码<br>测试结果：</p>
+<p>复制代码<br>D:\02teach\01soft\jdk8\bin\java com.anan.struct.linetable.ArrayQueueTest<br>1.创建队列———队列容量：10<br>2.入队操作———<br>入队元素：0<br>入队元素：1<br>入队元素：2<br>入队元素：3<br>入队元素：4<br>3.出队操作———<br>出队元素：0<br>出队元素：1<br>出队元素：2<br>出队元素：3<br>出队元素：4</p>
+<p>Process finished with exit code 0<br>复制代码<br>3.3.循环队列代码实现<br>复制代码<br>package com.anan.struct.linetable;</p>
+<p>/**</p>
+<ul>
+<li><p>循环队列</p>
+</li>
+<li><p>/<br>public class CircularQueue<E> {</p>
+<p>  private Object[] items;<br>  private int n;</p>
+<p>  // 队头、对尾指针<br>  private int head;<br>  private int tail;</p>
+<p>  public CircularQueue(int capacity){</p>
+<pre><code>items = new Object[capacity];
+n = capacity;</code></pre><p>  }</p>
+<p>  /**</p>
+<ul>
+<li><p>入队操作</p>
+</li>
+<li><p>/<br>public boolean enqueue(E e){<br>  // 判断队列是否满<br>  // 队列满条件：(tail + 1) % n == head<br>  if((tail + 1) % n == head){</p>
+<pre><code>return false;</code></pre><p>  }</p>
+<p>  items[tail] = e;<br>  tail = (tail + 1) % n;</p>
+<p>  return true;<br>}</p>
+<p>/**</p>
+</li>
+<li><p>出队操作</p>
+</li>
+<li><p>/<br>public E dequeue(){<br>  // 判断队列是否空<br>  // 队列空条件：tail == head<br>  if(tail == head){</p>
+<pre><code>return null;</code></pre><p>  }</p>
+<p>  E e = (E)items[head];<br>  head = (head + 1) % n;</p>
+<p>  return e;<br>}<br>}<br>复制代码<br>4.讨论分享<br>复制代码<br>#考考你答案：<br>1.你能用自己的话描述队列吗？<br>1.1.队列是基于线性表的数据结构<br>1.2.队列是一种操作受限的数据结构<br>1.3.队列满足先进先出（FIFO）的特点<br>1.4.队列在队头出队元素，在队尾入队元素</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>2.你知道常见的队列分类吗？<br>  2.1.从底层数据结构分类有：顺序队列、链式队列<br>  2.2.从实现特点分类有：循环队列、阻塞队列、并发队列</p>
+<p>3.你知道队列代码实现的关键吗？<br>  3.1.队列满足先进先出（FIFO）特点<br>  3.2.队列在队头出队元素，在队尾入队元素<br>  3.3.实现队列的关键：<br>    a.需要两个指针：head、tail分别指向队头和队尾<br>    b.入队时，判断队列满条件：tail == n &amp;&amp; head == 0<br>    c.出队时，判断队列空条件：tail == head</p>
+<p>4.你知道如何实现一个循环队列吗？<br>  4.1.在案例中，基于数组实现了一个普通的队列<br>  4.2.入队操作的时候，如果队列满，需要移动数据<br>  // 如果队列满，且已经有元素出队，则向对头移动数据<br>   for (int i = head; i &lt; tail ; i++) {<br>          items[i - head] = items[i];<br>   }<br>  4.3.这样会将入队操作，时间复杂度从O(1)，转变成O(n)，执行效率下降<br>  4.4.有没有更好的方式，保持入队操作的时间复杂度为O(1)不变呢？<br>  4.5.答案是：通过循环队列来实现<br>  4.6.关于循环队列的代码，你可以参考【3.3】循环队列实现<br>  4.7.重点关注队列满的条件：(tail + 1) % n == head<br>  4.8.看你是否能理解，欢迎留言我们一起讨论</p>
+<p>5.你知道队列的常见的应用场景吗？<br>  5.1.队列主要针对有限资源控制的应用场景<br>  5.2.比如数据库连接池的应用<br>  5.3.比如线程池的应用<br>  5.4.如果你有兴趣，可以看一下JUC中线程池的底层实现<br>  5.5.JUC线程池的底层，应用了：阻塞队列<br>  5.6.通过队列还能实现：生产者—消费者模型<br>复制代码<br>JUC创建线程池：</p>
  
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/" class="archive-article-date">
-  <time datetime="2020-07-07T03:26:00.000Z" itemprop="datePublished">07/07</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/"
-    >数据结构与算法 - 插入排序</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%86%92%E6%B3%A1/" class="archive-article-date">
-  <time datetime="2020-07-07T03:25:00.000Z" itemprop="datePublished">07/07</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%86%92%E6%B3%A1/"
-    >数据结构与算法 - 冒泡</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8E%92%E5%BA%8F/" class="archive-article-date">
-  <time datetime="2020-07-07T03:23:00.000Z" itemprop="datePublished">07/07</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8E%92%E5%BA%8F/"
-    >数据结构与算法 - 排序</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%922/" class="archive-article-date">
-  <time datetime="2020-07-07T03:22:00.000Z" itemprop="datePublished">07/07</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%922/"
-    >数据结构与算法 - 递归2</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%92/" class="archive-article-date">
-  <time datetime="2020-07-07T03:20:00.000Z" itemprop="datePublished">07/07</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%92/"
-    >数据结构与算法 - 递归1</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%98%9F%E5%88%97/" class="archive-article-date">
-  <time datetime="2020-07-06T00:57:00.000Z" itemprop="datePublished">07/06</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%98%9F%E5%88%97/"
-    >数据结构与算法 - 队列</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%A0%88/" class="archive-article-date">
-  <time datetime="2020-07-05T01:25:00.000Z" itemprop="datePublished">07/05</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%A0%88/"
-    >数据结构与算法 - 栈</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A82/" class="archive-article-date">
-  <time datetime="2020-07-04T11:46:00.000Z" itemprop="datePublished">07/04</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A82/"
-    >数据结构与算法 - 链表2</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A8/" class="archive-article-date">
-  <time datetime="2020-07-02T05:43:00.000Z" itemprop="datePublished">07/02</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A8/"
-    >数据结构与算法 - 链表</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
+      <!-- reward -->
       
     </div>
-  </div>
-  
-  
-
-  
-  <nav class="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/page/2/">2</a><a class="extend next" rel="next" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/page/2/">下一页</a>
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%92/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            数据结构与算法 - 递归1
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/07/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%A0%88/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">数据结构与算法 - 栈</div>
+      </a>
+    
   </nav>
+
   
+     
+</article>
+
 </section>
       <footer class="footer">
   <div class="outer">
@@ -454,6 +368,23 @@
 <script src="/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">

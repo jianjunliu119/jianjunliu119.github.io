@@ -11,7 +11,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    Tag: 数据结构与算法 |  印记
+    数据结构与算法 - 冒泡 |  印记
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -45,284 +45,163 @@
       
     <main class="content on">
       <section class="outer">
-  <article class="articles">
+  <article
+  id="post-数据结构与算法-冒泡"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
     
-    
-    <h1 class="page-type-title">#&nbsp数据结构与算法</h1>
-    
-    
-  
-  
-  
-  
-  
-  
-  <div class="archives-wrap">
-    <div class="archive-year-wrap">
-      <a href="/archives/2020" class="archive-year">2020</a>
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  数据结构与算法 - 冒泡
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%86%92%E6%B3%A1/" class="article-date">
+  <time datetime="2020-07-07T03:25:00.000Z" itemprop="datePublished">2020-07-07</time>
+</a>  
     </div>
-    <div class="archives">
       
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F/" class="archive-article-date">
-  <time datetime="2020-07-07T05:11:00.000Z" itemprop="datePublished">07/07</time>
-</a>
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
        
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F/"
-    >数据结构与算法 - 选择排序</a> 
-</h2>
+  <p>1.引子<br>1.1.为什么要学习数据结构与算法？<br>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！</p>
+<p>有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？</p>
+<p>于是问题来了：为什么还要学习数据结构与算法呢？</p>
+<p>复制代码<br>#理由一：<br>    面试的时候，千万不要被数据结构与算法拖了后腿<br>#理由二：<br>    你真的愿意做一辈子CRUD Boy吗<br>#理由三：<br>    不想写出开源框架，中间件的工程师，不是好厨子<br>复制代码<br>1.2.如何系统化学习数据结构与算法？<br>我想好了，还是需要学习数据结构与算法。但是我有两个困惑：</p>
+<p>1.如何着手学习呢？</p>
+<p>2.有哪些内容要学习呢？</p>
+<p>学习方法推荐：</p>
+<p>#学习方法<br>1.从基础开始，系统化学习<br>2.多动手，每一种数据结构与算法，都自己用代码实现出来<br>3.思路更重要：理解实现思想，不要背代码<br>4.与日常开发结合，对应应用场景<br>学习内容推荐：</p>
+<p>数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法</p>
+<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>在上一篇：数据结构与算法系列十（排序概述）中，我们列举了常用的排序算法，以及分析了如何综合衡量排序算法的优劣。如果你还没有看上一篇的内容，可以去看一看，应该会有所收获。</p>
+<p>从这一篇开始，我们把每一种排序算法，从算法的思想，到代码实现都做一个分享。那么你准备好了吗？</p>
+<p>我们这一篇的主角是：冒泡排序</p>
+<p>#考考你：<br>1.你知道冒泡排序的核心思想吗？<br>2.你能用java实现冒泡排序吗？<br>3.你能写出更优秀的冒泡排序代码吗？</p>
+<p>3.案例<br>3.1.冒泡排序思想<br>假设有一个待排序序列：[4, 5, 6, 3, 2, 1]。我们需要按照升序进行排序，排序后的序列是这样的：[1, 2, 3, 4, 5, 6]。</p>
+<p>如何通过冒泡排序实现呢？</p>
+<p>这里我们先来理解冒泡排序中的冒泡两个字。所谓冒泡就像平静的水面，鱼儿从水底吹气一样，一个一个的水泡向上冒，很诗情画意，我们都向往这样的生活环境对吧。</p>
+<p>那么请保持这个美好的姿势，我们一起来理解冒泡排序的思想，先看一个图：</p>
+<p>冒泡排序核心思想：</p>
+<p>假设待排序序列有n个元素，需要经过n次冒泡，每一次冒泡过程中依次比较交换相邻的两个元素，一次冒泡结束，都会有1个元素到达指定的目标位置。这里的关键词有：</p>
+<p>1.n个元素，n次冒泡<br>2.比较交换相邻元素<br>3.2.冒泡排序代码实现<br>3.2.1.排序代码<br>复制代码<br>/**</p>
+<ul>
+<li><p>冒泡排序：普通实现版本</p>
+</li>
+<li><p>@param array：待排序数组</p>
+</li>
+<li><p>@param n：待排序数组大小</p>
+</li>
+<li><p>/<br>public static void sort_1(Integer [] array,int n){<br> // 如果排序数组规模小于等于1，直接返回<br> if(n &lt;= 1){<br>   return;<br> }</p>
+<p> // 有n个元素，进行n次冒泡<br> for(int i = 0; i &lt; n; i++){</p>
+<p>   // 每一次冒泡，比较交换相邻两个元素<br>   for(int j = 0; j &lt; n-i-1; j++){</p>
+<pre><code> if(array[j] &gt; array[j+1]){
+   int tmp = array[j];
+   array[j] = array[j+1];
+   array[j+1] = tmp;
+  }
+}</code></pre><p>   }</p>
+</li>
+</ul>
+<p>}<br>复制代码<br>3.2.2.测试代码<br>复制代码<br>public static void main(String[] args) {<br> // 初始化测试数组<br> Integer[] array = {4,5,6,3,2,1};<br> // 排序前<br> System.out.println(“1.排序前数组：” + Arrays.deepToString(array));</p>
+<p> // 排序后<br> sort_1(array,array.length);</p>
+<p> // 排序后<br> System.out.println(“2.排序后数组：” + Arrays.deepToString(array));</p>
+<p>}<br>复制代码<br>测试结果：</p>
+<p>复制代码<br>D:\02teach\01soft\jdk8\bin\java<br>com.anan.algorithm.sort.BubbleSort<br>1.排序前数组：[4, 5, 6, 3, 2, 1]<br>2.排序后数组：[1, 2, 3, 4, 5, 6]</p>
+<p>Process finished with exit code 0<br>复制代码<br>3.3.冒泡排序实现优化<br>3.3.1.优化分析<br>在3.2.1节冒泡排序普通实现版本，我们严格按照冒泡排序的思想：n个元素、n次冒泡，每一次冒泡依次比较交换相邻元素。实现了一个冒泡排序。</p>
+<p>在这里，请你先简单思考一下：有没有更优化的实现方式呢？</p>
+<p>我们先来分析一下冒泡排序算法的时间复杂度，结合代码我们发现冒泡排序的时间复杂度是：O(n^2)，有两次for循环，这不是一个高效的算法对吧。如果说我们能够减少冒泡的次数，则可以极大提升算法的执行效率。</p>
+<p>问题来了：什么情况下可以减少冒泡次数呢？</p>
+<p>其实我们只要结合冒泡排序算法的核心思想后半部分：比较交换相邻的元素。如果说在一次冒泡中，没有发生相邻元素的交换，那说明待排序序列已经有序了，不管后面还剩下多少次冒泡，我们都不需要再进行冒泡下去了。这样是不是就减少冒泡的次数了呢</p>
+<p>关于减少冒泡次数的分析，如果你暂时没有理解过来的话，没有关系。请看我们下面的代码实现，相信结合代码你会恍然大悟。</p>
+<p>3.3.2.优化代码实现<br>复制代码<br>/**</p>
+<ul>
+<li><p>冒泡排序：优化实现版本</p>
+</li>
+<li><p>@param array：待排序数组</p>
+</li>
+<li><p>@param n：待排序数组大小</p>
+</li>
+<li><p>/<br>public static void sort_2(Integer [] array,int n){<br> // 如果排序数组规模小于等于1，直接返回<br> if(n &lt;= 1){</p>
+<pre><code>return;</code></pre><p> }</p>
+<p> // 优化标识<br> // 如果某一次冒泡过程中，没有发生数据交换<br> // 则说明已经排好了序，不需要在继续冒泡<br> boolean flag = false;</p>
+<p> // n个元素，n次冒泡<br> for(int i = 0; i &lt; n; i++){</p>
+<p>   // 重置是否发生交换标识<br>   flag = false;</p>
+<p>   // 每一次冒泡中，比较交换相邻元素<br>   for(int j = 0; j &lt; n-i-1; j++){</p>
+<pre><code> if(array[j] &gt; array[j+1]){
+    int tmp = array[j];
+    array[j] = array[j+1];
+    array[j+1] = tmp;
+
+    // 发生了数据交换
+    flag = true;
+   }
+ }
+
+// 一次冒泡结束,检查是否发生了数据交换
+// 如果没有发生数据交换，说明序列已经有序，不需要再继续冒泡了
+System.out.println(&quot;第【&quot; + (i+1) + &quot;】次冒泡.&quot;);
+if( !flag){
+   break;
+ }</code></pre><p>   }</p>
+</li>
+</ul>
+<p>}<br>复制代码<br>3.3.3.测试代码<br>复制代码<br>public static void main(String[] args) {<br> // 初始化测试数组<br> Integer[] array = {4,5,6,3,2,1};<br> // 排序前<br> System.out.println(“1.排序前数组：” + Arrays.deepToString(array));</p>
+<p> // 第一次排序<br> System.out.println(“2.第一次排序——————————-start”);<br> sort_2(array,array.length);<br> System.out.println(“3.第一次排序后数组：” + Arrays.deepToString(array));</p>
+<p> // 第二次排序<br> System.out.println(“4.第二次排序——————————-start”);<br> sort_2(array,array.length);<br> System.out.println(“5.第二次排序后数组：” + Arrays.deepToString(array));</p>
+<p>}<br>复制代码<br>测试结果：</p>
+<p>4.讨论分享<br>复制代码<br>#考考你答案：<br>1.你知道冒泡排序的核心思想吗？<br>  1.1.假设待排序序列有n个元素<br>  1.2.整个排序过程中，需要n次冒泡<br>  1.3.每一次冒泡过程中，依次比较交换相邻两个元素<br>  1.4.一次冒泡结束，都会有一个元素到达指定的位置</p>
+<p>2.你能用java实现冒泡排序吗？<br>  2.1.参考【3.2】节案例实现</p>
+<p>3.你能写出更优秀的冒泡排序代码吗？<br>  3.1.结合冒泡排序算法的核心思想：n个元素、n次冒泡，每一次冒泡依次比较交换相邻的两个元素<br>  3.2.如果在某一次冒泡中，没有发生元素交换<br>  3.3.说明待排序序列已经有序，不需要再进行冒泡下去<br>复制代码</p>
  
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/" class="archive-article-date">
-  <time datetime="2020-07-07T03:26:00.000Z" itemprop="datePublished">07/07</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/"
-    >数据结构与算法 - 插入排序</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%86%92%E6%B3%A1/" class="archive-article-date">
-  <time datetime="2020-07-07T03:25:00.000Z" itemprop="datePublished">07/07</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%86%92%E6%B3%A1/"
-    >数据结构与算法 - 冒泡</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8E%92%E5%BA%8F/" class="archive-article-date">
-  <time datetime="2020-07-07T03:23:00.000Z" itemprop="datePublished">07/07</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8E%92%E5%BA%8F/"
-    >数据结构与算法 - 排序</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%922/" class="archive-article-date">
-  <time datetime="2020-07-07T03:22:00.000Z" itemprop="datePublished">07/07</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%922/"
-    >数据结构与算法 - 递归2</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%92/" class="archive-article-date">
-  <time datetime="2020-07-07T03:20:00.000Z" itemprop="datePublished">07/07</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%92/"
-    >数据结构与算法 - 递归1</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%98%9F%E5%88%97/" class="archive-article-date">
-  <time datetime="2020-07-06T00:57:00.000Z" itemprop="datePublished">07/06</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%98%9F%E5%88%97/"
-    >数据结构与算法 - 队列</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%A0%88/" class="archive-article-date">
-  <time datetime="2020-07-05T01:25:00.000Z" itemprop="datePublished">07/05</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%A0%88/"
-    >数据结构与算法 - 栈</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A82/" class="archive-article-date">
-  <time datetime="2020-07-04T11:46:00.000Z" itemprop="datePublished">07/04</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A82/"
-    >数据结构与算法 - 链表2</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/07/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A8/" class="archive-article-date">
-  <time datetime="2020-07-02T05:43:00.000Z" itemprop="datePublished">07/02</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/07/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A8/"
-    >数据结构与算法 - 链表</a> 
-</h2>
- 
-
-    </header>
-    
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    
-  </div>
-</article>
-      
+      <!-- reward -->
       
     </div>
-  </div>
-  
-  
-
-  
-  <nav class="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/page/2/">2</a><a class="extend next" rel="next" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/page/2/">下一页</a>
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            数据结构与算法 - 插入排序
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8E%92%E5%BA%8F/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">数据结构与算法 - 排序</div>
+      </a>
+    
   </nav>
+
   
+     
+</article>
+
 </section>
       <footer class="footer">
   <div class="outer">
@@ -454,6 +333,23 @@
 <script src="/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
