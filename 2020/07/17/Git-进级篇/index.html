@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="description" content="岁月的痕迹" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Git - 进级篇 |  印记
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Git-进级篇"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Git - 进级篇
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/17/Git-%E8%BF%9B%E7%BA%A7%E7%AF%87/" class="article-date">
+  <time datetime="2020-07-17T00:09:00.000Z" itemprop="datePublished">2020-07-17</time>
+</a>  
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><img src="/images/pasted-53.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<p><img src="/images/pasted-54.png" alt="upload successful"></p>
+<h3 id="Git-进阶使用"><a href="#Git-进阶使用" class="headerlink" title="Git 进阶使用"></a>Git 进阶使用</h3><h4 id="版本历史更改"><a href="#版本历史更改" class="headerlink" title="版本历史更改"></a>版本历史更改</h4><ol>
+<li>最近一次 commit 的 message 修改</li>
+</ol>
+<p>使用如下命令就可以对最近一次 commit 的 message 进行变更了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>老旧 commit 的 message 修改 — rebase + reword<br>输入如下命令</li>
+</ol>
+<p>git rebase -i hash_value # hash_value，是需要的 commit 的父亲 commit 的 hash_value<br>之后会发生一系列交互，比如你想某个 commit 对应的message，那么将该 commit 之前的 pick 改为 reword 或者 r（看下面的注释信息），然后保存退出。之后就跳到了修改 message 的文档了，在这里输入改变之后的 message 保存退出即可。</p>
+<p><img src="/images/pasted-55.png" alt="upload successful"><br>注意：这种方式修改之后会导致该 commit 及后面 commit 的 hash_value 都被改变掉，所以不适合团队集成开发中使用。</p>
+<ol start="3">
+<li>把连续的多个 commit 合并成一个 — rebase + squash<br>输入如下命令，</li>
+</ol>
+<p>git rebase -i hash_value # hash_value 是要合并的 commit 的父亲 commit<br>输入之后会发生一系列的交互，如下所示，</p>
+<p><img src="/images/pasted-56.png" alt="upload successful"><br>假如我想要把上面两个 commit 合并成一个，需要使用 squash ，版本历史中较早的 commit 在上面，较晚的 commit 在下面，进行合并的话，是把较早的保留，较晚的合并到较早中去，所以要将上述两个 commit 进行合并的话，修改为如下所示，并保存退出</p>
+<p><img src="/images/pasted-57.png" alt="upload successful"><br>之后会进入另一个交互，在下面填写更改之后的 message 信息，保存退出之后即可。</p>
+<p><img src="/images/pasted-58.png" alt="upload successful"><br>4. 把间隔的几个 commit 合并成一个 — rebase + squash<br>与上述类似，就是把间隔的 commit 移到一块即可。同样首先是输入如下命令，hash_value 是间隔多个 commit 中的最开始那个 commit 的父亲 commit 的 hash_value</p>
+<p>git rebase -i hash_value<br>之后会进入交互界面，</p>
+<p><img src="/images/pasted-59.png" alt="upload successful"><br>比如想要合并 760df21 和 2234131 这两个 commit的话，那么修改为如下内容，保存退出即可</p>
+<p><img src="/images/pasted-60.png" alt="upload successful"><br>之后会进入修改 message 的页面，修改之后保存退出即可</p>
+<p><img src="/images/pasted-61.png" alt="upload successful"><br>5. rebase 其他操作<br>上述都使用了 git rebase 的命令，rebase 的意思是说改变基底，把版本历史中的某些 commit 给修改了。</p>
+<p>git rebase origin/master # 把当前分支基于 origin/master 做 rebase 操作，也就相当于把当前分支的东西加到 origin/master 中<br>git rerere      # 记录冲突解决的方式，然后可以在 rebase 的时候反复应用，可以和 rebase 结合用<br>6. 碎碎念<br>上述对 commit 的修改和合并，会导致该 commit 及后面 commit 的 hash_value 都被改变掉，所以不适合团队集成开发中使用。</p>
+<p>假如 commit 修改和合并这一步操作完成之后不是直接进入修改 message 的页面，请根据提示进行进一步操作，比如git rebase –continue。</p>
+<p>假如合并的包含了根 commit，那么 hash_value 则是根 commit 的 hash_value，之后在交互文档中把根 commit 填入即可，只需要填入要操作的名称和 hash_value 即可。</p>
+<p>在合并 commit 中，假如一个 commit 没有被 pick 的话，比如注释了或者删除，那么在完成一系列操作中之后，这个 commit 将会被丢弃。如下图所示，275a765 这个 commit 被注释掉了的话，那么在完成之后，这个 commit 将会被丢弃。</p>
+<p><img src="/images/pasted-62.png" alt="upload successful"></p>
+<h4 id="回滚操作-—-git-reset"><a href="#回滚操作-—-git-reset" class="headerlink" title="回滚操作 — git reset"></a>回滚操作 — git reset</h4><ol>
+<li>暂存区恢复成和 HEAD 一样<br>git reset HEAD<br>git reset HEAD – file_name1 file_name2 # 暂存区部分文件变得跟 HEAD 一样<br>比如一开始的话，HEAD 、暂存区和工作目录都是一样的，都是状态A，并且 readme*.md 文件都已经被跟踪起来了。下面我们修改 readme3.md 文件，之后把它 add 到暂存区。那么这样子工作目录和暂存区都是状态 B，而 HEAD 是状态 A。那么使用上述命令之后，会将暂存区恢复成状态 A。</li>
+</ol>
+<p><img src="/images/pasted-63.png" alt="upload successful"><br>2. 工作目录恢复为和暂存区一样<br>git checkout – file_name # 工作目录中指定文件恢复为和暂存区一样<br>git checkout – *|. ## 工作目录全部文件恢复为和暂存区一样</p>
+<p><img src="/images/pasted-64.png" alt="upload successful"><br>3. 回滚到某个 commit<br>git reset –hard hash_value # 把 HEAD、暂存区、工作目录都回滚到 hash_value 所代表的 commit 中。<br>git reset –hard  # 把暂存区里面的修改去掉，也就是让暂存区、工作目录默认恢复到 HEAD 的位置</p>
+<p><img src="/images/pasted-65.png" alt="upload successful"></p>
+<p><img src="/images/pasted-66.png" alt="upload successful"><br>4. 碎碎念<br>工作目录内容的修改使用 git checkout，</p>
+<p>暂存区内容的修改使用 git reset</p>
+<p>版本历史的修改使用 git rabase</p>
+<h4 id="工作目录、暂存区的更改状态保存下来"><a href="#工作目录、暂存区的更改状态保存下来" class="headerlink" title="工作目录、暂存区的更改状态保存下来"></a>工作目录、暂存区的更改状态保存下来</h4><p>这个应用在开发中临时加塞了紧急任务的情况，可以把处理了一半，还在工作目录、暂存区的更改状态保存下来。</p>
+<p>git stash # 把相应的修改内容给存下来，之后 git status 查看的话又变为什么都没改变的了<br>git stash list # 查看存下来的内容<br>git stash apply # 存下来的内容又恢复了，但是存下来的内容还在 stash 中<br>git stash pop   # 存下来的内容恢复了，但是存下来的内容也没了</p>
+<p><img src="/images/pasted-67.png" alt="upload successful"></p>
+<h4 id="git-merge"><a href="#git-merge" class="headerlink" title="git merge"></a>git merge</h4><p>将两个分支或者两个 commit 进行 merge，merge 之后也会产生一个 commit</p>
+<p>git merge branch_name1 branch_name2<br>git merge hash_value1 hash_value2<br>git merge –squash # 以 squash 方式进行 merge<br>在 merge 的过程中有时候会产生冲突，比如两个分支修改或者两个 commit 修改的是同文件的同一区域，那么就会发生冲突，那么会在相应文件冲突的地方有提示，大致如下所示。</p>
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD<br>windows<br>=======<br>root</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>origin/master<br>通过协商和决定之后，确定文件最终内容，同时把上述内容删除。之后 git add 、git commit 即可。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>不同人修改了不同文件不会产生冲突。比如说两个人维护一个仓库，一个人修改 A 文件，另一个修改 B 文件，那么 merge 的话不会产生冲突，直接将内容合并在一起。</p>
+<p>不同人修改了同文件不同区域不会产生冲突。merge 的话直接将内容合并在一起。</p>
+<p>同一文件改成不同的文件名会产生冲突。同上，一个人把文件名改成了 rename1，另一个人把文件名改成了 rename2，那么 merge 会发生冲突，需要进行协商确定最终的文件名。</p>
+<p>不同人修改了同文件的同一区域会产生冲突。merge 的话因为不能确定保留谁的内容所以会产生冲突。</p>
+<h4 id="分离头指针"><a href="#分离头指针" class="headerlink" title="分离头指针"></a>分离头指针</h4><p>分离头指针的例子如下所示，上面提到切换到某个分支的用法是</p>
+<p>$ git checkout branch_name<br>那么假如把 branch_name 变成了 hash_value，那么这个就相当于“分离头指针”（PS：个人的理解是相当于创建了一个匿名 branch，这个匿名的 branch 是从 hash_value 的地方分出来的）</p>
+<p>$ git checkout hash_value<br>之后的 commit 都是基于这个分离头指针的位置开始的，这些 commit 都没有基于某个 branch，相当于都是“游离”状态的。那么当切回到某个分支之后，这些 commit 都会被当成垃圾一样清理掉。如果这些 commit 很重要，那么请把这些 commit 跟某个 branch 绑在一起。</p>
+<p>另外分类头指针也是可以用的，比如我们先用分离头指针进行一波修改和测试，如果测试不错，那么就把这些修改的 commit 添加成 branch。</p>
+<h4 id="gitignore-—-指定不需要-git-管理的文件"><a href="#gitignore-—-指定不需要-git-管理的文件" class="headerlink" title=".gitignore — 指定不需要 git 管理的文件"></a>.gitignore — 指定不需要 git 管理的文件</h4><p>git 更多是管理代码的版本控制，而代码构建出来的东西可以不用管理，因为这些是可以复现的。那么 .gitignore 这个文件就是告诉 git 哪些文件不需要被纳入版本控制系统的，也就是相当于会被忽视。</p>
+<p>doc  # doc 文件和 doc 目录都不会被管理<br>doc/  # 只指定 doc 目录不会被管理，但是 doc 文件没被说明，假如 doc 在的话，还是会被管理起来的<br>上面内容的有效范围是在整个项目中，即包括子目录等</p>
+<p><img src="/images/pasted-68.png" alt="upload successful"></p>
+<p><img src="/images/pasted-69.png" alt="upload successful"><br>.gitignore 可以借助 github 创建仓库时生成，常用的 .gitignore 如下所示，自己写的时候也值得参考一波：<a href="https://github.com/github/gitignore" target="_blank" rel="noopener">https://github.com/github/gitignore</a> ；</p>
+<p>另外想要 git 不管理某些文件，只能在 .gitignore 文件中指定；</p>
+<h4 id="团队合作注意事项"><a href="#团队合作注意事项" class="headerlink" title="团队合作注意事项"></a>团队合作注意事项</h4><p>如果你的 git 仓库是跟其他人一起维护的，那么请注意一下几点：</p>
+<p>git push -f 不能使用</p>
+<p>公共的分支严禁拉倒本地做 rebase 操作的，因为一旦做了 rebase 操作之后，历史的 commit 就变了，但是其他人那边还是老旧的 commit，他们是基于老旧的 commit 做事情的，而你是几于新的 commit 做事情了，那么就相当于是两条分支了。所以记住了，不能向集成分支执行变更历史操作，建议的方式是在现在 commit 的基础之上再做调整。</p>
+<p><img src="/images/pasted-70.png" alt="upload successful"><br>A 在 temp 分支上做 rabase 操作，那么 temp 分支就会和 master 分开。如下图所示，</p>
+<p><img src="/images/pasted-71.png" alt="upload successful"><br>然而在另一个人，还是基于如下情况做的 commit 等，那么这样，就出现问题了</p>
+<p><img src="/images/pasted-72.png" alt="upload successful"></p>
+<h3 id="git-中的对象及其操作"><a href="#git-中的对象及其操作" class="headerlink" title="git 中的对象及其操作"></a>git 中的对象及其操作</h3><p>git 中的对象有三种：commit、tree、blob。下面对这三种对象进行阐述。</p>
+<h4 id="commit"><a href="#commit" class="headerlink" title="commit"></a>commit</h4><p>每次执行git commit都会创建一个commit对象，一个 commit 对象只包含一个 tree 对象，这个 tree 对象是 .git 所在父目录的对象， 那么这样子的话，一次 commit 就相当于把当前目录的情况给记录下来了。</p>
+<h4 id="tree"><a href="#tree" class="headerlink" title="tree"></a>tree</h4><p>目录的对象，那么由于目录中可以包含目录，也可以包含文件，所以 tree 对象可以包含 tree 对象，也可以包含 blob 对象。</p>
+<h4 id="blob"><a href="#blob" class="headerlink" title="blob"></a>blob</h4><p>blob 是一个文件的具体对象，比如png图像，css文件，这些文件都会对应一个blob对象，可以说是 git 对象中最基本的。另外，blob 跟文件名一点关系都么有，只要文件内容相同，不管文件名叫什么，blob 只有一份。</p>
+<p>新建的Git 仓库中，有且仅有一个 commit，仅仅包含了 /doc/readme，请问内含多少个 tree，多个 blob？</p>
+<p>含两个 tree，一个 blob。首先是 git 仓库所在目录是一个 tree (也就是 /doc/readme 的父目录)，doc 是一个tree，而 readme 文件是唯一 blob。</p>
+<h4 id="对象的相关操作"><a href="#对象的相关操作" class="headerlink" title="对象的相关操作"></a>对象的相关操作</h4><p>git cat-file -t|p|s hash_value # 显示版本库对象的内容，类型及大小信息<br>git cat-file -t hash_value  # 查看版本库对象的类型<br>git cat-file -p hash_value  # 查看版本库对象的内容<br>git cat-file -s hash_value  # 查看版本库对象的大小</p>
+<h3 id="git-目录探索"><a href="#git-目录探索" class="headerlink" title=".git 目录探索"></a>.git 目录探索</h3><h4 id="HEAD-文件"><a href="#HEAD-文件" class="headerlink" title="HEAD 文件"></a>HEAD 文件</h4><p>HEAD文件的内容显示了 HEAD 当前所指的分支信息，通过下面的内容可以佐证上面 HEAD 说到的一点：HEAD 指向的是某个分支，但通过查看分支文件内容可以发现里面其实是 commit 的 hash_value，也就是说 HEAD 实际指向的是某个commit。</p>
+<p><img src="/images/pasted-73.png" alt="upload successful"><br>git_head_temp</p>
+<p>使用 git checkout 命令之后，查看HEAD 文件的内容</p>
+<p><img src="/images/pasted-74.png" alt="upload successful"><br>git_head_chang_to_master</p>
+<h4 id="config-文件"><a href="#config-文件" class="headerlink" title="config 文件"></a>config 文件</h4><p>存放本地仓库（local）相关的配置信息，假如之前设置了 local 下的 user.name ，那么会在这个文件中存储相关的内容等信息。修改 config 文件中 user.name 配置项的内容，使用命令查看到的也是修改之后的。</p>
+<h4 id="refs-目录"><a href="#refs-目录" class="headerlink" title="refs 目录"></a>refs 目录</h4><ol>
+<li>heads 子目录<br>目录中包含的是各分支信息，每一个文件的内容都是 hash value，这个是值是该分支最后一次 commit 的 hash_value 值</li>
+</ol>
+<p>…/.git/refs/heads# ls<br>master  temp  temp2<br>…/.git/refs/heads# cat master<br>9ef147d58eb7e09987cf5ce92254b1600ac92cd9<br>2. tags 子目录<br>里面显示的是标签的信息，Git 仓库可以有很多标签，项目开发到一定程度，是一个关键的成果了，比如开发到 v1.0，那可以打上一个标签了。</p>
+<h4 id="objects-目录"><a href="#objects-目录" class="headerlink" title="objects 目录"></a>objects 目录</h4><p>存放对象的目录。git 中的对象都是由 40 位字符组成，前两位字符用来当 object 目录中子目录名，后 38 位做文件名。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Git/" rel="tag">Git</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/07/20/Git-%E7%9A%84%E8%BF%9C%E7%AB%AF%E6%93%8D%E4%BD%9C/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Git 的远端操作
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/07/16/%E5%AE%9E%E7%8E%B0%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">单点登录</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> JianJian Liu
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="印记"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/jianjunliu119/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/jianjunliu119/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

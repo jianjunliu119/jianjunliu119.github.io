@@ -81,7 +81,7 @@
     
     
     <article
-  id="post-数据结构与算法-链表"
+  id="post-SQL分页"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -92,188 +92,379 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2020/07/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A8/"
-    >数据结构与算法 - 链表</a> 
+  <a class="article-title" href="/2020/07/14/SQL%E5%88%86%E9%A1%B5/"
+    >SQL分页</a> 
 </h2>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2020/07/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A8/" class="article-date">
-  <time datetime="2020-07-02T05:43:00.000Z" itemprop="datePublished">2020-07-02</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>链表与数组一样，都是常用的基础数据结构，它通过“指针”将一组零散的内存块串联起来使用。每一个零散的内存块称为：节点。</p>
-<p>为了将所有节点串联起来，每个链表节点除了存储数据，还需要存储链上下一个节点的地址，我们把存储下一个节点地址的指针，称为：后继指针。</p>
-<p>链表有两个特殊的节点：头节点、尾节点</p>
-<p>头节点：第一个节点</p>
-<p>尾节点：后继指针指向null的节点</p>
-<p><img src="/images/pasted-0.png" alt="upload successful"></p>
-<h2 id="差异"><a href="#差异" class="headerlink" title="差异"></a>差异</h2><h3 id="内存空间"><a href="#内存空间" class="headerlink" title="内存空间"></a>内存空间</h3><p>数组的一个特点：需要连续的内存空间。链表与数组刚好相反，链表不需要连续的内存空间，它是通过“指针”将一组零散的内存块串联起来使用</p>
-<p><img src="/images/pasted-1.png" alt="upload successful"></p>
-<h3 id="操作方式"><a href="#操作方式" class="headerlink" title="操作方式"></a>操作方式</h3><ol>
-<li><p>插入、删除</p>
-<p>数组的插入、删除操作，需要向后，向前移动数据，时间复杂度是：O(n)<br> 链表的插入、删除操作，只需要改变节点指针，不需要移动数据，时间复杂度是：O(1)</p>
-</li>
-</ol>
-<p><img src="/images/pasted-2.png" alt="upload successful"></p>
-<ol start="2">
-<li><p>查找</p>
-<p> 数组的内存空间是连续的，支持随机访问操作，根据下标索引访问，时间复杂度是：O(1)<br> 链表的内存空间不连续，不支持随机访问操作，从头节点遍历访问，时间复杂度是：O(n)</p>
-</li>
-</ol>
-<h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
-<li><p>你能用自己的话描述链表吗？</p>
-<ol>
-<li>链表与数组一样，都是常用的基础数据结构</li>
-<li>链表通过“指针”将一组零散的内存块串联起来使用</li>
-<li>每一个零散的内存块称为：节点</li>
-<li>链表的每个节点，除了存储数据以外，还需要存储一个指向下一个节点的指针</li>
-<li>通常我们把指向下一个节点的指针，称为：后继指针</li>
-</ol>
-</li>
-<li><p>你知道链表和数组的区别吗？</p>
-<ol>
-<li>数组需要连续的内存空间，链表不需要</li>
-<li>插入、删除操作<ol>
-<li>数组需要移动数据，时间复杂度是：O(n)</li>
-<li>链表不需要移动数据，时间复杂度是：O(1)</li>
-</ol>
-</li>
-<li>查找操作<ol>
-<li>数组支持随机访问操作，时间复杂度是：O(1)</li>
-<li>链表需要从头节点遍历，不支持随机访问操作，时间复杂度是：O(n)</li>
-</ol>
-</li>
-</ol>
-</li>
-<li><p>你知道都有哪些常用的链表吗？</p>
-<ol>
-<li>单链表</li>
-<li>双向链表</li>
-<li>循环链表</li>
-</ol>
-</li>
-</ol>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-数据结构与算法-数组"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/07/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%95%B0%E7%BB%84/"
-    >数据结构与算法 - 数组</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/07/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%95%B0%E7%BB%84/" class="article-date">
-  <time datetime="2020-07-02T01:50:00.000Z" itemprop="datePublished">2020-07-02</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="数组特点"><a href="#数组特点" class="headerlink" title="数组特点"></a>数组特点</h2><ol>
-<li><p>线性表,是基于线性表的数据结构。</p>
-<p> 线性表（Linear List），就是把数据组织成一条线一样，每个线性表上的数据，只有向前和向后两个方向。基于线性表的数据结构有：数组、链表、栈、队列。</p>
-</li>
-</ol> 
-      <a class="article-more-link" href="/2020/07/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%95%B0%E7%BB%84/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-数据结构与算法-复杂度"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/07/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%A4%8D%E6%9D%82%E5%BA%A6/"
-    >数据结构与算法 - 复杂度</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/07/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%A4%8D%E6%9D%82%E5%BA%A6/" class="article-date">
-  <time datetime="2020-07-01T02:52:00.000Z" itemprop="datePublished">2020-07-01</time>
+      <a href="/2020/07/14/SQL%E5%88%86%E9%A1%B5/" class="article-date">
+  <time datetime="2020-07-14T00:41:00.000Z" itemprop="datePublished">2020-07-14</time>
 </a>  
     </div>
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>算法复杂度是指算法在编写成可执行程序后，运行时所需要的资源，资源包括时间资源和内存资源。应用于数学和计算机导论。</p> 
-      <a class="article-more-link" href="/2020/07/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%A4%8D%E6%9D%82%E5%BA%A6/"
+  <h2 id="请不要将OFFSET和LIMIT用于分页"><a href="#请不要将OFFSET和LIMIT用于分页" class="headerlink" title="请不要将OFFSET和LIMIT用于分页"></a>请不要将OFFSET和LIMIT用于分页</h2><p><img src="/images/pasted-27.png" alt="upload successful"></p>
+<p>不再需要担心数据库性能优化的日子已经一去不复返了。</p>
+<p>随着时代的发展，每个新企业家都希望建立下一个Facebook，并结合收集每个可能的数据点以提供更好的机器学习预测的心态，作为开发人员，我们需要比以往更好地准备我们的API，以提供可靠，高效的端点，应该能够毫不费力地浏览大量数据。</p>
+<p>如果您已经进行了一段时间的后端或数据库体系结构，则可能已经完成了分页查询，如下所示：</p>
+<p><img src="/images/pasted-28.png" alt="upload successful"></p> 
+      <a class="article-more-link" href="/2020/07/14/SQL%E5%88%86%E9%A1%B5/"
         >阅读更多...</a
       >
        
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">数据库</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-开发者必备的Mysql命令"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/07/10/%E5%BC%80%E5%8F%91%E8%80%85%E5%BF%85%E5%A4%87%E7%9A%84Mysql%E5%91%BD%E4%BB%A4/"
+    >开发者必备的Mysql命令</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/10/%E5%BC%80%E5%8F%91%E8%80%85%E5%BF%85%E5%A4%87%E7%9A%84Mysql%E5%91%BD%E4%BB%A4/" class="article-date">
+  <time datetime="2020-07-09T23:59:00.000Z" itemprop="datePublished">2020-07-10</time>
+</a>  
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <blockquote>
+<p>开发者必备Mysql常用命令，涵盖了数据定义语句、数据操纵语句及数据控制语句，基于Mysql5.7。</p>
+</blockquote>
+<h2 id="数据定义语句-DDL"><a href="#数据定义语句-DDL" class="headerlink" title="数据定义语句(DDL)"></a>数据定义语句(DDL)</h2><h3 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h3><ul>
+<li><p>登录数据库：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -proot</span><br><span class="line">Copy to clipboardErrorCopied</span><br></pre></td></tr></table></figure></li>
+<li><p>创建数据库：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create database test</span><br></pre></td></tr></table></figure></li>
+<li><p>查看所有数据库：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show databases</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-17.png" alt="upload successful"></p>
+</li>
+<li><p>选择数据库并使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use test</span><br></pre></td></tr></table></figure></li>
+<li><p>查看所有数据表：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show tables</span><br></pre></td></tr></table></figure></li>
+<li><p>删除数据库：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drop database test</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul> 
+      <a class="article-more-link" href="/2020/07/10/%E5%BC%80%E5%8F%91%E8%80%85%E5%BF%85%E5%A4%87%E7%9A%84Mysql%E5%91%BD%E4%BB%A4/"
+        >阅读更多...</a
+      >
+       
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">数据库</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-我用的顺手的工具"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/07/09/%E6%88%91%E7%94%A8%E7%9A%84%E9%A1%BA%E6%89%8B%E7%9A%84%E5%B7%A5%E5%85%B7/"
+    >项目开发中我用的顺手工具</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/09/%E6%88%91%E7%94%A8%E7%9A%84%E9%A1%BA%E6%89%8B%E7%9A%84%E5%B7%A5%E5%85%B7/" class="article-date">
+  <time datetime="2020-07-08T23:59:00.000Z" itemprop="datePublished">2020-07-09</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>之前经常有朋友问我一些常用的工具，比如我的架构图是用什么工具做的？我的数据库是用什么工具设计的？今天给大家介绍下我用的顺手的工具！</p>
+<p>IntelliJ IDEA</p>
+<p><img src="/images/pasted-5.png" alt="upload successful"><br>业界公认最好的Java开发工具，平时用的最多。可以安装大量插件丰富功能，开发前端应用也不在话下！</p>
+<p>X-shell</p>
+<p><img src="/images/pasted-6.png" alt="upload successful"><br>一款强大的安全终端模拟软件，可以用来连接和管理远程Linux服务器。</p>
+<p>Postman</p>
+<p><img src="/images/pasted-7.png" alt="upload successful"><br>API接口调试工具，平时用来测试开发好的接口，有时也用来格式化下JSON字符串。</p>
+<p>PowerDesigner</p>
+<p><img src="/images/pasted-8.png" alt="upload successful"></p>
+<p>数据库设计工具，平时用来设计数据库表，设计完成之后可以直接导出数据库表。</p>
+<p>Navicat</p>
+<p><img src="/images/pasted-9.png" alt="upload successful"><br>数据库可视化工具，支持多种数据库，平时用来连接并管理数据库，项目上线的时候可以用来同步表结构。</p>
+<p>RedisDesktop</p>
+<p><img src="/images/pasted-10.png" alt="upload successful"><br>Redis可视化工具，平时用来查看和管理Redis缓存中的数据，有时候需要清空缓存的时候就用到它了。</p>
+<p>Robomongo</p>
+<p><img src="/images/pasted-11.png" alt="upload successful"><br>MongoDB可视化工具，平时用来查看和管理MongoDB中的数据。</p>
+<p>Typora</p>
+<p><img src="/images/pasted-12.png" alt="upload successful"><br>平时用来写文章的Markdown编辑器，编辑与预览二合一，界面简洁且功能强大！</p>
+<p>ProcessOn</p>
+<p><img src="/images/pasted-13.png" alt="upload successful"><br>作图工具，可以用来制作思维导图和流程图，mall项目的架构图就是用这个画的！</p>
+<p>MindMaster</p>
+<p><img src="/images/pasted-14.png" alt="upload successful"></p>
+<p>好用的思维导图制作工具，设计功能的时候可以用来整理下思路。</p>
+<p>Snipaste</p>
+<p><img src="/images/pasted-15.png" alt="upload successful"><br>一款好用的截屏工具，文章中很多图片都是用这个截的。</p>
+<p>ScreenToGif</p>
+<p><img src="/images/pasted-16.png" alt="upload successful"><br>用来制作Gif的工具，mall项目功能演示的Gif就是用这个做的。</p>
+<h2 id="官网地址"><a href="#官网地址" class="headerlink" title="官网地址"></a>官网地址</h2><ul>
+<li>IntelliJ IDEA：<a href="https://www.jetbrains.com/idea/download" target="_blank" rel="noopener">https://www.jetbrains.com/idea/download</a></li>
+<li>X-shell：<a href="http://www.netsarang.com/download/software.html" target="_blank" rel="noopener">http://www.netsarang.com/download/software.html</a></li>
+<li>Postman：<a href="https://www.postman.com/" target="_blank" rel="noopener">https://www.postman.com/</a></li>
+<li>PowerDesigner：<a href="http://powerdesigner.de/" target="_blank" rel="noopener">http://powerdesigner.de/</a></li>
+<li>Navicat：<a href="http://www.formysql.com/xiazai.html" target="_blank" rel="noopener">http://www.formysql.com/xiazai.html</a></li>
+<li>RedisDesktop：<a href="https://redisdesktop.com/download" target="_blank" rel="noopener">https://redisdesktop.com/download</a></li>
+<li>Robomongo：<a href="https://robomongo.org/download" target="_blank" rel="noopener">https://robomongo.org/download</a></li>
+<li>Typora：<a href="https://typora.io/" target="_blank" rel="noopener">https://typora.io/</a></li>
+<li>ProcessOn：<a href="https://processon.com/" target="_blank" rel="noopener">https://processon.com/</a></li>
+<li>MindMaster：<a href="http://www.edrawsoft.cn/mindmaster" target="_blank" rel="noopener">http://www.edrawsoft.cn/mindmaster</a></li>
+<li>Snipaste：<a href="https://www.snipaste.com/" target="_blank" rel="noopener">https://www.snipaste.com/</a></li>
+<li>ScreenToGif：<a href="https://www.screentogif.com" target="_blank" rel="noopener">https://www.screentogif.com</a></li>
+</ul>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-高效工作与学习的免费工具1"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/07/08/%E9%AB%98%E6%95%88%E5%B7%A5%E4%BD%9C%E4%B8%8E%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%85%8D%E8%B4%B9%E5%B7%A5%E5%85%B71/"
+    >高效工作与学习的免费工具1</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/08/%E9%AB%98%E6%95%88%E5%B7%A5%E4%BD%9C%E4%B8%8E%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%85%8D%E8%B4%B9%E5%B7%A5%E5%85%B71/" class="article-date">
+  <time datetime="2020-07-08T00:04:04.000Z" itemprop="datePublished">2020-07-08</time>
+</a>  
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><img src="/images/pasted-4.png" alt="upload successful"></p>
+<ol>
+<li><p>PDF在线转换工具支持OCR图片识别：<a href="http://www.onlineocr.net" target="_blank" rel="noopener">http://www.onlineocr.net</a>  ，对于小文件无需注册，大文件注册后依然免费。使用方式也很简单，需要手动选择需要转换的语言比如中文 CHINESESIMPLIFIED</p>
+</li>
+<li><p>音视频倍数播放器：MX Player 支持市面上几乎所有视频格式。支持在线字幕匹配、文件夹播放、儿童锁等。应用市场下载的有广告，可自行搜索无广告版本。</p>
+</li>
+<li><p>Chrome浏览器倍数播放插件：Video Speed Controller 。</p>
+</li>
+<li><p>秘塔写作猫：<a href="https://xiezuocat.com/#/" target="_blank" rel="noopener">https://xiezuocat.com/#/</a>  能自动识别错别字、错别语句并一键修改。注册既能使用。</p>
+</li>
+<li><p>Snipaste 是一个简单但强大的截图工具，也可以让你将截图贴回到屏幕上！下载后即可用。</p>
+</li>
+<li><p>FV悬浮窗(FooView)它的主要功能是可以快速截图支持拼接长截图、文字抓取、手势操作、录制屏幕、图片视频编辑、快速网页浏览 、快速打开本地应用、本地文件管理等等，功能很多。很好很强大。APP官方演示视频:<a href="https://m.youku.com/video/id_XMTU0NTMyMTEzMg==.html" target="_blank" rel="noopener">https://m.youku.com/video/id_XMTU0NTMyMTEzMg==.html</a></p>
+</li>
+<li><p>锤子便签，可以一键把文章以长图形式分享出去。图片效果排版都很好。</p>
+</li>
+<li><p>超级简历，一款免费提供简历模版和排版的工具。在书写过程中还会给很多词汇参考，其他小功能请自行探索。</p>
+</li>
+<li><p>坚果云，同步盘。所谓同步盘就是文件修改后自动同步到其他设备上。每个月上传1G，下载3G的流量。对于同步盘来说足够了。ps: 手机里的视频免费版不支持备份。手机号注册即可使用。</p>
+</li>
+<li><p>印象笔记，可以做为自己的知识库，随时记录自己的想法、在浏览器上遇到好的内容，支持一键剪藏。搜索起来很方便。免费版只能同步2台设备、60M的上传流量。</p>
+</li>
+</ol>
+<p>11.扫描全能王，合同、收据等商务文档签署或盖章后的照片，通过扫描全能王的智能裁剪效果更好、体积更小。</p>
+<ol start="12">
+<li>接听宝AI电话助手，通过拨打运营商转接电话，把拒接的、飞行模式的来电的全都自动帮你应答。可以自定义助理声音。在某些特定场景中这个工具很好用。</li>
+</ol>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-数据结构与算法-选择排序"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F/"
+    >数据结构与算法 - 选择排序</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F/" class="article-date">
+  <time datetime="2020-07-07T05:11:00.000Z" itemprop="datePublished">2020-07-07</time>
+</a>  
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>1.引子<br>1.1.为什么要学习数据结构与算法？<br>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！</p>
+<p>有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？</p>
+<p>于是问题来了：为什么还要学习数据结构与算法呢？</p>
+<p>复制代码<br>#理由一：<br>    面试的时候，千万不要被数据结构与算法拖了后腿<br>#理由二：<br>    你真的愿意做一辈子CRUD Boy吗<br>#理由三：<br>    不想写出开源框架，中间件的工程师，不是好厨子<br>复制代码<br>1.2.如何系统化学习数据结构与算法？<br>我想好了，还是需要学习数据结构与算法。但是我有两个困惑：</p>
+<p>1.如何着手学习呢？</p>
+<p>2.有哪些内容要学习呢？</p>
+<p>学习方法推荐：</p>
+<p>#学习方法<br>1.从基础开始，系统化学习<br>2.多动手，每一种数据结构与算法，都自己用代码实现出来<br>3.思路更重要：理解实现思想，不要背代码<br>4.与日常开发结合，对应应用场景<br>学习内容推荐：</p>
+<p>数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法</p>
+<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>上一篇：数据结构与算法系列十二（插入排序）中，我们详细分析了插入排序的核心思想，和代码实现。插入排序的核心思想很巧妙：它是将待排序序列，分为有序区间，和无序区间，循环遍历无序区间，每一次将无序区间中的第一个元素，插入到有序区间的合适位置，每一次插入都要始终保证有序区间有序。</p>
+<p>你需要对插入排序的核心思想再仔细琢磨一下，因为我们今天的主角：选择排序，它的核心思想与插入排序类似。</p>
+<p>#考考你：<br>1.你知道选择排序的核心思想吗？<br>2.你能用java代码实现选择排序吗？<br>3.你知道实际开发中，为什么插入排序，比选择排序更好吗？<br>3.案例<br>3.1.选择排序核心思想<br>假设有一个待排序序列：[4, 5, 6, 3, 2, 1]。我们需要按照升序进行排序，排序后的序列是这 样的：[1, 2, 3, 4, 5, 6]。</p>
+<p>如何通过选择排序实现呢？</p>
+<p>选择排序核心思想：</p>
+<p>将待排序序列，分成两个区间：有序区间、无序区间。一开始假定有序区间元素个数：0，无序区间元素个数：n。循环遍历无序区间，每一次从无序区间中，选择最小的一个元素，插入到有序区间的末尾。</p>
+<p>这里的关键词有：</p>
+<p>1.待排序序列，分成：有序区间、无序区间<br>2.最开始，假定有序区间元素个数：0，无序区间元素个数：n<br>3.每次循环遍历无序区间，选择最小元素，插入到有序区间末尾，如下图：</p>
+<p>3.2.选择排序代码实现<br>3.2.1.排序代码<br>复制代码<br>/**</p>
+<ul>
+<li><p>选择排序</p>
+</li>
+<li><p>@param array：待排序数组</p>
+</li>
+<li><p>@param n：待排序数组大小</p>
+</li>
+<li><p>/<br>public static void sort(Integer [] array,int n) {<br>  // 如果排序数组规模小于等于1，直接返回<br>  if (n &lt;= 1) {</p>
+<pre><code>return;</code></pre><p>  }</p>
+<p>  // 将待排序数组，分为：有序区间、无序区间<br>  // 一开始，假设整个序列都无序，那么有序区间的元素个数是：0<br>  // 无序区间的元素个数是：n<br>  // 每次从无序区间中，选择最小元素<br>  // 插入有序区间末尾：n个元素，n次选择<br>  for(int i = 0; i &lt; n; i++){</p>
+<pre><code> // 从无序区间第一个位置开始查找：最小元素位置
+ int min = i;
+ for(int j = i+1; j &lt; n; j++){
+   // 比较大小，设定新的最小元素位置标记
+   if(array[min] &gt; array[j]){
+        min = j;
+    }
+ }
+
+// 找到新的最小元素位置后，进行数据交换</code></pre><p>   System.out.println(“第【”+(i+1)+”】次选择，最小元素是：”+array[min]);<br>   int tmp = array[i];<br>   array[i] = array[min];<br>   array[min] = tmp;</p>
+<p>  }</p>
+</li>
+</ul>
+<p>}<br>复制代码<br>3.2.2.测试代码<br>复制代码<br>/**</p>
+<ul>
+<li><p>选择排序：</p>
+</li>
+<li><p>1.时间复杂度：</p>
+</li>
+<li><p>O(n^2)</p>
+</li>
+<li><p>2.空间复杂度：</p>
+</li>
+<li><p>O(1)是原地排序算法</p>
+</li>
+<li><p>3.算法稳定性：</p>
+</li>
+<li><p>不是稳定排序算法</p>
+</li>
+<li><p>/<br>public static void main(String[] args) {<br> // 初始化测试数组<br> Integer[] array = {4,5,6,3,2,1};<br> // 排序前<br> System.out.println(“1.排序前数组：” + Arrays.deepToString(array));</p>
+<p> // 排序<br> System.out.println(“2.开始排序——————————-start”);<br> sort(array,array.length);</p>
+<p> // 排序后<br> System.out.println(“3.排序后数组：” + Arrays.deepToString(array));<br>}<br>复制代码<br>测试结果：</p>
+</li>
+</ul>
+<p>复制代码<br>D:\02teach\01soft\jdk8\bin\java<br>    com.anan.algorithm.sort.SelectSort<br>1.排序前数组：[4, 5, 6, 3, 2, 1]<br>2.开始排序——————————-start<br>第【1】次选择，最小元素是：1<br>第【2】次选择，最小元素是：2<br>第【3】次选择，最小元素是：3<br>第【4】次选择，最小元素是：4<br>第【5】次选择，最小元素是：5<br>第【6】次选择，最小元素是：6<br>3.排序后数组：[1, 2, 3, 4, 5, 6]</p>
+<p>Process finished with exit code 0<br>复制代码<br>4.讨论分享<br>复制代码<br>#考考你答案：<br>1.你知道选择排序的核心思想吗？<br>  1.1.将待排序序列，分成：有序区间、无序区间<br>  1.2.最开始，有序区间元素个数：0，无序区间元素个数：n<br>  1.3.循环遍历无序区间，每次选择最小元素，插入有序区间末尾</p>
+<p>2.你能用java代码实现选择排序吗？<br>  2.1.参考【3.2】节代码实现</p>
+<p>3.你知道实际开发中，为什么插入排序，比选择排序更好吗？<br>  3.1.我们在排序算法概述中说过，衡量一个排序算法的优劣，<br>  有三个因素：时间复杂度、空间复杂度、是否稳定<br>  3.2.插入排序与选择排序，它们的时间复杂度都是：O(n^2)<br>  3.3.插入排序与选择排序，它们的空间复杂度都是：O(1)<br>  3.3.插入排序，是稳定的排序算法</p>
+<p>  3.4.【注意】：选择排序，不是稳定排序算法<br>  3.5.假设有一个待排序序列：int a[]={4,5,6,4,3,2,1}<br>  3.6.待排序序列中，有重复元素：a[0]=4,a[3]=4<br>  3.7.第一轮选择排序，选择最小元素：a[6]=1<br>  3.8.将a[0]=4,a[6]=1进行交换</p>
+<p>  3.9.【注意】：第一轮选择排序后，重复元素4的顺序发生了改变<br>  3.10.待排序序列变成：a[]={1,5,6,4,3,2,4}<br>  3.11.此时重复元素：a[3]=4,a[6]=4<br>  3.12.a[3]还是原来的a[3],a[6]是原来的a[0]</p>
+<p>  3.13.我们说稳定排序算法，是指待排序序列中重复元素，<br>  排序前的顺序，与排序后的顺序保持不变<br>  3.14.可见选择排序，不符合稳定排序算法的定义<br>  3.15.关于选择排序，不是稳定排序算法的分析，你可以结合我们前面的图来理解<br>复制代码</p>
+ 
       <!-- reward -->
       
     </div>
@@ -294,7 +485,7 @@
 
     
     <article
-  id="post-数据机构与算法"
+  id="post-数据结构与算法-插入排序"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -305,41 +496,544 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2020/06/30/%E6%95%B0%E6%8D%AE%E6%9C%BA%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"
-    >数据结构与算法 - 开篇</a> 
+  <a class="article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/"
+    >数据结构与算法 - 插入排序</a> 
 </h2>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2020/06/30/%E6%95%B0%E6%8D%AE%E6%9C%BA%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" class="article-date">
-  <time datetime="2020-06-30T02:16:00.000Z" itemprop="datePublished">2020-06-30</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-  </div>
- 
+      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/" class="article-date">
+  <time datetime="2020-07-07T03:26:00.000Z" itemprop="datePublished">2020-07-07</time>
+</a>  
     </div>
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><h3 id="为什么要学习数据结构与算法？"><a href="#为什么要学习数据结构与算法？" class="headerlink" title="为什么要学习数据结构与算法？"></a>为什么要学习数据结构与算法？</h3><pre><code>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！
+  <p>1.引子<br>1.1.为什么要学习数据结构与算法？<br>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！</p>
+<p>有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？</p>
+<p>于是问题来了：为什么还要学习数据结构与算法呢？</p>
+<p>复制代码<br>#理由一：<br>    面试的时候，千万不要被数据结构与算法拖了后腿<br>#理由二：<br>    你真的愿意做一辈子CRUD Boy吗<br>#理由三：<br>    不想写出开源框架，中间件的工程师，不是好厨子<br>复制代码<br>1.2.如何系统化学习数据结构与算法？<br>我想好了，还是需要学习数据结构与算法。但是我有两个困惑：</p>
+<p>1.如何着手学习呢？</p>
+<p>2.有哪些内容要学习呢？</p>
+<p>学习方法推荐：</p>
+<p>#学习方法<br>1.从基础开始，系统化学习<br>2.多动手，每一种数据结构与算法，都自己用代码实现出来<br>3.思路更重要：理解实现思想，不要背代码<br>4.与日常开发结合，对应应用场景<br>学习内容推荐：</p>
+<p>数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法</p>
+<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>上一篇：数据结构与算法系列十一（冒泡排序）中，我们详细分析了冒泡排序的核心思想，以及代码实现。如果你不记得了，可以回去再看看。学习数据结构与算法，最重要的就是理解每一种算法背后的思想，多看，有助于锻炼我们的逻辑思维分析能力。</p>
+<p>我们这一篇的主角是：插入排序。它是时间复杂度O(n^2)家族的第二个排序算法。</p>
+<p>#考考你：<br>1.你知道插入排序的核心思想吗？<br>2.你能用java实现插入排序吗？<br>3.案例<br>3.1.插入排序思想<br>假设有一个待排序序列：[4, 5, 6, 3, 2, 1]。我们需要按照升序进行排序，排序后的序列是这 样的：[1, 2, 3, 4, 5, 6]。</p>
+<p>如何通过插入排序实现呢？</p>
+<p>插入排序核心思想：</p>
+<p>将待排序序列，分成两个区间：有序区间、无序区间。循环遍历无序区间，依次将无序区间的元素，插入到有序区间的合适位置，所谓合适位置：就是要保证插入元素后，有序区间始终有序。</p>
+<p>这里的关键词有：</p>
+<p>1.待排序序列，分成：有序区间、无序区间<br>2.将无序区间数据，插入到有序区间的合适位置<br>3.有序区间始终保证有序，如下图：</p>
+<p>3.2.插入排序代码实现<br>3.2.1.排序代码<br>复制代码<br>/**</p>
+<ul>
+<li><p>插入排序</p>
+</li>
+<li><p>@param array：待排序数组</p>
+</li>
+<li><p>@param n：待排序数组大小</p>
+</li>
+<li><p>/<br>public static void sort(Integer [] array,int n) {<br> // 如果排序数组规模小于等于1，直接返回<br> if (n &lt;= 1) {</p>
+<pre><code>return;</code></pre><p> }</p>
+<p> // 将数据分为两个区域：<br> // 有序数据区域：array[0]<br> // 无序数据区域：array[1]…array[n-1]<br> // 循环遍历无序区域的数据，插入到有序数据区域<br> for(int i = 1; i &lt; n; i++){</p>
+<pre><code>// 临时存储待插入目标元素
+int tmp = array[i];
+// 有序区域最后一个元素下标
+int j = i - 1;
+// 从后往前查找插入位置,并移动数据
+for(; j &gt;= 0;j--){
+  if(array[j] &gt; tmp){
+     // 向后移动数据
+     array[j+1] = array[j];
+   }else{
+       break;
+    }
+ }
 
-有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？
+ // 插入数据
+ System.out.println(&quot;第【&quot; + i + &quot;】次插入排序&quot;);
+ array[j+1] = tmp;
+}</code></pre><p>}<br>复制代码</p>
+</li>
+</ul>
+<p>3.2.2.测试代码<br>复制代码<br>/**</p>
+<ul>
+<li><p>插入排序：</p>
+</li>
+<li><p>1.时间复杂度：</p>
+</li>
+<li><p>O(n^2)</p>
+</li>
+<li><p>2.空间复杂度：</p>
+</li>
+<li><p>O(1)是原地排序算法</p>
+</li>
+<li><p>3.算法稳定性：</p>
+</li>
+<li><p>是稳定排序算法<br>*/<br>public static void main(String[] args) {<br>// 初始化测试数组<br>Integer[] array = {4,5,6,3,2,1};<br>// 排序前<br>System.out.println(“1.排序前数组：” + Arrays.deepToString(array));</p>
+<p>// 排序<br>System.out.println(“2.开始排序——————————-start”);<br>sort(array,array.length);</p>
+<p>// 排序后<br>System.out.println(“3.排序后数组：” + Arrays.deepToString(array));</p>
+</li>
+</ul>
+<p>}<br>复制代码<br>测试结果：</p>
+<p>复制代码<br>D:\02teach\01soft\jdk8\bin\java<br>com.anan.algorithm.sort.InsertSort<br>1.排序前数组：[6, 5, 4, 3, 2, 1]<br>2.开始排序——————————-start<br>第【1】次插入排序<br>第【2】次插入排序<br>第【3】次插入排序<br>第【4】次插入排序<br>第【5】次插入排序<br>3.排序后数组：[1, 2, 3, 4, 5, 6]</p>
+<p>Process finished with exit code 0<br>复制代码<br>4.讨论分享<br>复制代码<br>#考考你答案：<br>1.你知道插入排序的核心思想吗？<br>  1.1.待排序序列，分成：有序区间、无序区间<br>  1.2.循环遍历无序区间元素，插入到有序区间的合适位置<br>  1.3.插入元素后，始终保证有序区间有序</p>
+<p>2.你能用java实现插入排序吗？<br>  2.1.参考【3.2】节案例实现<br>复制代码</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
 
-于是问题来了：为什么还要学习数据结构与算法呢？
-
-理由一：
-    面试的时候，千万不要被数据结构与算法拖了后腿
-理由二：
-    你真的愿意做一辈子CRUD吗
-理由三：
-    不想写出开源框架，中间件的工程师，不是好厨子</code></pre> 
-      <a class="article-more-link" href="/2020/06/30/%E6%95%B0%E6%8D%AE%E6%9C%BA%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"
-        >阅读更多...</a
-      >
+    <!-- copyright -->
+    
+    <footer class="article-footer">
        
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-数据结构与算法-冒泡"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%86%92%E6%B3%A1/"
+    >数据结构与算法 - 冒泡</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E5%86%92%E6%B3%A1/" class="article-date">
+  <time datetime="2020-07-07T03:25:00.000Z" itemprop="datePublished">2020-07-07</time>
+</a>  
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>1.引子<br>1.1.为什么要学习数据结构与算法？<br>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！</p>
+<p>有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？</p>
+<p>于是问题来了：为什么还要学习数据结构与算法呢？</p>
+<p>复制代码<br>#理由一：<br>    面试的时候，千万不要被数据结构与算法拖了后腿<br>#理由二：<br>    你真的愿意做一辈子CRUD Boy吗<br>#理由三：<br>    不想写出开源框架，中间件的工程师，不是好厨子<br>复制代码<br>1.2.如何系统化学习数据结构与算法？<br>我想好了，还是需要学习数据结构与算法。但是我有两个困惑：</p>
+<p>1.如何着手学习呢？</p>
+<p>2.有哪些内容要学习呢？</p>
+<p>学习方法推荐：</p>
+<p>#学习方法<br>1.从基础开始，系统化学习<br>2.多动手，每一种数据结构与算法，都自己用代码实现出来<br>3.思路更重要：理解实现思想，不要背代码<br>4.与日常开发结合，对应应用场景<br>学习内容推荐：</p>
+<p>数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法</p>
+<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>在上一篇：数据结构与算法系列十（排序概述）中，我们列举了常用的排序算法，以及分析了如何综合衡量排序算法的优劣。如果你还没有看上一篇的内容，可以去看一看，应该会有所收获。</p>
+<p>从这一篇开始，我们把每一种排序算法，从算法的思想，到代码实现都做一个分享。那么你准备好了吗？</p>
+<p>我们这一篇的主角是：冒泡排序</p>
+<p>#考考你：<br>1.你知道冒泡排序的核心思想吗？<br>2.你能用java实现冒泡排序吗？<br>3.你能写出更优秀的冒泡排序代码吗？</p>
+<p>3.案例<br>3.1.冒泡排序思想<br>假设有一个待排序序列：[4, 5, 6, 3, 2, 1]。我们需要按照升序进行排序，排序后的序列是这样的：[1, 2, 3, 4, 5, 6]。</p>
+<p>如何通过冒泡排序实现呢？</p>
+<p>这里我们先来理解冒泡排序中的冒泡两个字。所谓冒泡就像平静的水面，鱼儿从水底吹气一样，一个一个的水泡向上冒，很诗情画意，我们都向往这样的生活环境对吧。</p>
+<p>那么请保持这个美好的姿势，我们一起来理解冒泡排序的思想，先看一个图：</p>
+<p>冒泡排序核心思想：</p>
+<p>假设待排序序列有n个元素，需要经过n次冒泡，每一次冒泡过程中依次比较交换相邻的两个元素，一次冒泡结束，都会有1个元素到达指定的目标位置。这里的关键词有：</p>
+<p>1.n个元素，n次冒泡<br>2.比较交换相邻元素<br>3.2.冒泡排序代码实现<br>3.2.1.排序代码<br>复制代码<br>/**</p>
+<ul>
+<li><p>冒泡排序：普通实现版本</p>
+</li>
+<li><p>@param array：待排序数组</p>
+</li>
+<li><p>@param n：待排序数组大小</p>
+</li>
+<li><p>/<br>public static void sort_1(Integer [] array,int n){<br> // 如果排序数组规模小于等于1，直接返回<br> if(n &lt;= 1){<br>   return;<br> }</p>
+<p> // 有n个元素，进行n次冒泡<br> for(int i = 0; i &lt; n; i++){</p>
+<p>   // 每一次冒泡，比较交换相邻两个元素<br>   for(int j = 0; j &lt; n-i-1; j++){</p>
+<pre><code> if(array[j] &gt; array[j+1]){
+   int tmp = array[j];
+   array[j] = array[j+1];
+   array[j+1] = tmp;
+  }
+}</code></pre><p>   }</p>
+</li>
+</ul>
+<p>}<br>复制代码<br>3.2.2.测试代码<br>复制代码<br>public static void main(String[] args) {<br> // 初始化测试数组<br> Integer[] array = {4,5,6,3,2,1};<br> // 排序前<br> System.out.println(“1.排序前数组：” + Arrays.deepToString(array));</p>
+<p> // 排序后<br> sort_1(array,array.length);</p>
+<p> // 排序后<br> System.out.println(“2.排序后数组：” + Arrays.deepToString(array));</p>
+<p>}<br>复制代码<br>测试结果：</p>
+<p>复制代码<br>D:\02teach\01soft\jdk8\bin\java<br>com.anan.algorithm.sort.BubbleSort<br>1.排序前数组：[4, 5, 6, 3, 2, 1]<br>2.排序后数组：[1, 2, 3, 4, 5, 6]</p>
+<p>Process finished with exit code 0<br>复制代码<br>3.3.冒泡排序实现优化<br>3.3.1.优化分析<br>在3.2.1节冒泡排序普通实现版本，我们严格按照冒泡排序的思想：n个元素、n次冒泡，每一次冒泡依次比较交换相邻元素。实现了一个冒泡排序。</p>
+<p>在这里，请你先简单思考一下：有没有更优化的实现方式呢？</p>
+<p>我们先来分析一下冒泡排序算法的时间复杂度，结合代码我们发现冒泡排序的时间复杂度是：O(n^2)，有两次for循环，这不是一个高效的算法对吧。如果说我们能够减少冒泡的次数，则可以极大提升算法的执行效率。</p>
+<p>问题来了：什么情况下可以减少冒泡次数呢？</p>
+<p>其实我们只要结合冒泡排序算法的核心思想后半部分：比较交换相邻的元素。如果说在一次冒泡中，没有发生相邻元素的交换，那说明待排序序列已经有序了，不管后面还剩下多少次冒泡，我们都不需要再进行冒泡下去了。这样是不是就减少冒泡的次数了呢</p>
+<p>关于减少冒泡次数的分析，如果你暂时没有理解过来的话，没有关系。请看我们下面的代码实现，相信结合代码你会恍然大悟。</p>
+<p>3.3.2.优化代码实现<br>复制代码<br>/**</p>
+<ul>
+<li><p>冒泡排序：优化实现版本</p>
+</li>
+<li><p>@param array：待排序数组</p>
+</li>
+<li><p>@param n：待排序数组大小</p>
+</li>
+<li><p>/<br>public static void sort_2(Integer [] array,int n){<br> // 如果排序数组规模小于等于1，直接返回<br> if(n &lt;= 1){</p>
+<pre><code>return;</code></pre><p> }</p>
+<p> // 优化标识<br> // 如果某一次冒泡过程中，没有发生数据交换<br> // 则说明已经排好了序，不需要在继续冒泡<br> boolean flag = false;</p>
+<p> // n个元素，n次冒泡<br> for(int i = 0; i &lt; n; i++){</p>
+<p>   // 重置是否发生交换标识<br>   flag = false;</p>
+<p>   // 每一次冒泡中，比较交换相邻元素<br>   for(int j = 0; j &lt; n-i-1; j++){</p>
+<pre><code> if(array[j] &gt; array[j+1]){
+    int tmp = array[j];
+    array[j] = array[j+1];
+    array[j+1] = tmp;
+
+    // 发生了数据交换
+    flag = true;
+   }
+ }
+
+// 一次冒泡结束,检查是否发生了数据交换
+// 如果没有发生数据交换，说明序列已经有序，不需要再继续冒泡了
+System.out.println(&quot;第【&quot; + (i+1) + &quot;】次冒泡.&quot;);
+if( !flag){
+   break;
+ }</code></pre><p>   }</p>
+</li>
+</ul>
+<p>}<br>复制代码<br>3.3.3.测试代码<br>复制代码<br>public static void main(String[] args) {<br> // 初始化测试数组<br> Integer[] array = {4,5,6,3,2,1};<br> // 排序前<br> System.out.println(“1.排序前数组：” + Arrays.deepToString(array));</p>
+<p> // 第一次排序<br> System.out.println(“2.第一次排序——————————-start”);<br> sort_2(array,array.length);<br> System.out.println(“3.第一次排序后数组：” + Arrays.deepToString(array));</p>
+<p> // 第二次排序<br> System.out.println(“4.第二次排序——————————-start”);<br> sort_2(array,array.length);<br> System.out.println(“5.第二次排序后数组：” + Arrays.deepToString(array));</p>
+<p>}<br>复制代码<br>测试结果：</p>
+<p>4.讨论分享<br>复制代码<br>#考考你答案：<br>1.你知道冒泡排序的核心思想吗？<br>  1.1.假设待排序序列有n个元素<br>  1.2.整个排序过程中，需要n次冒泡<br>  1.3.每一次冒泡过程中，依次比较交换相邻两个元素<br>  1.4.一次冒泡结束，都会有一个元素到达指定的位置</p>
+<p>2.你能用java实现冒泡排序吗？<br>  2.1.参考【3.2】节案例实现</p>
+<p>3.你能写出更优秀的冒泡排序代码吗？<br>  3.1.结合冒泡排序算法的核心思想：n个元素、n次冒泡，每一次冒泡依次比较交换相邻的两个元素<br>  3.2.如果在某一次冒泡中，没有发生元素交换<br>  3.3.说明待排序序列已经有序，不需要再进行冒泡下去<br>复制代码</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-数据结构与算法-排序"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8E%92%E5%BA%8F/"
+    >数据结构与算法 - 排序</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8E%92%E5%BA%8F/" class="article-date">
+  <time datetime="2020-07-07T03:23:00.000Z" itemprop="datePublished">2020-07-07</time>
+</a>  
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>1.引子<br>1.1.为什么要学习数据结构与算法？<br>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！</p>
+<p>有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？</p>
+<p>于是问题来了：为什么还要学习数据结构与算法呢？</p>
+<p>复制代码<br>#理由一：<br>    面试的时候，千万不要被数据结构与算法拖了后腿<br>#理由二：<br>    你真的愿意做一辈子CRUD Boy吗<br>#理由三：<br>    不想写出开源框架，中间件的工程师，不是好厨子<br>复制代码<br>1.2.如何系统化学习数据结构与算法？<br>我想好了，还是需要学习数据结构与算法。但是我有两个困惑：</p>
+<p>1.如何着手学习呢？</p>
+<p>2.有哪些内容要学习呢？</p>
+<p>学习方法推荐：</p>
+<p>#学习方法<br>1.从基础开始，系统化学习<br>2.多动手，每一种数据结构与算法，都自己用代码实现出来<br>3.思路更重要：理解实现思想，不要背代码<br>4.与日常开发结合，对应应用场景<br>学习内容推荐：</p>
+<p>数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法</p>
+<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>在前面两篇，我们详细看了常用算法的第一个主题：递归。接下来我们来看常用算法的第二个主题：排序。排序内容有点多，常见的排序算法就有：冒泡排序、插入排序、选择排序、归并排序、快速排序、桶排序、计数排序、基数排序。</p>
+<p>这些排序算法中，不知道有没有你熟悉的，或者不熟悉的。让我们开启排序算法之旅吧。首先第一篇中，我们先来对排序算法做一个总体上的认识。</p>
+<p>#考考你：<br>1.你知道常用的排序算法有哪些吗？<br>2.你知道如何衡量排序算法的优劣吗？<br>3.你知道排序算法的基础概念：有序度、逆序度、满有序度吗？<br>3.案例<br>3.1.排序算法分类<br>在考考你中，我们说排序算法有：冒泡排序、插入排序、选择排序、归并排序、快速排序、桶排序、计数排序、基数排序。这样看起来有点散乱，能不能给它们归一下类呢？答案是可以的。</p>
+<p>对于排序算法，我们可以从时间复杂度上进行归类：</p>
+<p>3.2.从三个角度分析排序算法<br>在实际软件开发中，有众多的排序算法，如何选择和取舍呢？真的会有选择困难症啊！有没有一些好的、可行的方法，去综合衡量排序算法的优劣呢？</p>
+<p>答案是：有</p>
+<p>我们可以从三个角度去综合分析排序算法：时间复杂度、空间复杂度、算法稳定性</p>
+<p>复制代码<br>#时间复杂度<br>  1.分析最好情况、最坏情况、平均情况时间复杂度<br>  2.复杂度分析中，关于系数、常数、低阶平常可以省略<br>  3.但是，需要特别注意：在排序算法中，我们需要考虑进来</p>
+<p>#空间复杂度<br>  1.空间复杂度分析，主要看是否是：原地排序算法<br>  2.原地排序算法，是指：空间复杂度是O(1)<br>  3.注意：在实际软件开发中，这一条很重要</p>
+<p>#算法稳定性<br>  1.算法稳定性，是指如果待排序序列中，有值相同的元素<br>  2.如果经过排序后，原来值相同的元素，顺序保持不变<br>  3.那么我们说，该排序算法是稳定的排序算法<br>  4.否则，该排序算法是不稳定排序算法</p>
+<p>  5.比如，有一个待排序序列：3,6,5,2,6,8<br>  6.待排序序列中，有两个值为6的元素<br>  7.假设用数组a来存储，对应的下标是：a[1]=6,a[4]=6<br>  8.排序后：a[3]=6,a[4]=6<br>  9.这里的a[3]是排序前的a[1]<br>  10.这里的a[4]还是排序前的a[4]<br>  11.这就是稳定排序算法的要求，如下图：<br>复制代码<br>理解排序算法稳定性：</p>
+<p>3.3.排序基础概念：有序度、逆序度、满有序度<br>在排序算法中，我们需要关注三个基础概念：有序度、逆序度、满有序度。</p>
+<p>整个排序过程，我们可以理解为：增加有序度，减少逆序度，最终达到满有序度的过程。</p>
+<p>那么，它们具体的含义是什么呢？</p>
+<p>复制代码<br>#有序度：<br>  待排序序列中，如果下标索引：i&lt;j，且a[i]&lt;a[j],则称为有序度<br>#逆序度<br>  待排序序列中，如果下标索引：i&lt;j，且a[i]&gt;a[j],则称为逆序度<br>#满有序度<br>  1.待排序序列中，如果有序度达到：n(n-1)/2，则称为满有序度<br>  2.即此时待排序序列，其实是有序的<br>复制代码<br>以上关于有序度、逆序度的概念，相信很多朋友都能理解。这里我们解释一下关于满有序度的公式：n(n-1)/2。</p>
+<p>要理解满有序度的概念，你可能需要回顾一下数学中的：排列、组合知识点，应该是在高二的时候学的，可以这样去理解它们：</p>
+<p>复制代码<br>#排列：<br>  1.有n个元素，如果每两个元素，组成一个排列<br>  2.则总共有排列数：n(n-1)<br>  3.比如，有3个元素：a b c<br>  4.每两个元素组成排列数是：3*(3-1)=6<br>  5.组成的排列有：(a,b) (a,c) (b,a) (b,c) (c,a) (c,b)</p>
+<p>#组合：<br>  1.有n个元素，如果每两个元素，组成一个组合<br>  2.则总共有组合数：n(n-1)/2<br>  3.比如，有3个元素：a b c<br>  4.每两个元素组成的组合数是：3(3-1)/2=3<br>  5.组成的组合有：(a,b) (a,c) (b,c)</p>
+<p>#综合结论：<br>   1.假设待排序序列有n个元素<br>   2.如果有序度，等于每2个元素的组合数：n(n-1)/2<br>   3.那么该待排序序列，其实是有序的<br>   4.这就是满有序度的概念<br>复制代码</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-数据结构与算法-递归2"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%922/"
+    >数据结构与算法 - 递归2</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%922/" class="article-date">
+  <time datetime="2020-07-07T03:22:00.000Z" itemprop="datePublished">2020-07-07</time>
+</a>  
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>1.引子<br>1.1.为什么要学习数据结构与算法？<br>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！</p>
+<p>有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？</p>
+<p>于是问题来了：为什么还要学习数据结构与算法呢？</p>
+<p>复制代码<br>#理由一：<br>    面试的时候，千万不要被数据结构与算法拖了后腿<br>#理由二：<br>    你真的愿意做一辈子CRUD Boy吗<br>#理由三：<br>    不想写出开源框架，中间件的工程师，不是好厨子<br>复制代码<br>1.2.如何系统化学习数据结构与算法？<br>我想好了，还是需要学习数据结构与算法。但是我有两个困惑：</p>
+<p>1.如何着手学习呢？</p>
+<p>2.有哪些内容要学习呢？</p>
+<p>学习方法推荐：</p>
+<p>#学习方法<br>1.从基础开始，系统化学习<br>2.多动手，每一种数据结构与算法，都自己用代码实现出来<br>3.思路更重要：理解实现思想，不要背代码<br>4.与日常开发结合，对应应用场景<br>学习内容推荐：</p>
+<p>数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法</p>
+<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>在上一篇【数据结构与算法系列八（递归见面礼）】中，通过两个小案例：</p>
+<p>1.求最终推荐人</p>
+<p>2.电影院看电影</p>
+<p>相信你已经对递归有一个直观的认识了。那么这一篇我们来对递归做一个详细的分析，比如以下这几个问题，如果你都知道，那么恭喜你！你都会抢答了（开个玩笑，这是黑土大爷说的：不是卖车，就是卖拐，对吧）。</p>
+<p>言归正传，关于递归，我们只需要搞清楚以下几个问题，就算是完全掌握了。很简单有没有？</p>
+<p>#考考你：<br>1.你知道哪些问题适合用递归解决吗？<br>2.你知道编写递归代码的关键步骤吗？<br>3.案例<br>3.1.递归解决的问题模板<br>我们说每一种数据结构与算法，都是在特定问题域下的产物；也就是说每一种数据结构与算法，都有它们各自适用的问题场景。</p>
+<p>关于递归，结合上一篇：求最终推荐人、电影院看电影案例，我们可以归纳如下：</p>
+<p>1.问题可以分解为子问题</p>
+<p>简述：</p>
+<p>对于一个问题的求解，本身可以被分解为更小的子问题</p>
+<p>案例：</p>
+<p>电影院案例：我们在哪一排的问题，可以分解为我们的前一排人在哪一排的子问题</p>
+<p>2.问题的求解，与分解后的子问题，求解思路一致</p>
+<p>简述：</p>
+<p>问题本身的求解思路，与分解后的子问题求解思路一致</p>
+<p>案例：</p>
+<p>电影院案例：求解我们在哪一排的问题思路，与求解我们前一排人在哪一排的思路一致</p>
+<p>3.问题的求解，存在终止条件</p>
+<p>简述：</p>
+<p>注意，这一条很重要，递归一定要有明确的终止条件，否则就等于死循环了</p>
+<p>案例：</p>
+<p>电影院案例：存在终止条件，如果是第一排，则f(1)=1</p>
+<p>3.2.编写递归代码关键步骤<br>知道了递归适合解决的问题，那么在实际软件开发中，我们该如何更有效率的编写递归代码呢？有没有什么套路，或者模板。答案是有。</p>
+<p>编写递归代码，有两个关键步骤：</p>
+<p>1.找出递推公式</p>
+<p>简述：</p>
+<p>前面我们说了，递归适合于将问题分解为子问题，然后问题本身的求解，与子问题求解思路一致。你需要仔细琢磨并理解这句话的含义，这句话是精髓。如果你理解了，你会发现这其实是一个重复性的问题。</p>
+<p>那么顺着这个思路，我们只需要将子问题，在继续分解问为更小的子问题……一直到子问题不能再分解为止。</p>
+<p>这里需要提醒一个常见的思维误区：我们在分解问题的时候，千万不要在大脑里去重现每一个分解步骤，这样容易把自己绕进去：走火入魔。毕竟人类的大脑只适合平铺直叙的思维方式，重复性的东西更适合电脑，对吧。你只需要找出不能再分解的最小子问题，然后解决它就对了。</p>
+<p>案例：</p>
+<p>电影院案例：f(n)=f(n-1)+1</p>
+<p>2.找出终止条件</p>
+<p>简述：</p>
+<p>关于递归就是一个不断分解子问题，与求解子问题的过程。因此一定要存在明确的终止条件。一定要找到它，不然就死循环了。</p>
+<p>案例：</p>
+<p>电影院案例：f(1)=1</p>
+<p>3.3.走台阶案例<br>我们通过一个稍微复杂些的案例，来巩固3.1与3.2两节的内容。假设有一个n阶的台阶，小明每一步可以走1个台阶，或者走2个台阶。求小明走完台阶，总共有多少种走法？</p>
+<p>3.3.1.找出递推公式<br>我们首先尝试分析，有这么几个前提：</p>
+<p>1.总台阶数是n</p>
+<p>2.走台阶的方式，一次可以走1个台阶，或者一次可以走2个台阶</p>
+<p>那么根据递归求解过程：分解子问题。不过这个案例稍微复杂一些，我们可以假设小明第一步只走1个台阶，是一种走法，即 f(n-1)；第一步走2个台阶，又是一种走法，即f(n-2)。</p>
+<p>这样一来，我们就可以得出递推公式，走完n个台阶的走法f(n)，等于第一步走1个台阶的走法f(n-1)，加上第一步走2个台阶的走法f(n-2)。即：</p>
+<p>#走n个台阶的递推公式<br>f(n)=f(n-1)+f(n-2)<br>3.3.2.找出终止条件<br>寻找终止条件的前提是，假设子问题不能再分解为更小的子问题的时候，有明确的终止条件。我们继续尝试分析：</p>
+<p>1.我们假设最后只剩下1个台阶的情况，只有一种走法，即：f(1)=1</p>
+<p>2.我们假设最后剩下2个台阶的情况，一次可以走1个台阶，是一种走法；一次可以走2个台阶，又是一种走法。那么剩下2个台阶的走法是：f(2)=2</p>
+<p>#走n个台阶的终止条件<br>只剩下1个台阶：f(1)=1<br>剩下2个台阶：f(2)=2<br>3.3.3.实现代码<br>有了递推公式，与终止条件，再来编写递归代码就是水到渠成的事情了，很简单了有没有</p>
+<p>复制代码<br>/**</p>
+<ul>
+<li><p>递归求解走n阶抬价的走法：</p>
+</li>
+<li><p>1.求解递推公式</p>
+</li>
+<li><p>1.1.前提：每次可以走1步台阶，或者2步台阶</p>
+</li>
+<li><p>1.2.第一步走法是关键：</p>
+</li>
+<li><p>1.2.1.如果第一步走1步台阶，则剩下n-1步台阶</p>
+</li>
+<li><p>1.2.2.如果第一步走2步台阶，则剩下n-2步台阶</p>
+</li>
+<li><p>1.3.根据1.2.1与1.2.2得出：</p>
+</li>
+<li><p>1.3.1.递推公式：f(n) = f(n-1) + f(n-2)</p>
+</li>
+<li><p>1.3.2.f(n-1)表示剩下n-1步台阶走法</p>
+</li>
+<li><p>1.3.3.f(n-2)表示剩下n-2步台阶走法</p>
+</li>
+<li></li>
+<li><p>2.求解终止条件</p>
+</li>
+<li><p>2.1.如果只剩下1步台阶，则f(1)=1</p>
+</li>
+<li><p>2.2.如果剩下2步台阶，则f(2)=2，有两种走法</p>
+</li>
+<li><p>@param n</p>
+</li>
+<li><p>/<br>public static int walkingMethod(int n){<br>   // 终止条件f(1)=1<br>   if(n == 1) return 1;</p>
+<p>   // 终止条件f(2)=2<br>   if(n == 2) return 2;</p>
+<p>   return walkingMethod(n - 1) + walkingMethod(n -2);<br>}<br>复制代码</p>
+</li>
+</ul>
+<p>4.讨论分享<br>复制代码<br>#考考你答案：<br>1.你知道哪些问题适合用递归解决吗？<br>  1.1.如果一个问题，满足三个条件，适合用递归解决<br>    a.问题本身，可以分解为子问题<br>    b.问题本身的求解思路，与分解后的子问题求解思路一致<br>    c.求解问题，本身存在明确的终止条件</p>
+<p>2.你知道编写递归代码的关键步骤吗？<br>  2.1.编写递归代码的关键步骤，有两步<br>    a.根据分解后的子问题，找出递推公式<br>    b.当子问题足够小的时候，找出终止条件<br>复制代码</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-数据结构与算法-递归"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%92/"
+    >数据结构与算法 - 递归1</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%92/" class="article-date">
+  <time datetime="2020-07-07T03:20:00.000Z" itemprop="datePublished">2020-07-07</time>
+</a>  
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>1.引子<br>1.1.为什么要学习数据结构与算法？<br>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！</p>
+<p>有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？</p>
+<p>于是问题来了：为什么还要学习数据结构与算法呢？</p>
+<p>复制代码<br>#理由一：<br>    面试的时候，千万不要被数据结构与算法拖了后腿<br>#理由二：<br>    你真的愿意做一辈子CRUD Boy吗<br>#理由三：<br>    不想写出开源框架，中间件的工程师，不是好厨子<br>复制代码<br>1.2.如何系统化学习数据结构与算法？<br>我想好了，还是需要学习数据结构与算法。但是我有两个困惑：</p>
+<p>1.如何着手学习呢？</p>
+<p>2.有哪些内容要学习呢？</p>
+<p>学习方法推荐：</p>
+<p>#学习方法<br>1.从基础开始，系统化学习<br>2.多动手，每一种数据结构与算法，都自己用代码实现出来<br>3.思路更重要：理解实现思想，不要背代码<br>4.与日常开发结合，对应应用场景<br>学习内容推荐：</p>
+<p>数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法</p>
+<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>到目前为止，基于线性表的数据结构我们都看完了，简单回顾一下，它们是：数组、链表、栈、队列。这些数据结构是其它数据结构与算法的基础，需要重点关注。</p>
+<p>这一篇开始，我们开启算法的列车了，请系好安全带！第一个要看的算法是：递归。递归这两个字你一定很熟悉，有没有？</p>
+<p>如果没有的话，我们先举一个例子。从2016年开始到如今，知识付费发展的如火如荼。如果你也是其中的一员，比如说在xx平台购买了xx课程。大多数平台都会告诉你，将你购买的课程分享出去，假如有人通过你分享的链接购买了该课程，那么平台会给你佣金返现。</p>
+<p>既然与钱有关系，那就比较麻烦了！对于平台来说，有这么几个问题需要搞清楚。比如说：1.谁是一级推荐人？</p>
+<p>2.谁是二级推荐人……？</p>
+<p>3.谁是最终推荐人？</p>
+<p>因为不同级的推荐人，返现佣金的比例可不一样，千万别返错了，对吧。关于这种类似求推荐人的问题，有请我们今天的主角登场，它就是：递归。</p>
+<p>复制代码<br>#递归稍微有些复杂，我们通过两篇来学习：<br>1.第一篇是见面礼：<br>  1.1.体会两个生活中的小案例</p>
+<p>2.第二篇是重头戏：<br>  2.1.详细分析递归的实现<br>  2.2.递归实现的注意事项<br>复制代码<br>3.案例<br>3.1.求最终推荐人<br>简述：</p>
+<p>1.A在某某知识付费平台购买了课程：xx。并将链接分享到了微信朋友圈</p>
+<p>2.B通过A分享的链接，购买了课程：xx。并且将链接分享到了微信朋友圈</p>
+<p>3.C通过B分享的链接，购买了课程：xx。并且将连接分享到了微信朋友圈</p>
+<p>4.以此类推下去……</p>
+<p>5.假如以C为起点，如何求出课程：xx的最终推荐人？</p>
+<p>6.假设数据库中存储的数据是这样的：</p>
+<p>求解：</p>
+<p>1.你肯定想到了，这个问题好简单，经常写如下类似这样的代码：</p>
+<p>复制代码<br>/**</p>
+<ul>
+<li><p>求最终推荐人</p>
+</li>
+<li><p>/<br>public String findRootRecommend(String userId,String xx){<br>   // 根据购买课程用户id、课程  查询数据库，获取推荐用户id<br>   String 【分享用户id】 = select 【分享用户id】 from 【购买课程表】 where 【用户id】 = 【userId】 and 【课程id】 = 【xx】;</p>
+<p>   // 判断是否是根据好友分享购买的课程<br>   if(分享用户id == null){</p>
+<pre><code>return userId;</code></pre><p>   }</p>
+<p>   // 递归查找<br>   return findRootRecommend(分享用户id,xx);<br>}<br>复制代码</p>
+</li>
+</ul>
+<p>3.2.电影院看电影<br>简述：</p>
+<p>1.你与女朋友正在电影院看电影，电影已经放映</p>
+<p>2.突然，女朋友问你：我们坐在电影院的第几排？</p>
+<p>3.你一看，坏了：电影院一片漆黑，伸手不见五指</p>
+<p>4.这个问题必须要回答，因为是女朋友问的，你该怎么办？</p>
+<p>求解：</p>
+<p>1.别忘了，你是程序员，对于程序员来说，这个问题太简单了</p>
+<p>2.用递归：先问前一排的人，他们在第几排？</p>
+<p>3.前一排的人，再问他的前一排，在第几排？</p>
+<p>4.以此类推……</p>
+<p>5.一直问到第一排的人，第一排不需要再问了，直接回答在第一排</p>
+<p>6.第二排的人：在第一排的人基础上 + 1</p>
+<p>7.以此类推……</p>
+<p>8.每一排都在前一排的基础上 + 1，最后到了你们这一排，女朋友得到了满意的答案</p>
+<p>9.你很骄傲有没有？用代码回答，类似这样：</p>
+<p>复制代码<br>public int movies(int n){<br>    // 如果是第一排，返回1<br>    if(n == 1){ return 1;}</p>
+<pre><code>// 递归向前一排询问
+return movies(n - 1) + 1;</code></pre><p>}<br>复制代码</p>
+ 
       <!-- reward -->
       
     </div>
@@ -365,7 +1059,7 @@
   
   <nav class="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/">上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">下一页</a>
   </nav>
   
 </section>

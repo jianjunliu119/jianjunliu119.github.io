@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="description" content="岁月的痕迹" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Git - 基础篇 |  印记
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Git-基础篇"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Git - 基础篇
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/16/Git-%E5%9F%BA%E7%A1%80%E7%AF%87/" class="article-date">
+  <time datetime="2020-07-15T23:56:00.000Z" itemprop="datePublished">2020-07-16</time>
+</a>  
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这是程序锅对之前学习和使用 Git 做的一份整理，后头继续使用和学习 Git 的话，还会更新这份内容，所以喜欢的话可以关注一波【多选参数】哦，会第一时间在【多选参数】发布的。因此，这份就算是 v1.0 版本的吧。另外，附上了本篇内容的提纲，后头还会有几篇关于 Git 的，每篇都有这样的一份提纲。    </p>
+<p><img src="/images/pasted-40.png" alt="upload successful"></p>
+<a id="more"></a>
+<h2 id="Git-的三个区域"><a href="#Git-的三个区域" class="headerlink" title="Git 的三个区域"></a>Git 的三个区域</h2><p>在正式 git 之前，我们先来了解一下 git 的 3 个区域，分别是工作目录、暂存区、版本历史。这个知识点是尤为重要的，在理解了这三个区域之后，git 的操作才会显得很容易。</p>
+<ul>
+<li>工作目录是直接跟文件相关的，比如被 git 管理起来的文件被修改了的话，在使用 git status 命令查看的时候会显示出来。显示的内容就是相比之前的版本 A  变更了的哪些文件；</li>
+<li>当使用 git add 命令之后，文件修改的东西就被提交到暂存区了，而工作目录中版本是变化之后了的，比如版本 B。那么使用 git status 之后，暂存区显示的内容是相对版本 A 的变化的文件信息，也相当于是版本 B 的情况；</li>
+<li>当使用 git commit 之后，这个更改就被提交到了版本历史中，那么版本历史就从版本 A 变到了版本 B；</li>
+</ul>
+<p><img src="/images/pasted-41.png" alt="upload successful"></p>
+<h2 id="Git-基础使用"><a href="#Git-基础使用" class="headerlink" title="Git 基础使用"></a>Git 基础使用</h2><ol>
+<li>Git 配置相关<br>在使用 Git 管理文件系统的时候，需要进行一些配置，比如用户信息的配置。 Git 管理文件系统主要分为三个层次，如下所示（PS：只输入下面这些命令是不行的）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># config的三个作用域</span><br><span class="line"># 缺省等同于local</span><br><span class="line">$ git config --local		# local只对某个仓库有效</span><br><span class="line">$ git config --global 	# global对登录用户所有仓库有效，在用户根目录下，比如 root 用户就在 &#x2F;root 目录下有个关于 git 的配置文件</span><br><span class="line">$ git config --system 	# system对系统所有登录的用户有效，基本不用</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>优先级 local &gt; global &gt; system，也就是说当对一个仓库同时设置了 global 和 local 那么采用local配置的信息。</p>
+</blockquote>
+<ul>
+<li>查看配置信息<br>有些时候我们也会查看 Git 配置信息等，使用如下命令可以查看相应层次的配置信息</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 显示 config 的配置 加--list</span><br><span class="line">$ git config --list --local	# 这个只能在git仓库中使用</span><br><span class="line">$ git config --list --global</span><br><span class="line">$ git config --list --system</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置信息—以用户信息为例<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global user.name &#39;your_name &#39;                                             </span><br><span class="line">$ git config --global user.email &#39;your_email@domain.com&#39;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>Git 相对于其他版本控制系统需要这些信息，是因为在版本控制中，做出的修改是跟这些用户信息捆绑在一起的。绑定的 email 是为了，当评审人员对代码提出了相应的修改，那么 Git 管理系统会对修改代码的提交者绑定的 email 发送邮件。所以email 需要是一个有效的 email，能收的到邮件的 email。</p>
+<ul>
+<li>清除配置信息<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git config --unset --local user.name</span><br><span class="line">$ git config --unset --global user.name</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol start="2">
+<li>建立 Git 仓库</li>
+</ol>
+<ul>
+<li><p>把已有的项目代码纳入 Git 管理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cd 项目代码所在的文件夹</span><br><span class="line">$ git init</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>新建的项目直接用Git管理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git init your_project # 会在当前路径下创建和项目名称同名的文件夹</span><br><span class="line">$ cd your_project</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol start="3">
+<li>仓库管理常用命令</li>
+</ol>
+<ul>
+<li><p>git add 主要是把新文件或者文件变动的情况添加到暂存区</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git add readme.md	# 将 readme.md 文件添加到暂存区</span><br><span class="line">$ git add .	# 将当前工作目录的所有文件添加到暂存区</span><br><span class="line">$ git add -u # 把修改之后的文件（这些文件已经被管理起来了）一次性提交到暂存区</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>暂存区的文件也是相当于被 git 管理了的。</p>
+</blockquote>
+</li>
+<li><p>git status 可以查看工作目录和暂存区的状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git status</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips:假如 bash 有颜色显示的话，会看到红色是代表工作目录，绿色代表暂存区。</p>
+</blockquote>
+</li>
+<li><p>git commit 命令进行提交，提交的历史会被记录下来</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git commit -m &#39;Add readme.md&#39;	# -m 指定 commit 的信息</span><br><span class="line">$ git commit	# 这时候会跳出一个文本输入界面，让你输入更多的 commit 信息</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git mv  将 git 管理的文件进行重命名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git mv readme readme.md	# 使用git的方式对文件进行重命名</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git rm 从 git 管理的文件删除某个已管理的文件，同时把修改的情况添加到暂存区</p>
+</li>
+<li><p>git log 命令查看提交历史，也就是版本演进历史</p>
+</li>
+</ul>
+<p><img src="/images/pasted-42.png" alt="upload successful"></p>
+<p>上面已经稍微使用了一下 git log 命令，这边更加详细的来阐述这个命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">git log	# 只查看当前分支(Head所指的分支)的log情况</span><br><span class="line">git log --oneline	# 简洁的显示版本更新信息</span><br><span class="line">git log -n2		# n2 代表查看最近两次commit历史</span><br><span class="line">git log -2 		# 2 代表查看最近两次commit历史</span><br><span class="line">git log -n2 --oneline	# 简洁的显示最近两次的版本更新信息</span><br><span class="line">git log branch_name	# 后面跟上分支名表示查看该分支的log日志</span><br><span class="line">git log -all	# 列出所有分支的log</span><br><span class="line">git log --all --graph	# 以图形化的方式查看</span><br><span class="line">git log --oneline --all	# 以简洁的方式查看所有分支的log</span><br><span class="line">git log --oneline --all	-n4# 以简洁的方式查看所有分支的log</span><br><span class="line">git help log	# 以web的方式查看log的帮助文档，等同于</span><br><span class="line">git help --web log # 和上面那条效果一样</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>分支相关<br>分支就相当于一个独立的开发空间，比如前端和后端开发，前端开发可以建立一个分支，后端开发也可以建立一个分支，但是彼此在不同工作空间里面工作的时候是互不影响的，当需要集成的时候又可以把他们集成到一个公共的分支上面去。下面是有关分支的操作：</li>
+</ol>
+<ul>
+<li>HEAD-&gt;temp2 表示当前的 HEAD 指向的是 temp2 分支，那么其实真正指向的是该分支最后一次 commit</li>
+</ul>
+<p><img src="/images/pasted-43.png" alt="upload successful"></p>
+<ul>
+<li>git branch 查看分支情况、创建分支、删除分支<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git branch -v # 查看本地分支的详细情况</span><br><span class="line">git branch -a # 查看所有分支，包括远端分支，但没有过于详细的信息</span><br><span class="line">git branch -av # 查看所有分支情况</span><br><span class="line">git branch branchname hashvalue # 创建一个新的分支，基于 hashvalue 的这个 commit 创建一个新的分支，hashvalue 可以省略，那么默认是基于当前分支的最后一个 commit 创建。</span><br><span class="line">git branch -d branch_name</span><br><span class="line">git branch -D branch_name 	# 这个分支已经有了一些 commit</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>如下图所示，要想删除 temp 分支就得用 -D</p>
+<p><img src="/images/pasted-44.png" alt="upload successful"></p>
+<ul>
+<li>git checkout 切换分支或者创建分支<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git checkout branch_name	# 切换分支</span><br><span class="line">git checkout master</span><br><span class="line">git checkout -b branchname gitid # 创建一个新的分支并切换过去，gitid可以是hashvalue，也可以是某个分支的名字（分支的名字其实就指向了某个 commit）</span><br><span class="line">git checkout -b temp 9ef147d</span><br><span class="line">git checkout -b temp2 master</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>切换分支，必须在.git的同级目录下执行</p>
+</blockquote>
+</li>
+</ul>
+<ol start="5">
+<li>比较 — git diff</li>
+</ol>
+<ul>
+<li><p>不同 commit、分支 之间进行比较</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">git diff hash_value1 hash_value2 # hash_value1 对应的 comimit 和 hash_value2 对应的 commit 进行比较</span><br><span class="line">git diff hash_value1 hash_value2 -- file_name1 file_name2	# 在上述基础之上，只比较 file_name1、file_name2 这两个文件</span><br><span class="line">git diff branch_name1 branch_name2	# 对两个分支进行比较</span><br><span class="line">git diff branch_name1 branch_name2	-- file_name1 file_name2</span><br><span class="line">git diff HEAD HEAD^		# HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD^1	# 同上</span><br><span class="line">git diff HEAD HEAD^^	# HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD~		# HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD~1	# 同上</span><br><span class="line">git diff HEAD HEAD~~	# HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD~2	# 同上</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>1.可以直接使用 HEAD，因为 HEAD 实际上指向的是某个 commit 的。同理，比较两个分支的差异其实就是比较两个分支最近 commit 的差异，因为分支名其实就是一个指针，指向的还是分支最近的 commit。<br>2.^ 后面只能跟数字1，一个 ^ 就表示往父亲 commit 这边追溯一个，以此类推<br>3.~ 后面跟任何数字都可，同样一个 ~ 就表示往父亲 commit 这边追溯一个，以此类推</p>
+</blockquote>
+</li>
+<li><p>暂存区和 HEAD 做比较</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git diff --cached</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>比如一开始的话，HEAD 、暂存区和工作目录都是一样的，都是状态A，并且 readme*.md 文件都已经被跟踪起来了。下面我们修改 readme3.md 文件，之后把它 add 到暂存区。然后使用上述命令进行比较，因为 HEAD 中的是历史，还没有被更新，是状态 A，而暂存区是状态 B，所以可以显示出差异。</p>
+<p><img src="/images/pasted-45.png" alt="upload successful"></p>
+<ul>
+<li>工作目录和暂存区做比较<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git diff						# 对所有文件进行比较</span><br><span class="line">git diff -- file_name1 file_name2 # 对指定文件进行比较</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>比如一开始的话，HEAD 、暂存区和工作目录都是一样的，都是状态A，并且 readme*.md 文件都已经被跟踪起来了。下面我们修改 readme3.md 文件，但是不 add 到暂存区，然后使用上述命令进行比较，由于readme3.md 是在工作区中已经被更改了，工作区是版本 B，而暂存区还没更新是版本 A，所以进行比较会有如下结果。</p>
+<p><img src="/images/pasted-46.png" alt="upload successful"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Git/" rel="tag">Git</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/07/16/%E5%AE%9E%E7%8E%B0%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            单点登录
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/07/15/%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">设计思想</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> JianJian Liu
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="印记"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/jianjunliu119/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/jianjunliu119/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

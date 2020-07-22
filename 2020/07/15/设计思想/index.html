@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="description" content="岁月的痕迹" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    设计思想 |  印记
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-设计思想"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  设计思想
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/15/%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3/" class="article-date">
+  <time datetime="2020-07-14T23:58:00.000Z" itemprop="datePublished">2020-07-15</time>
+</a>  
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <blockquote>
+<p>一直在说互联网系统应该是design for failure，今天看到的这篇文介绍的虽是简单几句话，但妥妥的设计思想，还是蛮契合SRE精髓。作为一名designer或者developer，应该要对墨菲定律心存敬畏，以下讲一下我对这16中设计思想的一个大致看法吧。</p>
+</blockquote>
+ <a id="more"></a>
+
+<h3 id="防御性设计（Defensive-Design）"><a href="#防御性设计（Defensive-Design）" class="headerlink" title="防御性设计（Defensive Design）"></a>防御性设计（Defensive Design）</h3><p>所谓的防御性设计实际上就是“防呆”，英文叫Idiot Proofing。说白了就是用户有时候会不自觉的做一些蠢事，我们在设计的时候要尽量考虑到一些不规范的交互行为，如果你的用户是一只猴子，你要写包单保证系统不被玩坏。例如，在Android开发中使用到的Monkey Test就是用于这样的目的。</p>
+<h3 id="边界情况（Edge-Case）"><a href="#边界情况（Edge-Case）" class="headerlink" title="边界情况（Edge Case）"></a>边界情况（Edge Case）</h3><p>这个设计思想在测试领域比较常见，就是我们在设计我们的设计案例的时候有没有充分考虑在边界情况下的系统行为。比较常见的例如，闰年情况、跨日情况等边界。想起刚入行我leader跟我说你的程序在你脑袋有没有跑过一遍所有能想到的情况，没有的话重做。</p>
+<h3 id="防误措施（Mistake-Proofing）"><a href="#防误措施（Mistake-Proofing）" class="headerlink" title="防误措施（Mistake Proofing）"></a>防误措施（Mistake Proofing）</h3><p>怎么保证不会发生错误。例如在人机交互环节，能不能进行输入校验？</p>
+<h3 id="解耦（Decoupling）"><a href="#解耦（Decoupling）" class="headerlink" title="解耦（Decoupling）"></a>解耦（Decoupling）</h3><p>设计的时候，哪怕是最基础的代码也应该符合开闭原则。远的不说，就单单Spring的IOC就是为了把对象创建及维护从原来的由引用类负责这种强耦合模式转成通过spring容器负责。且解耦一般的做法是通过把内部逻辑封装起来，暴露对外统一API接口，调用方不需要了解被调用方的内部逻辑实现，只需要知道提供什么功能即可。这样再引申一下，解耦的作用就在于复用，把所有的高内聚功能独立成一个个模块，然后就可以像乐高积木一样根据调用方的实际需求进行组装。</p>
+<p>宏观的系统设计就更是如此，例如微服务中的Eureka。首先，Eureka客户端通过把自己注册到Eureka服务端（如IP、端口），然后其他服务在调用前通过Eureka获取被调用方的信息，然后再去调用被调用方，然后他们的调用关系就是这样解耦的。</p>
+<p><img src="/images/pasted-35.png" alt="upload successful"></p>
+<p>熔断本质上就是一种防御性设计或者策略。假设一个微服务体系下的系统，其中A服务调用B服务。系统的QPS是千级别，当时如果B服务挂掉的话A的线程绝对在短时间内占满耗尽而导致假死，从而形成大量A请求积压而导致情况恶化，最终形成雪崩。</p>
+<p>在SpringCloud技术体系中，熔断就是Hystrix所体现的另外一种思想。Hystrix可以通过监控一段事件内的异常次数和响应速度来判断当前服务的健康状况，若服务健康状况不佳则进行熔断，熔断之后新的请求将不会调用实际的业务，而是通过快速失败或优雅降级的方式来快速给用户进行响应。</p>
+<h3 id="舱壁模式（Bulkhead）"><a href="#舱壁模式（Bulkhead）" class="headerlink" title="舱壁模式（Bulkhead）"></a>舱壁模式（Bulkhead）</h3><p>在分布式系统的设计中有一种舱壁模式。目前比较火的微服务架构我理解实际上就是隔板模式的一个体现。这种模式把系统中的各个功能模块实体进行进程、资源上的隔离，使得系统不会因为某个功能模块试题（即微服务）的局部失败而导致全局失败。</p>
+<ol>
+<li>资源隔离：</li>
+</ol>
+<p>微服务里面的Hystrix则是遵守了该模式，通过为每个单独的服务提供独立的线程池而进行资源隔离。在Hystrix中实际上通过两种方式进行资源隔离：</p>
+<blockquote>
+<p>信号量隔离策略（ ExecutionIsolationStrategy.SEMAPHORE）<br>Semaphores 隔离就是利用了java.util.concurrent.Semaphore 的功能，从信号量获取到许可才允许执行，否则不允许执行，执行完成后要释放之前获取到的许可。同样的每一个服务依赖都有一个自己的信号量，当该信号量的许可被获取完之后，再有线程要进行依赖调用，发现已经没有可用的信号量，这时候就会被拒绝调用。信号量隔离始终都是运行在 Container 线程内的。它的优势就在于造成的开销更低。<br>线程隔离策略（ ExecutionIsolationStrategy.THREAD）<br>所谓的线程隔离，实际上就是每一个依赖调用都有自己的线程池来负责处理，依赖调用都运行在自己线程池中的线程上，当同一个依赖调用使用的线程池中的 Queue  size 达到设置的阙值时就会拒绝进行依赖的调用。<br>具体用法可以通过继承@HystrixCommand实现线程隔离或者交易隔离。</p>
+</blockquote>
+<ol start="2">
+<li>数据隔离</li>
+</ol>
+<p>上面讲的都是线程隔离，当然数据隔离这个一般的做法有库隔离、表隔离、按字段区分这三种租户隔离的方法。</p>
+<h3 id="冗余（Redundancy）"><a href="#冗余（Redundancy）" class="headerlink" title="冗余（Redundancy）"></a>冗余（Redundancy）</h3><p>所谓的冗余指的通过重复配置关键组件或部件，保证在关键组件失效的情况下还有备份组件运作以便保证系统可以继续提供服务。生活中的例子请参与飞机的双引擎设计。</p>
+<p>主从模式就是冗余的体现。在正常情况下，主实例负责提供全部的服务，从实例在主实例整体或部分不可用的情况下，完全替代主实例整体或局部而对外提供服务。</p>
+<h3 id="重试（Retry）"><a href="#重试（Retry）" class="headerlink" title="重试（Retry）"></a>重试（Retry）</h3><p>重试是在分布式系统下处理瞬态故障的一个基本手段，简单有效（当然重试的前提是要求幂等）。但是重试也是可以很危险的，它能够引起把一个局部小时间迅速升级为一个系统重大故障，严重者导致系统假死。</p>
+<p><img src="/images/pasted-36.png" alt="upload successful"></p>
+<p>举个简单例子：如果我们的链路类似上图，这里会发生什么问题？在极端情况下，重试次数达到5<em>5</em>5*5=625次。当链路中的其中一个服务故障率异常的时候，那重试风暴便开启了，因为重试为服务器带来额外的开销和线程的占用，然后其他新来的请求又形成排队，这样的话就形成了类似的DDos恶性事件。根据我们平时的项目经验：</p>
+<blockquote>
+<p>相对较好的是选用3次；<br>且重试的时间一定要设定一定的时间间隔（因为很多时候的瞬态故障更多是网络抖动）<br>尽量只在应用层做重试。</p>
+</blockquote>
+<h3 id="撤销（Undo）"><a href="#撤销（Undo）" class="headerlink" title="撤销（Undo）"></a>撤销（Undo）</h3><p>这个没什么好说，撤销这个功能应该是标配吧。</p>
+<h3 id="冷备（Cold-Standby）"><a href="#冷备（Cold-Standby）" class="headerlink" title="冷备（Cold Standby）"></a>冷备（Cold Standby）</h3><p>冷备实际上也是冗余设计的其中一种体现，只是它会更侧重于“冷”，意思是当系统发生宕机时，这个系统是需要手动启动用于替换下线的主实例，它是跟热备是不一样，热备更多体现在自动切换。</p>
+<h3 id="熔断（Derating）"><a href="#熔断（Derating）" class="headerlink" title="熔断（Derating）"></a>熔断（Derating）</h3><p><img src="/images/pasted-37.png" alt="upload successful"></p>
+<p>熔断本质上就是一种防御性设计或者策略。假设一个微服务体系下的系统，其中A服务调用B服务。系统的QPS是千级别，当时如果B服务挂掉的话A的线程绝对在短时间内占满耗尽而导致假死，从而形成大量A请求积压而导致情况恶化，最终形成雪崩。</p>
+<p>在SpringCloud技术体系中，熔断就是Hystrix所体现的另外一种思想。Hystrix可以通过监控一段事件内的异常次数和响应速度来判断当前服务的健康状况，若服务健康状况不佳则进行熔断，熔断之后新的请求将不会调用实际的业务，而是通过快速失败或优雅降级的方式来快速给用户进行响应。</p>
+<p>具体断路器可以参考以下文章：</p>
+<blockquote>
+<p>Netflix：<a href="https://github.com/Netflix/Hystrix/wiki/How-it-Works#CircuitBreaker" target="_blank" rel="noopener">https://github.com/Netflix/Hystrix/wiki/How-it-Works#CircuitBreaker</a><br>Martin Fowler的Circuit Breaker。</p>
+</blockquote>
+<h3 id="容错（Error-Tolerance）"><a href="#容错（Error-Tolerance）" class="headerlink" title="容错（Error Tolerance）"></a>容错（Error Tolerance）</h3><p>狭义的容错泛指人机交互界面的时候需要对用户输入进行输入校验，保证数据准确性。</p>
+<p>广义的容错应该是两个具有明确边界的事物（如服务间，系统间）交互时候针对可能发生的一切主客观异常情况的防御性手段。常见的容错机制有failsafe、failback、failover、failfast。</p>
+<p>failfast更多指的是快速失败。当系统遭遇一定概率的故障时，可预见这不是偶发性故障，然后就要开启类似断路器开关，让后续打进来的流量直接失败快速返回，避免线程积压导致系统滚雪球式崩溃。</p>
+<p>failover指的是失效转移。请参考我的上一篇redis的文章《玩转Redis高可用-哨兵模式》，里面的主库崩掉后通过选举重新选定新主库的情况就是失效转移。</p>
+<p>failsafe指的是失效安全，具体参考以下第12点。</p>
+<p>failback指的是失效自动恢复，具体是指主实例发生故障而导致系统切换到备实例，在主实例恢复后自动转移回主实例上。这种容错在Hystrix的自恢复能力可以得到体现（详看下图）。</p>
+<p><img src="/images/pasted-38.png" alt="upload successful"></p>
+<p>上图断路器的原理具体看以下三个关键参数，大体逻辑如下：</p>
+<p>// 这个用于设定断路器触发的异常比例阈值，正常情况下断路器处于关闭状态。假设阈值为50%，当在一定时间内（如1分钟），异常调用次数/总调用次数&gt;50%的话，断路器打开，后续所有的请求全部调用getFallback()进行failfast.</p>
+<p>HystrixCommandProperties.Setter().withCircuitBreakerErrorThresholdPercentage(50%)</p>
+<p>// 上面说的一定的采样周期内的流量至少要达到100，Hystrix才会进行采样统计并计算异常比例，再跟上面设定的异常比例阈值进行比较。</p>
+<p>HystrixCommandProperties.Setter().withCircuitBreakerRequestVolumeThreshold(100)</p>
+<p>// 当断路器状态为打开后，在下面预设的6000毫秒时间内所有请求被快速failfast；当时间一过，Hystrix会试探性允许一个请求进来，这个时候断路器处于半开状态；如果调用成功，断路器自动关闭，然后应用恢复正常状态。</p>
+<p>HystrixCommandProperties.Setter().withCircuitBreakerSleepWindowInMilliseconds(6000)</p>
+<h3 id="失效安全（Fail-safe）"><a href="#失效安全（Fail-safe）" class="headerlink" title="失效安全（Fail safe）"></a>失效安全（Fail safe）</h3><p>所谓的失效安全，就是指在特定失效的情况下，一个系统或者服务也不会对业务造成损害。实际上，我们使用token进行安全登录也是一种失效安全的体现，如果token失效了（如时间过期），用户是无法登录的，因为正常登录需要token有一种约束因素，这种因素就是时间。如果时间过了，代表这种约束因素不存在或者不再有效了，登录功能就不能正常工作了，这个是一个极好的设计理念。</p>
+<p>有点抽象？跟你介绍一个生活的例子。电梯之所以可以正常升降，是因为在通电的过程中，正常工作的约束因素（brake）是关闭的；如果某个特殊情况（如没电），这个约束因素不存在或不再有效了，brake是打开的，因此电梯是不会因为没电而下坠的。这个可以理解了吧？</p>
+<h3 id="优雅降级（Graceful-Degradation）"><a href="#优雅降级（Graceful-Degradation）" class="headerlink" title="优雅降级（Graceful Degradation）"></a>优雅降级（Graceful Degradation）</h3><p>服务降级跟熔断还是挺像的，只是降级来得更加温和和优雅一点。熔断是直接断掉防止异常进一步扩大而导致雪崩，但是我们的终极目标是提供尽可能多的服务，这个就是优雅降级的理念。在一些异常情况或者秒杀场景下，为了保证核心服务（如商品下单、支付）的正常可用，会放弃掉一些非核心服务（如历史账单查询），这就是所谓的服务降级。</p>
+<p>在微服务框架中，一般会使用Hystrix的@HystrixCommand或Feign的@FeignClient对服务进行声明，然后为每个服务配置相应的fallback类，最终结合起来进行服务降级。</p>
+<h3 id="监控（Monitoring）"><a href="#监控（Monitoring）" class="headerlink" title="监控（Monitoring）"></a>监控（Monitoring）</h3><p>我们的系统有哪几个纬度的监控，估计最多就是常规的硬件状态监控。当然这里的监控我理解除了技术指标监控，还更应该有业务指标监控，否则我们都在裸泳，等海水退下去后就一览无遗。</p>
+<p>监控实际上是为了更好的主动防御，下图展示一下本人前司的一个运维监控与开发协同的机制（从每个序号顺序往下走）。大家可以看出，一套完善的告警监控系统，能够快速通知开发与运维，开发侧能够完成紧急修复并能够协同运维进行快速部署。在笔者前司经历中，正是有着完善的监控告警系统，大部分故障基本可以在业务发现问题得到有效解决（麻蛋一般在晚上爆问题，那段时间太美好了）。</p>
+<p><img src="/images/pasted-39.png" alt="upload successful"></p>
+<h3 id="耐用性（Durability）"><a href="#耐用性（Durability）" class="headerlink" title="耐用性（Durability）"></a>耐用性（Durability）</h3><p>这里我理解的是系统或数据的耐受性。例如数据，为什么我们一定要持久化到数据库，因为就是要借助数据库硬件各种维度的耐受性。</p>
+<h3 id="回弹性（Resilience）"><a href="#回弹性（Resilience）" class="headerlink" title="回弹性（Resilience）"></a>回弹性（Resilience）</h3><p>这里我看到网上有一个更恰当的翻译，叫“韧性”，就是说我们的设计应该在一些特殊情况下还能通过一系列的手段继续提供尽可能多的服务，你也可以理解为“可靠性”。实际上，我的理解是上面说到的基本上都是回弹性的范畴之内。</p>
+<blockquote>
+<p>服务降级<br>限流<br>重试<br>舱壁模式<br>防御性设计</p>
+</blockquote>
+<p>当然，现在为了提升系统服务的回弹性，部分头部公司也会使用一些故障注入的办法进行混沌工程式训练，如Netflix的ChaosMonkey，阿里的ChaosBlade等。</p>
+<p>参考：</p>
+<p><a href="https://simplicable.com/new/design-for-failure" target="_blank" rel="noopener">https://simplicable.com/new/design-for-failure</a></p>
+<p><a href="https://github.com/Netflix/Hystrix/wiki/How-it-Works#CircuitBreaker" target="_blank" rel="noopener">https://github.com/Netflix/Hystrix/wiki/How-it-Works#CircuitBreaker</a></p>
+<p>Martin Fowler的Circuit Breaker。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%BE%E8%AE%A1/" rel="tag">设计</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/07/16/Git-%E5%9F%BA%E7%A1%80%E7%AF%87/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Git - 基础篇
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/07/14/Git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Git常用操作</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> JianJian Liu
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="印记"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/jianjunliu119/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/jianjunliu119/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

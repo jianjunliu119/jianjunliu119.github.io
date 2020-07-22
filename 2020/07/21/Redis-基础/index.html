@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="description" content="岁月的痕迹" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Redis - 基础 |  印记
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Redis-基础"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Redis - 基础
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/21/Redis-%E5%9F%BA%E7%A1%80/" class="article-date">
+  <time datetime="2020-07-20T23:59:00.000Z" itemprop="datePublished">2020-07-21</time>
+</a>  
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h4 id="什么是Redis"><a href="#什么是Redis" class="headerlink" title="什么是Redis"></a>什么是Redis</h4><p>我们先看看Redis官网给的介绍：</p>
+<blockquote>
+<p>Redis is an open source (BSD licensed), in-memory data structure store, used as a database, cache and message broker. It supports data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs, geospatial indexes with radius queries and streams. Redis has built-in replication, Lua scripting, LRU eviction, transactions and different levels of on-disk persistence, and provides high availability via Redis Sentinel and automatic partitioning with Redis Cluster.</p>
+</blockquote>
+<p>简而言之，Redis是一个开源的使用ANSI C语言编写、遵守BSD协议、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种数据类型，功能挺强。</p>
+<a id="more"></a>
+
+<h4 id="Redis之父"><a href="#Redis之父" class="headerlink" title="Redis之父"></a>Redis之父</h4><p>Redis之父是Salvatore Sanfilippo，一名来自意大利西西里岛的程序员，大家更习惯称呼他Antirez。如果你对他感兴趣，可以去他的博客逛逛，或者去关注他的github。</p>
+<h4 id="Redis有什么优势"><a href="#Redis有什么优势" class="headerlink" title="Redis有什么优势"></a>Redis有什么优势</h4><ul>
+<li>速度快：Redis使用内存来存储数据集，且支持Pipelining命令，可以一次发送多条命令。</li>
+<li>持久化：可以把内存中的数据保存在磁盘中，在重启时可重新加载使用。</li>
+<li>原子性：所有操作都是原子性的，同时支持事务。</li>
+<li>数据结构丰富：支持字符串、列表、哈希、集合及有序集合，满足大多数使用需求。</li>
+<li>支持多种语言：Redis支持许多语言，如C、C++、C#、Go、Java、JavaScript、PHP等等。</li>
+<li>多种特性：Redis还支持publish/subscribe, 通知, key 过期等特性。</li>
+</ul>
+<h4 id="Redis能做什么"><a href="#Redis能做什么" class="headerlink" title="Redis能做什么"></a>Redis能做什么</h4><p>因为Redis交换数据速度快，所以常在服务器中被用于存储一些需要频繁调取的数据，相比于直接读取磁盘来获得数据，使用Redis可以节省大量时间，提升效率。举个例子：</p>
+<blockquote>
+<p>某视频网站每天有100万人访问首页推荐视频专栏，如果都从数据库查询读取，那么每天都至少要多出100万次数据库查询请求。若使用了Redis，将常被调取的数据存到内存中，每次节约0.1秒，100万次就有10万秒，极大程度提高了速度与开销。</p>
+</blockquote>
+<p>总之，Redis的应用场景十分广泛，且价值极高，现在就开始学学基础。</p>
+<h4 id="安装Redis"><a href="#安装Redis" class="headerlink" title="安装Redis"></a>安装Redis</h4><p>工欲善其事必先利其器，学习Redis的第一步肯定就是安装Redis。由于我的环境是Windows系统，就只演示Windows下安装Redis。如果你不想安装Redis，但想体验一番，可以去官网提供的在线测试网站，里面也附有简单的介绍和教程。</p>
+<ul>
+<li>Windows下安装Redis下载地址：<a href="https://github.com/microsoftarchive/redis/releases/tag/win-3.2.100这里我们下载Redis-x64-3.2.100.zip压缩包文件(如果有更新版本，可以下载最近更新的稳定版本)。" target="_blank" rel="noopener">https://github.com/microsoftarchive/redis/releases/tag/win-3.2.100这里我们下载Redis-x64-3.2.100.zip压缩包文件(如果有更新版本，可以下载最近更新的稳定版本)。</a></li>
+</ul>
+<p><img src="/images/pasted-84.png" alt="upload successful"></p>
+<p>下载好之后解压到自己的文件夹中。例如我解压到D:\redis中。</p>
+<p><img src="/images/pasted-85.png" alt="upload successful"><br>打开一个cmd窗口，使用cd命令切换目录到解压后的文件夹路径（例如我切换目录到D:\redis），然后运行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-server.exe redis.windows.conf。</span><br></pre></td></tr></table></figure>
+<p>输入之后会显示如下界面：</p>
+<p><img src="/images/pasted-86.png" alt="upload successful"></p>
+<p>这样我们就打开了一个redis服务端，从图中我们可以看到一些信息，比如端口号为6379。如果要使用redis服务端，我们需要再打开一个cmd窗口，原来的不要关闭，不然就不能访问服务端了。同样将路径切换到redis目录下，然后运行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli.exe -h 127.0.0.1 -p 6379</span><br></pre></td></tr></table></figure>
+
+<p>存入一个键值对：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set firstkey &quot;hello redis&quot;</span><br></pre></td></tr></table></figure>
+
+<p>取出键值对：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">get firstkey</span><br></pre></td></tr></table></figure>
+
+<p>关闭连接：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">quit</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/pasted-87.png" alt="upload successful"></p>
+<p>这样我们就完成了Redis在Windows下的安装并初次体验了Redis的key-value存储方式。</p>
+<h4 id="Redis数据结构"><a href="#Redis数据结构" class="headerlink" title="Redis数据结构"></a>Redis数据结构</h4><p>Redis支持五种数据结构：String(字符串)、Hash(哈希)、List(列表)、Set(集合)以及SortedSet(有序集合)。下面我们简单介绍下每一种数据结构以及他们的基本命令。</p>
+<p>String String是Redis最基本的数据结构，也是任何存储系统都必备的数据类型。String类型是二进制安全的，简单来说，基本上你什么都能用字符串存储，你可以把图片文件的内容或者序列化的对象作为字符串来存储。String类型的值最大可以存512MB，确实基本什么都够存了。</p>
+<ul>
+<li><p>set key value：设置指定键的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; set mykey &quot;hello world&quot;</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>get key：获取指定键的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; gey mykey</span><br><span class="line">&quot;hello world&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>getrange key start end：返回key中字符串的子串</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; getrange mykey 6 10</span><br><span class="line">&quot;world&quot;</span><br><span class="line">&gt; getrange mykey 0 20</span><br><span class="line">&quot;hello world&quot;</span><br><span class="line">&gt; getrange mykey 0 -1</span><br><span class="line">&quot;hello world&quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips：从上面几个实例，我们不难看出字符串起始从0开始；若end大于字符串长度时返回完整字符串；而当end为-1时，end为字符串最后一个字符。</p>
+</blockquote>
+</li>
+<li><p>getset key value：设置指定键的新值，并返回旧值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt; getset database &quot;mysql&quot;</span><br><span class="line">(nil)</span><br><span class="line">&gt; get database</span><br><span class="line">&quot;mysql&quot;</span><br><span class="line">&gt; getset database &quot;redis&quot;</span><br><span class="line">&quot;mysql&quot;</span><br><span class="line">&gt; get database</span><br><span class="line">&quot;redis&quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips: 当键未设置时，会返回(nil)。</p>
+</blockquote>
+</li>
+<li><p>strlen key：返回键所存储的字符串值的长度</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; strlen mykey</span><br><span class="line">(integer) 11</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>append key value：如果可以已存在且是一个字符串，则将指定value添加到原值末尾,会返回操作后字符串长度</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; append mykey &quot;, hello redis&quot;</span><br><span class="line">24</span><br><span class="line">&gt;get mykey</span><br><span class="line">&quot;hello world, hello redis&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>incr key：整数值+1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; set incr_num 10</span><br><span class="line">OK</span><br><span class="line">&gt;get incr_num</span><br><span class="line">&quot;10&quot;</span><br><span class="line">&gt;incr incr_num</span><br><span class="line">(integer) 11</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>incrby key increment：整数值增加给定整数值(increment)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; incrby incr_num 4</span><br><span class="line">(intrger) 15</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>incrbyfloat key increment：数字值增加给定浮点值(increment)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; incrbyfloat incr_num 0.5</span><br><span class="line">15.5</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips：整数值会显示为integer，当变为浮点型后并不会提示为float</p>
+</blockquote>
+</li>
+<li><p>decr key：整数值-1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; set decr_num 10</span><br><span class="line">OK</span><br><span class="line">&gt; get decr_num</span><br><span class="line">&quot;10&quot;</span><br><span class="line">&gt; decr decr_num</span><br><span class="line">(integer) 9</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>decrby key decrement：整数值减少给定整数值(decrement)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; decrby decr_num 4</span><br><span class="line">(integer) 5</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips：redis并没有数字值减少给定浮点值的命令，如果我们想要decr_num减少2.5，可以用incrbyfloat命令执行incrbyfloat decr_num -2.5。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; incrbyfloat decr_num -2.5</span><br><span class="line">2.5</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>Hash Hash存储的是field和value的映射关系，适合用户存储对象。比如要存储一个用户的姓名、年龄、地址等，就可以使用Hash。每个Hash可以存储232&gt;-1个field-value对(4294967295，40多亿)。</p>
+<ul>
+<li><p>hset key field value：设置哈希表中key中field的值为value</p>
+</li>
+<li><p>hget key field：获取哈希表key中field对应的value</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; hset myhash name &quot;test&quot;</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; hget myhash name</span><br><span class="line">&quot;NPC&quot;</span><br><span class="line">&gt; hset myhash name &quot;NPC&quot;</span><br><span class="line">(integer) 0</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips：使用hset命令，新建字段并设置值成功后返回1，如果修改已有字段的值则返回0。</p>
+</blockquote>
+</li>
+<li><p>hmset key field1 value1 [field2 value2]：同时设置哈希表key中的多个field-value对。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; hmset myhash age &quot;20&quot; country &quot;China&quot;</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hexists key field：查看field是否存在于哈希表key中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; hexists myhash name</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; hexists myhash phone</span><br><span class="line">(integer) 0</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips：哈希表key中含有字段field返回1，不含有或对应key不存在返回0。</p>
+</blockquote>
+</li>
+<li><p>hmget key field1 [field2]：获取哈希表key中所有给定field的value</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; hmget myhash name age phone</span><br><span class="line">1) &quot;NPC&quot;</span><br><span class="line">2) &quot;20&quot;</span><br><span class="line">3) (nil)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hgetall key：获取哈希表key中所有field-value对</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; hgetall myhash</span><br><span class="line">1) &quot;name&quot;</span><br><span class="line">2) &quot;NPC&quot;</span><br><span class="line">3) &quot;age&quot;</span><br><span class="line">4) &quot;20&quot;</span><br><span class="line">5) &quot;country&quot;</span><br><span class="line">6) &quot;China&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hkeys key：获取哈希表key中所有field</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; hkeys myhash</span><br><span class="line">1) &quot;name&quot;</span><br><span class="line">2) &quot;age&quot;</span><br><span class="line">3) &quot;country&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hvals key：获取哈希表key中所有value</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; hvals myhash</span><br><span class="line">1) &quot;NPC&quot;</span><br><span class="line">2) &quot;20&quot;</span><br><span class="line">3) &quot;China&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hlen key：获取哈希表key中字段的数量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; hlen myhash</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hdel key field1：删除哈希表key中一个field</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; hdel myhash age</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+<p>List Redis的List类型是简单的字符串列表，在底层实现上相当于一个链表，我们可以在列表的头部(左边)或尾部(右边)添加值。列表最多可以存储232&gt;-1个元素(4294967295，40多亿)。</p>
+</li>
+<li><p>lpush key value1 [value2]：将一个或多个值插入到列表头部(左边)</p>
+</li>
+<li><p>rpush key value1 [value2]：将一个或多个值插入到列表尾部(右边)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; lpush mylist &quot;a&quot; &quot;b&quot;</span><br><span class="line">(integer) 2</span><br><span class="line">&gt; rpush mylist &quot;c&quot; &quot;d&quot;</span><br><span class="line">(integer) 4</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips：执行lpush和rpush命令后返回列表的长度。</p>
+</blockquote>
+</li>
+<li><p>llen key：获取列表长度</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; llen mylist</span><br><span class="line">(integer) 4</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>lrange key start end：获取列表指定范围内的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt; lrange mylist 0 -1</span><br><span class="line">1) &quot;b&quot;</span><br><span class="line">2) &quot;a&quot;</span><br><span class="line">3) &quot;c&quot;</span><br><span class="line">4) &quot;d&quot;</span><br><span class="line">&gt; lrange mylist 1 -2</span><br><span class="line">1) &quot;a&quot;</span><br><span class="line">2) &quot;c&quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips：由上述例子我们不难看出lrange命令中的start和end参数都是索引值，其中0代表第一个元素，-1表示最后一个元素。</p>
+</blockquote>
+</li>
+<li><p>lindex key index：通过索引获取列表中元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; lindex mylist 0</span><br><span class="line">&quot;b&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>lpop key：移除并获取列表头部的值</p>
+</li>
+<li><p>rpop key：移除并获取列表尾部的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; lpop mylist</span><br><span class="line">&quot;b&quot;</span><br><span class="line">&gt; rpop mylist</span><br><span class="line">&quot;d&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>lrem key count value：根据count的值，移除列表中与参数value相等的元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt; rpush rem &quot;hello&quot; &quot;hello&quot; &quot;redis&quot; &quot;hello&quot;</span><br><span class="line">(integer) 4</span><br><span class="line">&gt; lrange rem 0 -1</span><br><span class="line">1) &quot;hello&quot;</span><br><span class="line">2) &quot;hello&quot;</span><br><span class="line">3) &quot;redis&quot;</span><br><span class="line">4) &quot;hello&quot;</span><br><span class="line">&gt; lrem rem -2 &quot;hello&quot;</span><br><span class="line">(integer) 2</span><br><span class="line">&gt;lrange rem 0 -1</span><br><span class="line">1) &quot;hello&quot;</span><br><span class="line">2) &quot;redis&quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>count&gt;0：从左往右搜索列表，移除与value相等的元素，数量为count。 count&lt;0：从右往左搜索列表，移除与value相等的元素，数量为count的绝对值。 count=0：移除列表中所有与value相等的元素。</p>
+</blockquote>
+</li>
+</ul>
+<p>Set Set(集合)存储string类型的值，集合不允许重复元素，但集合里面的元素没有先后顺序。集合中最大的成员数为232&gt;-1(4294967295，40多亿)。</p>
+<ul>
+<li><p>sadd key member1 [member2]：向集合添加一个或多个成员</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; sadd myset1 &quot;hello&quot; &quot;redis&quot;</span><br><span class="line">(integer) 2</span><br><span class="line">&gt; sadd myset1 &quot;hello&quot;</span><br><span class="line">(integer) 0</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips：当向集合添加重复成员时，返回0</p>
+</blockquote>
+</li>
+<li><p>scard key：获取集合成员数量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; scard myset1</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>smembers key：返回集合中的所有成员</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; smembers myset1</span><br><span class="line">1) &quot;hello&quot;</span><br><span class="line">2) &quot;redis&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>sdiff key1 [key2]：返回所有给定集合的差集</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; sadd myset2 &quot;hello&quot; &quot;world&quot;</span><br><span class="line">(integer) 2</span><br><span class="line">&gt; sdiff myset1 myset2</span><br><span class="line">1) &quot;redis&quot;</span><br><span class="line">&gt; sdiff myset2 myset1</span><br><span class="line">1) &quot;world&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>sinter key1 [key2]：返回所有给定集合的交集</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; sinter myset1 myset2</span><br><span class="line">1) &quot;hello&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>sunion key1 [key2]：返回所有给定集合的并集</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; sunion myset1 myset2</span><br><span class="line">1) &quot;hello&quot;</span><br><span class="line">2) &quot;redis&quot;</span><br><span class="line">3) &quot;world&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>spop key：移除并返回集合中的一个随机元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; sadd myset1 &quot;NPC&quot;</span><br><span class="line">(integer) 1</span><br><span class="line">&gt;spop myset1</span><br><span class="line">&quot;redis&quot;</span><br><span class="line">&gt;smembers myset1</span><br><span class="line">1) &quot;NPC&quot;</span><br><span class="line">2) &quot;hello&quot;</span><br></pre></td></tr></table></figure>
+<p>SortedSet 除了无序集合(Set)，Redis还提供了有序集合(SortedSet)，有序集合不允许重复的成员，且每个不同的成员都关联一个double类型的分数，redis通过这些分数对成员进行从小到大排序。有序集合有时也被称为ZSet，因为其命令都是以字母Z开头的。</p>
+</li>
+<li><p>zadd key score1 member1 [score2 member2]：向有序集合中添加一个或多个成员，或者更新已有成员分数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; zadd myzset 10 &quot;one&quot; 20 &quot;two&quot; 30 &quot;three&quot;</span><br><span class="line">(integer) 3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>zcard key：获取有序集合的成员数量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; zcard myzset</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>zscore key member：返回指定成员的分数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; zscore myzset &quot;one&quot;</span><br><span class="line">10.0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>zrange key start end [withscores]：通过索引start和end从小到大返回成员</p>
+</li>
+<li><p>zrevrange key start end [withscores]：通过索引start和end从大到小返回成员</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&gt; zrange myzset 0 -1</span><br><span class="line">1) &quot;one&quot;</span><br><span class="line">2) &quot;two&quot;</span><br><span class="line">3) &quot;three&quot;</span><br><span class="line">&gt; zrange myzset 0 -1 withscores</span><br><span class="line">1) &quot;one&quot;</span><br><span class="line">2) 10.0</span><br><span class="line">3) &quot;two&quot;</span><br><span class="line">4) 20.0</span><br><span class="line">5) &quot;three&quot;</span><br><span class="line">6) 30.0</span><br><span class="line">&gt; zrevrange myzset 0 -1 withscores</span><br><span class="line">1) &quot;three&quot;</span><br><span class="line">2) 30.0</span><br><span class="line">3) &quot;two&quot;</span><br><span class="line">4) 20.0</span><br><span class="line">5) &quot;one&quot;</span><br><span class="line">6) 10.0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>zrank key member：返回指定成员的排名，从小到大排序</p>
+</li>
+<li><p>zrevrank key member：返回指定成员的排名，从大到小排序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt; zrank myzset &quot;one&quot;</span><br><span class="line">0</span><br><span class="line">&gt;zrank myzset &quot;three&quot;</span><br><span class="line">2</span><br><span class="line">&gt; zrevrank myzset &quot;one&quot;</span><br><span class="line">2</span><br><span class="line">&gt; zrevrank myzset &quot;three&quot;</span><br><span class="line">0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>zcount key min max：返回分数在min和max之间的成员数量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; zcount myzset 15 40</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>zincrby key increment member：将指定成员的分数增加increment</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&gt; zrange myzset 0 -1 withscores</span><br><span class="line">1) &quot;one&quot;</span><br><span class="line">2) 10.0</span><br><span class="line">3) &quot;two&quot;</span><br><span class="line">4) 20.0</span><br><span class="line">5) &quot;three&quot;</span><br><span class="line">6) 30.0</span><br><span class="line">&gt; zincrby myzset 40 &quot;one&quot;</span><br><span class="line">50.0</span><br><span class="line">&gt; zrange myzset 0 -1 withscores</span><br><span class="line">1) &quot;two&quot;</span><br><span class="line">2) 20.0</span><br><span class="line">3) &quot;three&quot;</span><br><span class="line">4) 30.0</span><br><span class="line">5) &quot;one&quot;</span><br><span class="line">6) 50.0</span><br></pre></td></tr></table></figure></li>
+</ul>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/" rel="tag">Redis</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/07/22/Docker%E7%8E%AF%E5%A2%83/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            开发者须知的Docker知识
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/07/20/Untitled/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">SQL - 命名约定 </div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> JianJian Liu
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="印记"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/jianjunliu119/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/jianjunliu119/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

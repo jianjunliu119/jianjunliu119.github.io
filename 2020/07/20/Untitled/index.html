@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="description" content="岁月的痕迹" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    SQL - 命名约定  |  印记
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Untitled"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  SQL - 命名约定 
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/20/Untitled/" class="article-date">
+  <time datetime="2020-07-20T06:32:00.000Z" itemprop="datePublished">2020-07-20</time>
+</a>  
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><blockquote>
+<p>“计算机科学中只有两个难题：缓存失效和命名。”<br>-菲尔·卡尔顿</p>
+</blockquote>
+<p>在这篇文章中，我将介绍后者。具体来说，我将描述数据库对象的命名约定，它们为何如此重要以及您应该做什么和不应该做什么。</p>
+<p>警告！ 这是一个很自以为是的帖子，我欢迎人们提出替代方案的反馈。</p>
+<a id="more"></a>
+
+<h3 id="目标观众"><a href="#目标观众" class="headerlink" title="目标观众"></a>目标观众</h3><p>我们的公司JackDB在内部使用PostgreSQL来存储持久状态，而本文中的命名约定是考虑到PostgreSQL编写的。大多数建议对于其他关系数据库（例如MySQL，Oracle或Microsoft SQL Server）应同样有效。</p>
+<p>尽管不是全部，但它们中的许多也将适用于NoSQL数据库。例如，以下建议使用完整的英语单词与在MongoDB中为字段命名的建议方法背道而驰。如有疑问，请查找针对您的特定数据库类型的指南。</p>
+<h3 id="为什么命名约定很重要"><a href="#为什么命名约定很重要" class="headerlink" title="为什么命名约定很重要"></a>为什么命名约定很重要</h3><h4 id="名字长寿"><a href="#名字长寿" class="headerlink" title="名字长寿"></a>名字长寿</h4><p>数据结构的使用寿命要比应用程序代码长得多。在长期运行的系统上工作的任何人都可以证明这一点。</p>
+<p>定义明确的数据结构和表布局将使任何应用程序代码无法生存。看到应用程序完全重写而未对其数据库架构进行任何更改的情况并不少见。</p>
+<h4 id="名字就是合同"><a href="#名字就是合同" class="headerlink" title="名字就是合同"></a>名字就是合同</h4><p>数据库对象通过名称来引用，因此对象名称是对象合同的一部分。在某种程度上，您可以将数据库表和列名视为数据模型的API。</p>
+<p>设置它们后，对其进行更改可能会破坏依赖的应用程序。这就是在首次使用之前正确命名事物的更多原因。</p>
+<h4 id="开发者上下文切换"><a href="#开发者上下文切换" class="headerlink" title="开发者上下文切换"></a>开发者上下文切换</h4><p>在整个数据模型中使用一致的命名约定意味着开发人员将需要花费更少的时间查找表，视图和列的名称。当您知道person_id必须是表id字段的外键时，编写和调试SQL会更容易person。</p>
+<h3 id="命名约定"><a href="#命名约定" class="headerlink" title="命名约定"></a>命名约定</h3><p>避免引号。如果必须引用标识符，则应将其重命名。带引号的标识符是一个严重的难题。使用加引号的标识符手动编写SQL令人沮丧，而编写包含加引号的标识符的动态SQL则更加令人沮丧。</p>
+<p>这也意味着您不应在标识符名称中包含空格。</p>
+<p>例如：避免使用诸如”FirstName”或的名称”All Employees”。</p>
+<p>小写字母。标识符应全部用小写字母书写。这包括表，视图，列以及其他所有内容。大小写混合的标识符名称意味着标识符的每次使用都需要用双引号引起来（我们已经说过不允许这样做）。</p>
+<p>例如：使用first_name，而不是”First_Name”。</p>
+<p>数据类型不是名称。数据库对象名称，尤其是列名称，应该是描述字段或对象的名词。避免使用仅是数据类型（例如text或）的单词timestamp。后者特别糟糕，因为它提供了零上下文。</p>
+<p>下划线分开。被由多个单词对象名称应该用下划线（分离即蛇情况下）。</p>
+<p>例如：使用word_count或team_member_id，不使用wordcount或wordCount。</p>
+<p>完整的单词，而不是缩写。对象名称应为全英文单词。通常，避免使用缩写词，尤其是仅用于去除元音的缩写词。大多数SQL数据库至少支持30个字符的名称，对于两个英文单词来说，这应该绰绰有余。PostgreSQL最多支持63个字符的标识符。</p>
+<p>例如：使用middle_name，而不是mid_nm。</p>
+<p>使用常见的缩写。对于一些长单词，缩写都比单词本身更常见。“国际化”和“本土化”是拿出最经常被视为两个i18n和l10n分别。在这些情况下，请使用缩写。</p>
+<p>如有疑问，请使用完整的英语单词。缩写有意义的地方应该很明显。</p>
+<p>避免保留字。避免在您使用的数据库中使用任何被视为保留字的字。没有太多的人，所以选择一个不同的词不需要太多的努力。根据上下文，保留字可能需要引用。这意味着有时您会写”user”，有时只是user。</p>
+<p>避免使用保留字的另一个好处是，少于智能的编辑器语法突出显示不会错误地突出显示它们。</p>
+<p>例如：避免使用单词喜欢user，lock或table。</p>
+<p>这是PostgreSQL，MySQL，Oracle和MSSQL保留字的列表。</p>
+<h3 id="奇异关系"><a href="#奇异关系" class="headerlink" title="奇异关系"></a>奇异关系</h3><p>包含数据的表，视图和其他关系应使用单数名称，而不是复数。这意味着我们的表和视图将被命名team，不teams。</p>
+<p>与其讨论关系代数为何正确的原因，不如给出一些实际的原因。</p>
+<p>他们是一致的。 可能有一个仅包含一行的关系。还是复数吗？</p>
+<p>他们是明确的。 仅使用单数名称意味着您无需确定如何使名词复数。</p>
+<p>例如：一个“人”对象进入一个“人”关系还是一个“人”关系？一个“ 八达通 ”物体怎么样？章鱼？章鱼？八极杆？</p>
+<p>简单的4GL翻译。 单个名称使您可以直接从4GL对象转换为数据库关系。您可能需要删除一些下划线并切换到驼峰式大小写，但名称翻译将始终简单明了。</p>
+<p>例如：team_member毫无疑问地成为TeamMemberJava中的类或team_memberPython中的变量。</p>
+<h3 id="关键领域"><a href="#关键领域" class="headerlink" title="关键领域"></a>关键领域</h3><h4 id="主键"><a href="#主键" class="headerlink" title="主键"></a>主键</h4><p>单列主键字段应命名为id。它简短，简单且明确。这意味着在编写SQL时，您不必记住要加入的字段的名称。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE person (</span><br><span class="line">  id            bigint PRIMARY KEY,</span><br><span class="line">  full_name     text NOT NULL,</span><br><span class="line">  birth_date    date NOT NULL);</span><br></pre></td></tr></table></figure>
+<p>一些指南建议在主键字段名称（即。person_idVS id。额外的前缀是多余的。非平凡的SQL语句中的所有字段名称（即具有多个表的 SQL语句）都应明确限定，并且以命名方式对字段名称进行前缀是一个坏主意。</p>
+<h4 id="外键"><a href="#外键" class="headerlink" title="外键"></a>外键</h4><p>外键字段应该是引用表的名称和引用字段的名称的组合。对于单列外键（到目前为止最常见的情况）类似于foo_id。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE team_member (</span><br><span class="line">  team_id       bigint NOT NULL REFERENCES team(id),</span><br><span class="line">  person_id     bigint NOT NULL REFERENCES person(id),</span><br><span class="line">  CONSTRAINT team_member_pkey PRIMARY KEY (team_id, person_id));</span><br></pre></td></tr></table></figure>
+
+<h3 id="前缀和后缀（不好）"><a href="#前缀和后缀（不好）" class="headerlink" title="前缀和后缀（不好）"></a>前缀和后缀（不好）</h3><h4 id="关系类型前缀"><a href="#关系类型前缀" class="headerlink" title="关系类型前缀"></a>关系类型前缀</h4><p>一些（较旧的）准则建议使用TB_前缀命名表，使用前缀命名视图VW_或使用前缀命名存储过程SP_。这样做的理由是，程序员通读一些未知的SQL会立即识别出这一点并根据名称知道对象类型。这是一个坏主意。</p>
+<p>对象名称中不应包含对象类型。这样，您以后就可以更改它。用表替换的视图保持视图的原始协定（例如：您可以从中进行选择）。更改后，不需要更新从属系统。</p>
+<p>我已经看到过许多这样的系统，在某些情况下，视图将成为表格。然后，您将获得向发出INSERT语句的代码vw_foobar。PostgreSQL甚至有一个非常强大的功能，它允许您在视图上定义DML规则（即，您可以从视图上进行INSERT / UPDATE / DELETE）。</p>
+<p>添加对象类型前缀现在会增加额外的键入内容，并会带来更多的混乱。</p>
+<h4 id="应用程序名称前缀"><a href="#应用程序名称前缀" class="headerlink" title="应用程序名称前缀"></a>应用程序名称前缀</h4><p>另一个（较旧的）建议是为所有数据库对象使用通用前缀。例如，我们的应用程序“Foobar的”将有表名Foobar_Users，Foobar_Teams等再次，这是一个坏主意。</p>
+<p>所有现代数据库都支持某种形式的命名空间。例如，在PostgreSQL中，您可以创建模式以对数据库对象进行分组。如果您有多个应用程序共享同一个数据库，并且想要防止它们相互破坏，请改用模式。那正是他们的目的！</p>
+<p>大多数人甚至都不需要它们。数据库与单个逻辑数据模型一起使用比与多个单独的数据模型一起使用更为普遍。因此，将不需要架构。如果确实需要它们，则应该很明显。</p>
+<p>该规则的例外是，如果您正在开发数据库不可知代码库，例如框架或插件。支持多种命名空间方法非常复杂，因此许多框架都依赖于应用程序名称前缀。</p>
+<p>但是，大多数人开发的是应用程序，而不是插件或框架，它们的应用程序将自己驻留在单一类型的数据库中。因此，没有理由向所有数据库对象添加应用程序名称前缀。</p>
+<h4 id="数据类型后缀"><a href="#数据类型后缀" class="headerlink" title="数据类型后缀"></a>数据类型后缀</h4><p>一些指南（通常还是较旧的指南）建议在字段名称的数据类型后缀后缀。例如，名称的文本字段为name_tx。甚至会有大量的列表可以将数据类型转换为后缀，文本-&gt; tx，日期-&gt; dt等。</p>
+<p>这是一个坏主意！</p>
+<p>字段数据类型可以更改。日期字段可以成为时间戳，整数可以成为bigint或数字。</p>
+<h3 id="显式命名"><a href="#显式命名" class="headerlink" title="显式命名"></a>显式命名</h3><p>某些创建数据库对象的数据库命令不需要您指定名称。对象名称将随机生成（例如：fk239nxvknvsdvi）或通过公式生成（例如：foobar_ix_1）。除非您确切知道如何生成名称并且对它感到满意，否则应该明确指定名称。</p>
+<p>这也包括由ORM生成的名称。许多ORM默认使用长乱码生成的名称来创建索引和约束。在短期内节省几分钟的时间，不值得记住fkas9dfnksdfnks长期内的含义。</p>
+<h4 id="指标"><a href="#指标" class="headerlink" title="指标"></a>指标</h4><p>索引应明确命名，并包括被索引的表名和列名。包括列名使它多少容易阅读通过SQL解释计划。如果命名了索引，foobar_ix1则您需要查找索引涵盖的列以了解索引的使用方式是否正确。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE person (</span><br><span class="line">  id          bigserial PRIMARY KEY,</span><br><span class="line">  email       text NOT NULL,</span><br><span class="line">  first_name  text NOT NULL,</span><br><span class="line">  last_name   text NOT NULL,</span><br><span class="line">  CONSTRAINT person_ck_email_lower_case CHECK (email &#x3D; LOWER(email)));</span><br><span class="line">  </span><br><span class="line">CREATE INDEX person_ix_first_name_last_name ON person (first_name, last_name);</span><br></pre></td></tr></table></figure>
+<p>解释计划现在将很容易理解。我们可以清楚地看到名字和姓氏即索引。person_ix_first_name_last_name，正在使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x3D;# EXPLAIN SELECT * FROM person WHERE first_name &#x3D; &#39;alice&#39; AND last_name &#x3D; &#39;smith&#39;;</span><br><span class="line"></span><br><span class="line">                                          QUERY PLAN                                          </span><br><span class="line">----------------------------------------------------------------------------------------------</span><br><span class="line"> Index Scan using person_ix_first_name_last_name on person  (cost&#x3D;0.15..8.17 rows&#x3D;1 width&#x3D;72)</span><br><span class="line">   Index Cond: ((first_name &#x3D; &#39;alice&#39;::text) AND (last_name &#x3D; &#39;smith&#39;::text))</span><br><span class="line">(2 rows)</span><br></pre></td></tr></table></figure>
+
+<h4 id="约束条件"><a href="#约束条件" class="headerlink" title="约束条件"></a>约束条件</h4><p>与索引类似，约束应使用描述性名称。对于检查约束尤其如此。如果违反的检查约束条件让您知道原因，则诊断出错误的插入要容易得多。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE team (</span><br><span class="line">  id          bigserial PRIMARY KEY,</span><br><span class="line">  name        text NOT NULL);</span><br><span class="line"></span><br><span class="line">CREATE TABLE team_member (</span><br><span class="line">  team_id     bigint REFERENCES team(id),</span><br><span class="line">  person_id   bigint REFERENCES person(id),</span><br><span class="line">  CONSTRAINT team_member_pkey PRIMARY KEY (team_id, person_id));</span><br></pre></td></tr></table></figure>
+<p>注意PostgreSQL如何很好地为外键约束提供描述性名称。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#x3D;# \d team_member</span><br><span class="line">   Table &quot;public.team_member&quot;</span><br><span class="line">  Column   |  Type  | Modifiers </span><br><span class="line">-----------+--------+-----------</span><br><span class="line"> team_id   | bigint | not null</span><br><span class="line"> person_id | bigint | not null</span><br><span class="line">Indexes:</span><br><span class="line">    &quot;team_member_pkey&quot; PRIMARY KEY, btree (team_id, person_id)</span><br><span class="line">Foreign-key constraints:</span><br><span class="line">    &quot;team_member_person_id_fkey&quot; FOREIGN KEY (person_id) REFERENCES person(id)</span><br><span class="line">    &quot;team_member_team_id_fkey&quot; FOREIGN KEY (team_id) REFERENCES team(id)</span><br></pre></td></tr></table></figure>
+<p>如果尝试插入违反这些约束之一的行，我们将仅根据约束名称立即知道原因：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x3D;&gt; INSERT INTO team_member(team_id, person_id) VALUES (1234, 5678);</span><br><span class="line">ERROR:  insert or update on table &quot;team_member&quot; violates foreign key constraint &quot;team_member_team_id_fkey&quot;</span><br><span class="line">DETAIL:  Key (team_id)&#x3D;(1234) is not present in table &quot;team&quot;.</span><br></pre></td></tr></table></figure>
+<p>同样，如果我们尝试person在上面创建的表中插入一个非小写的电子邮件地址，则会收到一个违反约束的错误，该错误会告诉我们确切的错误所在：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-- This insert will work:</span><br><span class="line">&#x3D;&gt; INSERT INTO person (email, first_name, last_name) VALUES (&#39;alice@example.com&#39;, &#39;Alice&#39;, &#39;Anderson&#39;);</span><br><span class="line">INSERT 0 1</span><br><span class="line"></span><br><span class="line">-- This insert will not work:</span><br><span class="line">&#x3D;&gt; INSERT INTO person (email, first_name, last_name) VALUES (&#39;bob@EXAMPLE.com&#39;, &#39;Bob&#39;, &#39;Barker&#39;);</span><br><span class="line">ERROR:  new row for relation &quot;person&quot; violates check constraint &quot;person_ck_email_lower_case&quot;</span><br><span class="line">DETAIL:  Failing row contains (2, bob@EXAMPLE.com, Bob, Barker).</span><br></pre></td></tr></table></figure>
+
+<h3 id="最后的想法"><a href="#最后的想法" class="headerlink" title="最后的想法"></a>最后的想法</h3><p>如果您要开始一个新项目，那么我建议您遵循此处概述的约定。如果您正在处理现有项目，则在创建任何新对象时都需要多加注意。</p>
+<p>唯一比糟糕的命名约定更糟糕的是多个命名约定。如果您现有的项目已经具有命名其数据库对象的标准方法，请继续使用它。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">数据库</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/07/21/Redis-%E5%9F%BA%E7%A1%80/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Redis - 基础
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/07/20/Git-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E6%B1%87%E6%80%BB/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Git 常用操作汇总</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> JianJian Liu
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="印记"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/jianjunliu119/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/jianjunliu119/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

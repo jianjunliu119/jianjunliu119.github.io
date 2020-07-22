@@ -1,6 +1,1134 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>开发者须知的Docker知识</title>
+    <url>/2020/07/22/Docker%E7%8E%AF%E5%A2%83/</url>
+    <content><![CDATA[<blockquote>
+<p>本文主要讲解Docker环境的安装以及Docker常用命令的使用，掌握这些对Docker环境下应用的部署具有很大帮助。</p>
+</blockquote>
+<h3 id="Docker-简介"><a href="#Docker-简介" class="headerlink" title="Docker 简介"></a>Docker 简介</h3><p>Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的镜像中，然后发布到任何流行的 Linux或Windows机器上。使用Docker可以更方便低打包、测试以及部署应用程序。</p>
+<a id="more"></a>
+
+<h3 id="Docker-环境安装"><a href="#Docker-环境安装" class="headerlink" title="Docker 环境安装"></a>Docker 环境安装</h3><ul>
+<li><p>安装yum-utils：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>为yum源添加docker仓库位置：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum-config-manager --add-repo https:&#x2F;&#x2F;download.docker.com&#x2F;linux&#x2F;centos&#x2F;docker-ce.repo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装docker:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install docker-ce</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动docker:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl start docker</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="Docker-镜像常用命令"><a href="#Docker-镜像常用命令" class="headerlink" title="Docker 镜像常用命令"></a>Docker 镜像常用命令</h3><h4 id="搜索镜像"><a href="#搜索镜像" class="headerlink" title="搜索镜像"></a>搜索镜像</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker search java</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-88.png" alt="upload successful"></p>
+<h4 id="下载镜像"><a href="#下载镜像" class="headerlink" title="下载镜像"></a>下载镜像</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker pull java:8</span><br></pre></td></tr></table></figure>
+
+<h4 id="如何查找镜像支持的版本"><a href="#如何查找镜像支持的版本" class="headerlink" title="如何查找镜像支持的版本"></a>如何查找镜像支持的版本</h4><blockquote>
+<p>由于docker search命令只能查找出是否有该镜像，不能找到该镜像支持的版本，所以我们需要通过docker hub来搜索支持的版本。</p>
+</blockquote>
+<ul>
+<li><p>进入docker hub的官网，地址：<a href="https://hub.docker.com" target="_blank" rel="noopener">https://hub.docker.com</a></p>
+</li>
+<li><p>然后搜索需要的镜像：<br><img src="/images/pasted-89.png" alt="upload successful"></p>
+</li>
+<li><p>查看镜像支持的版本：<br><img src="/images/pasted-90.png" alt="upload successful"></p>
+</li>
+<li><p>进行镜像的下载操作：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker pull nginx:1.17.0</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="列出镜像"><a href="#列出镜像" class="headerlink" title="列出镜像"></a>列出镜像</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-91.png" alt="upload successful"></p>
+<h4 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h4><ul>
+<li><p>指定名称删除镜像</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker rmi java:8</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>指定名称删除镜像（强制）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker rmi -f java:8</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除所有没有引用的镜像</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker rmi &#96;docker images | grep none | awk &#39;&#123;print $3&#125;&#39;&#96;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>强制删除所有镜像</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker rmi -f $(docker images)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="Docker-容器常用命令"><a href="#Docker-容器常用命令" class="headerlink" title="Docker 容器常用命令"></a>Docker 容器常用命令</h3><h4 id="新建并启动容器"><a href="#新建并启动容器" class="headerlink" title="新建并启动容器"></a>新建并启动容器</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run -p 80:80 --name nginx -d nginx:1.17.0</span><br></pre></td></tr></table></figure>
+<ul>
+<li>-d选项：表示后台运行</li>
+<li>–name选项：指定运行后容器的名字为nginx,之后可以通过名字来操作容器</li>
+<li>-p选项：指定端口映射，格式为：hostPort:containerPort</li>
+</ul>
+<h4 id="列出容器"><a href="#列出容器" class="headerlink" title="列出容器"></a>列出容器</h4><ul>
+<li><p>列出运行中的容器：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-92.png" alt="upload successful"></p>
+</li>
+<li><p>列出所有容器</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-93.png" alt="upload successful"></p>
+</li>
+</ul>
+<h4 id="停止容器"><a href="#停止容器" class="headerlink" title="停止容器"></a>停止容器</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># $ContainerName及$ContainerId可以用docker ps命令查询出来</span><br><span class="line">docker stop $ContainerName(或者$ContainerId)</span><br></pre></td></tr></table></figure>
+<p>比如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker stop nginx</span><br><span class="line">#或者</span><br><span class="line">docker stop c5f5d5125587</span><br></pre></td></tr></table></figure>
+
+<h4 id="强制停止容器"><a href="#强制停止容器" class="headerlink" title="强制停止容器"></a>强制停止容器</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker kill $ContainerName(或者$ContainerId)</span><br></pre></td></tr></table></figure>
+
+<h4 id="启动已停止的容器"><a href="#启动已停止的容器" class="headerlink" title="启动已停止的容器"></a>启动已停止的容器</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker start $ContainerName(或者$ContainerId)</span><br></pre></td></tr></table></figure>
+
+<h4 id="进入容器"><a href="#进入容器" class="headerlink" title="进入容器"></a>进入容器</h4><ul>
+<li><p>先查询出容器的pid：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker inspect --format &quot;&#123;&#123;.State.Pid&#125;&#125;&quot; $ContainerName(或者$ContainerId)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>根据容器的pid进入容器：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">nsenter --target &quot;$pid&quot; --mount --uts --ipc --net --pid</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-94.png" alt="upload successful"></p>
+</li>
+</ul>
+<h4 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h4><ul>
+<li><p>删除指定容器：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker rm $ContainerName(或者$ContainerId)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>按名称删除容器</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker rm &#96;docker ps -a | grep mall-* | awk &#39;&#123;print $1&#125;&#39;&#96;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>强制删除所有容器；</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker rm -f $(docker ps -a -q)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="查看容器的日志"><a href="#查看容器的日志" class="headerlink" title="查看容器的日志"></a>查看容器的日志</h4><ul>
+<li><p>查看当前全部日志</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker logs $ContainerName(或者$ContainerId)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>动态查看日志</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker logs $ContainerName(或者$ContainerId) -f</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-95.png" alt="upload successful"></p>
+</li>
+</ul>
+<h4 id="查看容器的IP地址"><a href="#查看容器的IP地址" class="headerlink" title="查看容器的IP地址"></a>查看容器的IP地址</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker inspect --format &#39;&#123;&#123; .NetworkSettings.IPAddress &#125;&#125;&#39; $ContainerName(或者$ContainerId)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-96.png" alt="upload successful"></p>
+<h4 id="修改容器的启动方式"><a href="#修改容器的启动方式" class="headerlink" title="修改容器的启动方式"></a>修改容器的启动方式</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker container update --restart&#x3D;always $ContainerName</span><br></pre></td></tr></table></figure>
+
+<h4 id="同步宿主机时间到容器"><a href="#同步宿主机时间到容器" class="headerlink" title="同步宿主机时间到容器"></a>同步宿主机时间到容器</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker cp &#x2F;etc&#x2F;localtime $ContainerName(或者$ContainerId):&#x2F;etc&#x2F;</span><br></pre></td></tr></table></figure>
+
+<h4 id="指定容器时区"><a href="#指定容器时区" class="headerlink" title="指定容器时区"></a>指定容器时区</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run -p 80:80 --name nginx \</span><br><span class="line">-e TZ&#x3D;&quot;Asia&#x2F;Shanghai&quot; \</span><br><span class="line">-d nginx:1.17.0</span><br></pre></td></tr></table></figure>
+
+<h4 id="在宿主机查看docker使用cpu、内存、网络、io情况"><a href="#在宿主机查看docker使用cpu、内存、网络、io情况" class="headerlink" title="在宿主机查看docker使用cpu、内存、网络、io情况"></a>在宿主机查看docker使用cpu、内存、网络、io情况</h4><ul>
+<li><p>查看指定容器情况：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker stats $ContainerName(或者$ContainerId)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-97.png" alt="upload successful"></p>
+</li>
+<li><p>查看所有容器情况：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker stats -a</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-98.png" alt="upload successful"></p>
+</li>
+</ul>
+<h4 id="查看Docker磁盘使用情况"><a href="#查看Docker磁盘使用情况" class="headerlink" title="查看Docker磁盘使用情况"></a>查看Docker磁盘使用情况</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker system df</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-99.png" alt="upload successful"></p>
+<h4 id="进入Docker容器内部的bash"><a href="#进入Docker容器内部的bash" class="headerlink" title="进入Docker容器内部的bash"></a>进入Docker容器内部的bash</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker exec -it $ContainerName &#x2F;bin&#x2F;bash</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-100.png" alt="upload successful"></p>
+<h4 id="使用root帐号进入Docker容器内部"><a href="#使用root帐号进入Docker容器内部" class="headerlink" title="使用root帐号进入Docker容器内部"></a>使用root帐号进入Docker容器内部</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker exec -it --user root $ContainerName &#x2F;bin&#x2F;bash</span><br></pre></td></tr></table></figure>
+
+<h4 id="Docker创建外部网络"><a href="#Docker创建外部网络" class="headerlink" title="Docker创建外部网络"></a>Docker创建外部网络</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker network create -d bridge my-bridge-network</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改Docker镜像的存放位置"><a href="#修改Docker镜像的存放位置" class="headerlink" title="修改Docker镜像的存放位置"></a>修改Docker镜像的存放位置</h4><ul>
+<li><p>查看Docker镜像的存放位置：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker info | grep &quot;Docker Root Dir&quot;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-101.png" alt="upload successful"></p>
+</li>
+<li><p>关闭Docker服务：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl stop docker</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>移动目录到目标路径：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mv &#x2F;var&#x2F;lib&#x2F;docker &#x2F;mydata&#x2F;docker</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>建立软连接：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ln -s &#x2F;mydata&#x2F;docker &#x2F;var&#x2F;lib&#x2F;docker</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-102.png" alt="upload successful"></p>
+</li>
+</ul>
+<p><img src="/images/pasted-103.png" alt="upload successful"></p>
+]]></content>
+      <tags>
+        <tag>Docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git - 基础篇</title>
+    <url>/2020/07/16/Git-%E5%9F%BA%E7%A1%80%E7%AF%87/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这是程序锅对之前学习和使用 Git 做的一份整理，后头继续使用和学习 Git 的话，还会更新这份内容，所以喜欢的话可以关注一波【多选参数】哦，会第一时间在【多选参数】发布的。因此，这份就算是 v1.0 版本的吧。另外，附上了本篇内容的提纲，后头还会有几篇关于 Git 的，每篇都有这样的一份提纲。    </p>
+<p><img src="/images/pasted-40.png" alt="upload successful"></p>
+<a id="more"></a>
+<h2 id="Git-的三个区域"><a href="#Git-的三个区域" class="headerlink" title="Git 的三个区域"></a>Git 的三个区域</h2><p>在正式 git 之前，我们先来了解一下 git 的 3 个区域，分别是工作目录、暂存区、版本历史。这个知识点是尤为重要的，在理解了这三个区域之后，git 的操作才会显得很容易。</p>
+<ul>
+<li>工作目录是直接跟文件相关的，比如被 git 管理起来的文件被修改了的话，在使用 git status 命令查看的时候会显示出来。显示的内容就是相比之前的版本 A  变更了的哪些文件；</li>
+<li>当使用 git add 命令之后，文件修改的东西就被提交到暂存区了，而工作目录中版本是变化之后了的，比如版本 B。那么使用 git status 之后，暂存区显示的内容是相对版本 A 的变化的文件信息，也相当于是版本 B 的情况；</li>
+<li>当使用 git commit 之后，这个更改就被提交到了版本历史中，那么版本历史就从版本 A 变到了版本 B；</li>
+</ul>
+<p><img src="/images/pasted-41.png" alt="upload successful"></p>
+<h2 id="Git-基础使用"><a href="#Git-基础使用" class="headerlink" title="Git 基础使用"></a>Git 基础使用</h2><ol>
+<li>Git 配置相关<br>在使用 Git 管理文件系统的时候，需要进行一些配置，比如用户信息的配置。 Git 管理文件系统主要分为三个层次，如下所示（PS：只输入下面这些命令是不行的）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># config的三个作用域</span><br><span class="line"># 缺省等同于local</span><br><span class="line">$ git config --local		# local只对某个仓库有效</span><br><span class="line">$ git config --global 	# global对登录用户所有仓库有效，在用户根目录下，比如 root 用户就在 &#x2F;root 目录下有个关于 git 的配置文件</span><br><span class="line">$ git config --system 	# system对系统所有登录的用户有效，基本不用</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>优先级 local &gt; global &gt; system，也就是说当对一个仓库同时设置了 global 和 local 那么采用local配置的信息。</p>
+</blockquote>
+<ul>
+<li>查看配置信息<br>有些时候我们也会查看 Git 配置信息等，使用如下命令可以查看相应层次的配置信息</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 显示 config 的配置 加--list</span><br><span class="line">$ git config --list --local	# 这个只能在git仓库中使用</span><br><span class="line">$ git config --list --global</span><br><span class="line">$ git config --list --system</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置信息—以用户信息为例<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git config --global user.name &#39;your_name &#39;                                             </span><br><span class="line">$ git config --global user.email &#39;your_email@domain.com&#39;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>Git 相对于其他版本控制系统需要这些信息，是因为在版本控制中，做出的修改是跟这些用户信息捆绑在一起的。绑定的 email 是为了，当评审人员对代码提出了相应的修改，那么 Git 管理系统会对修改代码的提交者绑定的 email 发送邮件。所以email 需要是一个有效的 email，能收的到邮件的 email。</p>
+<ul>
+<li>清除配置信息<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git config --unset --local user.name</span><br><span class="line">$ git config --unset --global user.name</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol start="2">
+<li>建立 Git 仓库</li>
+</ol>
+<ul>
+<li><p>把已有的项目代码纳入 Git 管理</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ cd 项目代码所在的文件夹</span><br><span class="line">$ git init</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>新建的项目直接用Git管理</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git init your_project # 会在当前路径下创建和项目名称同名的文件夹</span><br><span class="line">$ cd your_project</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol start="3">
+<li>仓库管理常用命令</li>
+</ol>
+<ul>
+<li><p>git add 主要是把新文件或者文件变动的情况添加到暂存区</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git add readme.md	# 将 readme.md 文件添加到暂存区</span><br><span class="line">$ git add .	# 将当前工作目录的所有文件添加到暂存区</span><br><span class="line">$ git add -u # 把修改之后的文件（这些文件已经被管理起来了）一次性提交到暂存区</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>暂存区的文件也是相当于被 git 管理了的。</p>
+</blockquote>
+</li>
+<li><p>git status 可以查看工作目录和暂存区的状态</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git status</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips:假如 bash 有颜色显示的话，会看到红色是代表工作目录，绿色代表暂存区。</p>
+</blockquote>
+</li>
+<li><p>git commit 命令进行提交，提交的历史会被记录下来</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git commit -m &#39;Add readme.md&#39;	# -m 指定 commit 的信息</span><br><span class="line">$ git commit	# 这时候会跳出一个文本输入界面，让你输入更多的 commit 信息</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git mv  将 git 管理的文件进行重命名</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git mv readme readme.md	# 使用git的方式对文件进行重命名</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git rm 从 git 管理的文件删除某个已管理的文件，同时把修改的情况添加到暂存区</p>
+</li>
+<li><p>git log 命令查看提交历史，也就是版本演进历史</p>
+</li>
+</ul>
+<p><img src="/images/pasted-42.png" alt="upload successful"></p>
+<p>上面已经稍微使用了一下 git log 命令，这边更加详细的来阐述这个命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git log	# 只查看当前分支(Head所指的分支)的log情况</span><br><span class="line">git log --oneline	# 简洁的显示版本更新信息</span><br><span class="line">git log -n2		# n2 代表查看最近两次commit历史</span><br><span class="line">git log -2 		# 2 代表查看最近两次commit历史</span><br><span class="line">git log -n2 --oneline	# 简洁的显示最近两次的版本更新信息</span><br><span class="line">git log branch_name	# 后面跟上分支名表示查看该分支的log日志</span><br><span class="line">git log -all	# 列出所有分支的log</span><br><span class="line">git log --all --graph	# 以图形化的方式查看</span><br><span class="line">git log --oneline --all	# 以简洁的方式查看所有分支的log</span><br><span class="line">git log --oneline --all	-n4# 以简洁的方式查看所有分支的log</span><br><span class="line">git help log	# 以web的方式查看log的帮助文档，等同于</span><br><span class="line">git help --web log # 和上面那条效果一样</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>分支相关<br>分支就相当于一个独立的开发空间，比如前端和后端开发，前端开发可以建立一个分支，后端开发也可以建立一个分支，但是彼此在不同工作空间里面工作的时候是互不影响的，当需要集成的时候又可以把他们集成到一个公共的分支上面去。下面是有关分支的操作：</li>
+</ol>
+<ul>
+<li>HEAD-&gt;temp2 表示当前的 HEAD 指向的是 temp2 分支，那么其实真正指向的是该分支最后一次 commit</li>
+</ul>
+<p><img src="/images/pasted-43.png" alt="upload successful"></p>
+<ul>
+<li>git branch 查看分支情况、创建分支、删除分支<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git branch -v # 查看本地分支的详细情况</span><br><span class="line">git branch -a # 查看所有分支，包括远端分支，但没有过于详细的信息</span><br><span class="line">git branch -av # 查看所有分支情况</span><br><span class="line">git branch branchname hashvalue # 创建一个新的分支，基于 hashvalue 的这个 commit 创建一个新的分支，hashvalue 可以省略，那么默认是基于当前分支的最后一个 commit 创建。</span><br><span class="line">git branch -d branch_name</span><br><span class="line">git branch -D branch_name 	# 这个分支已经有了一些 commit</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>如下图所示，要想删除 temp 分支就得用 -D</p>
+<p><img src="/images/pasted-44.png" alt="upload successful"></p>
+<ul>
+<li>git checkout 切换分支或者创建分支<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git checkout branch_name	# 切换分支</span><br><span class="line">git checkout master</span><br><span class="line">git checkout -b branchname gitid # 创建一个新的分支并切换过去，gitid可以是hashvalue，也可以是某个分支的名字（分支的名字其实就指向了某个 commit）</span><br><span class="line">git checkout -b temp 9ef147d</span><br><span class="line">git checkout -b temp2 master</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>切换分支，必须在.git的同级目录下执行</p>
+</blockquote>
+</li>
+</ul>
+<ol start="5">
+<li>比较 — git diff</li>
+</ol>
+<ul>
+<li><p>不同 commit、分支 之间进行比较</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git diff hash_value1 hash_value2 # hash_value1 对应的 comimit 和 hash_value2 对应的 commit 进行比较</span><br><span class="line">git diff hash_value1 hash_value2 -- file_name1 file_name2	# 在上述基础之上，只比较 file_name1、file_name2 这两个文件</span><br><span class="line">git diff branch_name1 branch_name2	# 对两个分支进行比较</span><br><span class="line">git diff branch_name1 branch_name2	-- file_name1 file_name2</span><br><span class="line">git diff HEAD HEAD^		# HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD^1	# 同上</span><br><span class="line">git diff HEAD HEAD^^	# HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD~		# HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD~1	# 同上</span><br><span class="line">git diff HEAD HEAD~~	# HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD~2	# 同上</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>1.可以直接使用 HEAD，因为 HEAD 实际上指向的是某个 commit 的。同理，比较两个分支的差异其实就是比较两个分支最近 commit 的差异，因为分支名其实就是一个指针，指向的还是分支最近的 commit。<br>2.^ 后面只能跟数字1，一个 ^ 就表示往父亲 commit 这边追溯一个，以此类推<br>3.~ 后面跟任何数字都可，同样一个 ~ 就表示往父亲 commit 这边追溯一个，以此类推</p>
+</blockquote>
+</li>
+<li><p>暂存区和 HEAD 做比较</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git diff --cached</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>比如一开始的话，HEAD 、暂存区和工作目录都是一样的，都是状态A，并且 readme*.md 文件都已经被跟踪起来了。下面我们修改 readme3.md 文件，之后把它 add 到暂存区。然后使用上述命令进行比较，因为 HEAD 中的是历史，还没有被更新，是状态 A，而暂存区是状态 B，所以可以显示出差异。</p>
+<p><img src="/images/pasted-45.png" alt="upload successful"></p>
+<ul>
+<li>工作目录和暂存区做比较<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git diff						# 对所有文件进行比较</span><br><span class="line">git diff -- file_name1 file_name2 # 对指定文件进行比较</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>比如一开始的话，HEAD 、暂存区和工作目录都是一样的，都是状态A，并且 readme*.md 文件都已经被跟踪起来了。下面我们修改 readme3.md 文件，但是不 add 到暂存区，然后使用上述命令进行比较，由于readme3.md 是在工作区中已经被更改了，工作区是版本 B，而暂存区还没更新是版本 A，所以进行比较会有如下结果。</p>
+<p><img src="/images/pasted-46.png" alt="upload successful"></p>
+]]></content>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git 常用操作汇总</title>
+    <url>/2020/07/20/Git-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E6%B1%87%E6%80%BB/</url>
+    <content><![CDATA[<p><img src="/images/pasted-82.png" alt="upload successful"></p>
+<p>&lt;</p>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>大家好，我是多选参数的程序锅，一个正在 neng 操作系统、学数据结构和算法以及 Java 的硬核菜鸡。到今天为止，关于 Git 的大坑算是给填上了。但是 Git 这个系列并不会结束，程序锅偶尔看到比较好的关于 Git 的文章也会整理一番发出来，争取在 Git 的坑上再长棵树。</p>
+<p><img src="/images/pasted-83.png" alt="upload successful"></p>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><ol>
+<li><p>git 配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 显示 config 的配置 加--list</span><br><span class="line"># 优先级：local &gt; global &gt; system</span><br><span class="line">git config --list --local # local 的范围是某个仓库</span><br><span class="line">git config --list --global # global 的范围是登录的用户</span><br><span class="line">git config --list --system # system 的范围是系统所有登录的用户</span><br><span class="line"># 配置用户 name 和 email</span><br><span class="line">git config --global user.name &#39;your_name &#39;</span><br><span class="line">git config --global user.email &#39;your_email@domain.com&#39;</span><br><span class="line"># 清除配置信息</span><br><span class="line">git config --unset --global user.name</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>仓库初始化</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 将执行该命令时所在的目录初始化为一个 git 仓库（如：进入某目录后执行该命令会将该目录初始化为一个 git 仓库）</span><br><span class="line">git init</span><br><span class="line"># 会在当前路径下创建和项目名称同名的文件夹，并将其初始化为 git 仓库</span><br><span class="line">git init your_project</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git add</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git add readme.md # 将 readme.md 文件添加到暂存区</span><br><span class="line">git add . # 将当前工作目录的所有文件添加到暂存区</span><br><span class="line">git add -u # 把修改之后的文件（这些文件已经被管理起来了）一次性提交到暂存区</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git status</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git status # 查看工作目录和暂存区的状态</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git commit</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git commit -m &#39;Add readme.md&#39; # -m 指定 commit 的信息</span><br><span class="line">git commit # 这时候会跳出一个文本输入界面，让你输入更多的 commit 信息</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git mv</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git mv readme readme.md # 将 git 管理的文件进行重命名</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git rm</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git rm filename # 从 git 管理的文件删除某个已管理的文件，同时把修改的情况添加到暂存区</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git log</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git log # 只查看当前分支(Head所指的分支)的log情况</span><br><span class="line">git log --oneline # 简洁的显示版本更新信息</span><br><span class="line">git log -n2  # n2 代表查看最近两次commit历史</span><br><span class="line">git log -2   # 2 代表查看最近两次commit历史</span><br><span class="line">git log -n2 --oneline # 简洁的显示最近两次的版本更新信息</span><br><span class="line">git log branch_name # 后面跟上分支名表示查看该分支的log日志</span><br><span class="line">git log -all # 列出所有分支的log</span><br><span class="line">git log --all --graph # 以图形化的方式查看</span><br><span class="line">git log --oneline --all # 以简洁的方式查看所有分支的log</span><br><span class="line">git log --oneline --all -n4# 以简洁的方式查看所有分支的log</span><br><span class="line">git help log # 以web的方式查看log的帮助文档，等同于</span><br><span class="line">git help --web log # 和上面那条效果一样</span><br></pre></td></tr></table></figure>
+<h3 id="分支相关"><a href="#分支相关" class="headerlink" title="分支相关"></a>分支相关</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git branch -v # 查看本地分支的详细情况</span><br><span class="line">git branch -a # 查看所有分支，包括远端分支，但没有过于详细的信息</span><br><span class="line">git branch -av # 查看所有分支情况</span><br><span class="line">git branch branch_name hash_value # 创建一个新的分支，基于 hash_value 的这个 commit 创建一个新的分支，hash_value 可以省略，那么默认是基于当前分支的最后一个 commit 创建。</span><br><span class="line">git branch -d branch_name</span><br><span class="line">git branch -D branch_name  # 这个分支已经有了一些 commit</span><br><span class="line">git checkout branch_name # 切换分支</span><br><span class="line">git checkout master</span><br><span class="line">git checkout -b branch_name git_id # 创建一个新的分支并切换过去，git_id可以是hash_value，也可以是某个分支的名字（分支的名字其实就指向了某个 commit）</span><br><span class="line">git checkout -b temp 9ef147d</span><br><span class="line">git checkout -b temp2 master</span><br><span class="line">git checkout hash_value  # 分离头指针</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git diff hash_value1 hash_value2 # hash_value1 对应的 comimit 和 hash_value2 对应的 commit 进行比较</span><br><span class="line">git diff hash_value1 hash_value2 -- file_name1 file_name2 # 在上述基础之上，只比较 file_name1、file_name2 这两个文件</span><br><span class="line">git diff branch_name1 branch_name2 # 对两个分支进行比较，也可以跟 -- 只看某些文件</span><br><span class="line">git diff HEAD HEAD^  # HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD^^ # HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD~  # HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD~1 # 同上 </span><br><span class="line">git diff HEAD HEAD~2 # HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较</span><br><span class="line">git diff --cached  # 暂存区和 HEAD 做比较，也可以跟 -- 只看某些文件</span><br><span class="line">git diff      # 工作目录和暂存区中所有文件进行比较，也可以跟 -- 只看某些文件</span><br></pre></td></tr></table></figure>
+
+<h3 id="版本历史更改"><a href="#版本历史更改" class="headerlink" title="版本历史更改"></a>版本历史更改</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git commit --amend # 最近一次 commit 的 message 修改</span><br><span class="line">git rebase -i hash_value # 交互文件中选择 reword，老旧 commit 的 message 修改。hash_value，是需要的 commit 的父亲 commit 的 hash_value</span><br><span class="line">git rabase -i hash_value # 交互文件中选择 squash，多个连续 commit 合并成一个，hash_value 同上</span><br><span class="line">git rebase -i hash_value # 交互文件中选择 squash，把间隔的 commit 移到一块，即可合并成一个，hash_value</span><br><span class="line">git rebase origin&#x2F;master # 把当前分支基于 origin&#x2F;master 做 rebase 操作，也就相当于把当前分支的东西加到 origin&#x2F;master 中</span><br></pre></td></tr></table></figure>
+
+<h3 id="回滚操作"><a href="#回滚操作" class="headerlink" title="回滚操作"></a>回滚操作</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git reset HEAD        # 暂存区恢复成和 HEAD 一样</span><br><span class="line">git reset HEAD -- file_name1 file_name2 # 暂存区部分文件变得跟 HEAD 一样</span><br><span class="line">git checkout -- file_name # 工作目录指定文件恢复为和暂存区一样</span><br><span class="line">git checkout -- *|. ## 工作目录全部文件恢复为和暂存区一样</span><br><span class="line">git reset --hard hash_value # 把 HEAD、暂存区、工作目录都回滚到 hash_value 所代表的 commit 中。</span><br><span class="line">git reset --hard  # 把暂存区里面的修改去掉，也就是让暂存区、工作目录默认恢复到 HEAD 的位置</span><br></pre></td></tr></table></figure>
+
+<h3 id="工作目录、暂存区状态保存"><a href="#工作目录、暂存区状态保存" class="headerlink" title="工作目录、暂存区状态保存"></a>工作目录、暂存区状态保存</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git stash # 把相应的修改内容给存下来，之后 git status 查看的话又变为什么都没改变的了</span><br><span class="line">git stash list # 查看存下来的内容</span><br><span class="line">git stash apply # 存下来的内容又恢复了，但是存下来的内容还在 stash 中</span><br><span class="line">git stash pop   # 存下来的内容恢复了，但是存下来的内容也没了</span><br></pre></td></tr></table></figure>
+
+<h3 id="合并"><a href="#合并" class="headerlink" title="合并"></a>合并</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git merge branch_name1 branch_name2</span><br><span class="line">git merge hash_value1 hash_value2</span><br><span class="line">git merge --squash # 以 squash 方式进行 merge</span><br></pre></td></tr></table></figure>
+
+<h3 id="Git-对象操作"><a href="#Git-对象操作" class="headerlink" title="Git 对象操作"></a>Git 对象操作</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git cat-file -t|p|s hash_value # 显示版本库对象的内容，类型及大小信息</span><br><span class="line">git cat-file -t hash_value  # 查看版本库对象的类型</span><br><span class="line">git cat-file -p hash_value  # 查看版本库对象的内容</span><br><span class="line">git cat-file -s hash_value  # 查看版本库对象的大小</span><br></pre></td></tr></table></figure>
+
+<h3 id="Git-远端操作"><a href="#Git-远端操作" class="headerlink" title="Git 远端操作"></a>Git 远端操作</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote add &lt;远端名&gt; &lt;远端仓库地址&gt; # 这边远端名的意思是远端仓库的别名，push、pull 都将用到远端名</span><br><span class="line">git remote -v  # 查看远端仓库连接情况</span><br><span class="line">git remote set-url &lt;远端名&gt; 你新的远程仓库地址 # 修改远端仓库地址</span><br><span class="line">git remote rm &lt;远端名&gt;      # 删除远端仓库</span><br><span class="line">git clone &lt;远端仓库地址&gt; # 把远端仓库 clone 下来</span><br><span class="line">git clone --bare  &lt;远端仓库地址&gt; # bare 是指不带工作目录，也就相当于只 clone .git 目录</span><br><span class="line">git push &lt;远端名&gt; &lt;本地分支名&gt; </span><br><span class="line">git push -u &lt;远端名&gt; &lt;本地分支名&gt; # -u 表示将本地分支的内容推到远端分支，并且将本地分支和远端分支关联起来</span><br><span class="line">git push -u origin master # 表示把本地 master 分支的内容推到远端分支 origin&#x2F;master，并且将本地分支 master 和远端分支 origin&#x2F;master 关联起来</span><br><span class="line">git push # 这条命令也可以使用，默认是将当前本地所在分支推到相关联的远端分支</span><br><span class="line">git fetch &lt;远端名&gt; &lt;本地分支名&gt;</span><br><span class="line">git fetch origin master # 将远端分支 origin&#x2F;master fetch 到本地</span><br><span class="line">git pull &lt;远端名&gt; &lt;本地分支名&gt; # 将远端分支 fetch 到本地，并且将远端分支和本地所处分支进行合并</span><br><span class="line">git pull --rebase # 以 rebase 方式进行合并，也就是将本地分支 rebase 到远端分支</span><br></pre></td></tr></table></figure>]]></content>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git 的远端操作</title>
+    <url>/2020/07/20/Git-%E7%9A%84%E8%BF%9C%E7%AB%AF%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<p><img src="/images/pasted-75.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>大家好，我是多选参数的程序锅，一个正在 neng 操作系统、学数据结构和算法以及 Java 的硬核菜鸡。Git 是 4 月份时候开的一个坑，一直没填完，所以今天我先来填一下 Git 的坑。最近正在学习的内容，有的已经挖了坑，有的正在挖坑中。首先依旧是先来一份本篇内容的提纲。</p>
+<p><img src="/images/pasted-76.png" alt="upload successful"></p>
+<h4 id="远端仓库"><a href="#远端仓库" class="headerlink" title="远端仓库"></a>远端仓库</h4><p>git 中远端的定义较为广泛，任何其他位置，只要不是当前仓库，都可以算作远端。同一台机器上，只要不是当前仓库的位置也可以算作远端。另外，我们常见的 github、gitlab 也是远端仓库。那么本地仓库和远端仓库之间的传输协议有以下那么几种：<br>常用协议语法格式说明本地协议(1)/path/to/repo.git哑协议本地协议(2)file:///path/to/repo.git智能协议http/https 协议<a href="http://git-server.com:port/to/repo.git">http://git-server.com:port/to/repo.git</a> <a href="https://git-server.com:port/to/repo.git平时接触的都是智能协议ssh">https://git-server.com:port/to/repo.git平时接触的都是智能协议ssh</a> 协议<a href="mailto:user@git-server.com">user@git-server.com</a>:path/to/repo.git工作中最常用的智能协议</p>
+<ul>
+<li>本地协议是指同一台机器上，通过文件路径能访问到的</li>
+<li>http/https 方式需要账号密码</li>
+<li>ssh 协议是需要公私秘钥的</li>
+<li>哑协议传输进度不可见，智能传输协议可见，另外智能协议比哑协议传输速度快</li>
+</ul>
+<h4 id="远端操作"><a href="#远端操作" class="headerlink" title="远端操作"></a>远端操作</h4><ol>
+<li><p>git remote 与远端仓库建立连接</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote add &lt;远端名&gt; &lt;远端仓库地址&gt;  # 这边远端名的意思是远端仓库的别名，push、pull 都将用到远端名</span><br><span class="line">git remote -v          # 查看远端仓库连接情况</span><br><span class="line">git remote set-url &lt;远端名&gt; 你新的远程仓库地址 # 修改远端仓库地址</span><br><span class="line">git remote rm &lt;远端名&gt;      # 删除远端仓库</span><br></pre></td></tr></table></figure>
+<p>在使用 git remote 命令之后，会多出一个远端分支。</p>
+</li>
+<li><p>git clone 将远端仓库 clone 下来</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git clone &lt;远端仓库地址&gt; # 把远端仓库 clone 下来</span><br><span class="line">git clone --bare  &lt;远端仓库地址&gt; # bare 是指不带工作目录，也就相当于只 clone .git 目录</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>从远端上 clone 一个仓库的时候，那么 clone 下来的仓库已经和远端建立了连接，不需要再使用 git remote 命令</p>
+</blockquote>
+</li>
+<li><p>git push 将本地分支推到远端</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git push &lt;远端名&gt; &lt;本地分支名&gt; </span><br><span class="line">git push -u &lt;远端名&gt; &lt;本地分支名&gt; # -u 表示将本地分支的内容推到远端分支，并且将本地分支和远端分支关联起来</span><br><span class="line">git push -u origin master # 表示把本地 master 分支的内容推到远端分支 origin&#x2F;master，并且将本地分支 master 和远端分支 origin&#x2F;master 关联起来</span><br><span class="line">git push # 这条命令也可以使用，默认是将当前本地分支推到相关联的远端分支</span><br></pre></td></tr></table></figure>
+<p>git push 的意思是本地比较新，要把本地 push 到远端，对远端进行更新，其实也就是更新 origin/master 的指向。所以 git push origin master， 其实就相当于把 origin/master 的指针移到 master 的位置，这样子 origin/master 就被更新了，然后将远端分支拷贝到远端，这样就相当于远端被更新了，但是在执行 push 的时候得要求远端仓库的 origin/master 是本地更新之后的 origin/master 的 fast-forward，也就相当于远端仓库的 origin/master 得在本地更新之后的 origin/master 的前面，其实也就是在一条线上。简单来说 git push 就是先将改变 origin/master ，然后将其复制到远端。（Hint：经过测试，本地仓库处于 master 分支，那么执行 git push origin temp 命令，操作的两个分支其实是 origin/temp 和 temp 分支）</p>
+</li>
+</ol>
+<blockquote>
+<p>在push的时候有时候会遇到 None fast-forward 问题，None fast-forward 是指：同分支情况下或者说两个相互绑定的远端分支和本地分支的情况下（通常origin/master 和 master 属于同分支），远端分支不是本地分支的父亲上的，也就是远端分支跟本地分支不在同一个分支上也就是远端分支所指的 commit 不在本地分支最新的 commit 的前面。</p>
+</blockquote>
+<ol start="4">
+<li><p>git fetch 将远端分支 fetch 到本地</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git fetch &lt;远端名&gt; &lt;本地分支名&gt;</span><br><span class="line">git fetch origin master # 将远端分支 origin&#x2F;master fetch 到本地</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git pull 这个命令是 git fetch 和 git merge 的整合</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git pull &lt;远端名&gt; &lt;本地分支名&gt; # 将远端分支 fetch 到本地，并且将远端分支和本地所处分支进行合并</span><br><span class="line">git pull --rebase # 以 rebase 方式进行合并，也就是将本地分支 rebase 到远端分支</span><br></pre></td></tr></table></figure>
+<p>git pull 的意思是远端比较新，要把本地分支进行更新。那么 git pull origin master，是相当于先把远端的 origin/master fetch 到本地，然后让 master 移到 origin/master 的位置（这是本地所在分支为 master，并且是 fast-forward 的情况）。假如 master 和 origin/master 不是 fast-forward（但是本地所在分支是 master），那么 master 和 origin/master 会进行 merge。那么假如本地当前分支不是 master，而是 temp，并且 temp 分支跟 origin/master 也不是 fast-forward，那么 temp 分支会和 origin/master 分支进行 merge。所以简单来说 git pull 就是先把远端分支 fetch 下来，然后将本地分支更新为远端分支所指的地方，这跟 git push 正好是反操作。</p>
+</li>
+</ol>
+<blockquote>
+<p>多人开发的情况下，一定要先 git fetch 或者 git pull。</p>
+</blockquote>
+<ol start="6">
+<li>远端操作总结—个人理解</li>
+</ol>
+<p>刚开始的时候对 git 的远端概念不太懂，怎么一会儿远端分支 origin/master、一会儿本地分支 master的，为啥 push 了之后，远端仓库内容就被更新了呢，pull 之后本地仓库就被更新了呢。在接触之后，其实从 git 是分布式的角度可以理解一波，git 分布式也就意味着一份仓库的内容，同时在远端和本地都有备份。如下图所示</p>
+<p><img src="/images/pasted-77.png" alt="upload successful"></p>
+<p>那么远端分支和本地分支都是这个仓库的分支，比如 origin/master 和 master 都是仓库的分支。只是本地仓库操作的分支是都是本地分支，而远端仓库只在远端分支上进行操作，远端仓库显示的内容是远端分支的内容。那么 push、pull 等操作其实就可以简单的当做对本地仓库分支的操作，比如 push 操作就是把本地仓库中的远端分支指向本地分支，然后把远端分支的情况同步到远端。pull 操作就是把远端仓库的远端分支同步下来，然后对将本地分支指向远端分支。</p>
+<h4 id="git-与-github-简单同步"><a href="#git-与-github-简单同步" class="headerlink" title="git 与 github 简单同步"></a>git 与 github 简单同步</h4><p>上文提到了 github 也可以算是一个远端仓库，那么本地仓库与远端仓库之间通信的方式有四种。显然，假如把 github 当成远端仓库，本地协议不能用了，只能用 http/https 协议或者 SSH 协议。假如需要想用 SSH 协议的话，需要配置公私钥，但是这个步骤在这里省略，下面是已经配好公私钥的。</p>
+<ol>
+<li>Github 上创建仓库</li>
+</ol>
+<p><img src="/images/pasted-78.png" alt="upload successful"></p>
+<p>依次将所需填写的内容填写完成，之后点击 “Create repository” 即可创建相应的仓库，其中关于填写选项有以下几点说明：</p>
+<ul>
+<li>Description：如果希望别人很容易搜到你的 repository 的话，那么需要在这块写具体一点</li>
+<li>Public：repository 可以让所有看到，但是仅有只读权限。</li>
+<li>Private：repository 并不是对外开放的，需要授权。</li>
+<li>README：搜索 repository 的时候，会到 README 里面搜索关键字的。</li>
+<li>Add .gitignore：有很多 .gitignore 的模板供你选择，可以根据仓库会使用的语言选择一个，也可不选。</li>
+<li>Add a license：选择开源协议</li>
+</ul>
+<p>创建完成之后，如下图所示：</p>
+<p><img src="/images/pasted-79.png" alt="upload successful"></p>
+<ol start="2">
+<li>本地仓库同步到 Github 上</li>
+</ol>
+<p>现在要将本地的这个仓库同步到 Github 上</p>
+<ul>
+<li>首先与远端仓库进行关联<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote add test git@github.com:******&#x2F;*****.git</span><br><span class="line"># test 是远端连接的名字，test 就表示后面那个仓库的地址，git 默认的是 origin，也可以改为别的；</span><br><span class="line"># git@...  这是上面新建仓库的地址，这是 SSH 协议的格式，也可以选择 https 方式的</span><br></pre></td></tr></table></figure></li>
+<li>之后使用 git push 命令把本地库的内容推送到远程<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git push -u test master</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>由于远程库是空的，我们第一次推送时，加上了 -u 参数，Git不但会把本地的 master 分支内容推送到远程新的 master 分支，还会把本地的 master 分支和远程的 master 分支关联起来。此后，每次本地提交后，就可以使用命令 git push origin master 推送最新修改。上述提交完成之后，Github 上面的内容就和本地的一样了。</p>
+<ol start="3">
+<li>本地仓库与远程仓库进行整合<br>上面所述的是在 Github 创建的是一个空仓库，假如Github上创建的仓库已经存在了东西，如下所示，仓库中已经还有了 LICENSE 文件，那么在 push 之前需要先 pull 或者 fetch &amp;&amp; merge。</li>
+</ol>
+<p><img src="/images/pasted-80.png" alt="upload successful"></p>
+<ul>
+<li><p>先使用 git remote 命令与远端仓库建立连接</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote add git_learning git@github.com:******&#x2F;******&#x2F;.git</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>之后先把远端的东西 fetch 下来</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git fetch git_learning master</span><br></pre></td></tr></table></figure>
+<p>假如不把远端的仓库中的东西 fetch 下来的话，而是直接 push 的话会报 fast-forward 错误。</p>
+</li>
+</ul>
+<p><img src="/images/pasted-81.png" alt="upload successful"></p>
+<ul>
+<li><p>使用 git merge 将两颗不相关的分支进行整合</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git merge --allow-unrelated-histories git_learning&#x2F;master</span><br><span class="line"># allow-unrelated-histories 表示允许两颗不相关的分支进行整合，这边不相关可以指没有父子关系</span><br><span class="line"># git_learning&#x2F;master  表示要 merge 的两个分支</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>最后再 git push</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git push git_learning master</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>其他方法</p>
+<ul>
+<li>其实针第二步开始可以使用 git pull 命令，因为 git pull 命令就包含了 fetch 和 merge 两个命令。</li>
+<li>当然，我们可以不用 merge 的方式进行合并，还可以使用 rebase 的方式进行合并，使用 git rebase orgin/master （假设本地仓库 HEAD 指向 master），那么就相当于把本地 master 中的 commit 以线性的方式依次合并到 origin/master 中。</li>
+<li>甚至可以在 git pull 的时候直接使用 git pull –rebase。</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git - 进级篇</title>
+    <url>/2020/07/17/Git-%E8%BF%9B%E7%BA%A7%E7%AF%87/</url>
+    <content><![CDATA[<p><img src="/images/pasted-53.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<p><img src="/images/pasted-54.png" alt="upload successful"></p>
+<h3 id="Git-进阶使用"><a href="#Git-进阶使用" class="headerlink" title="Git 进阶使用"></a>Git 进阶使用</h3><h4 id="版本历史更改"><a href="#版本历史更改" class="headerlink" title="版本历史更改"></a>版本历史更改</h4><ol>
+<li>最近一次 commit 的 message 修改</li>
+</ol>
+<p>使用如下命令就可以对最近一次 commit 的 message 进行变更了</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>老旧 commit 的 message 修改 — rebase + reword<br>输入如下命令</li>
+</ol>
+<p>git rebase -i hash_value # hash_value，是需要的 commit 的父亲 commit 的 hash_value<br>之后会发生一系列交互，比如你想某个 commit 对应的message，那么将该 commit 之前的 pick 改为 reword 或者 r（看下面的注释信息），然后保存退出。之后就跳到了修改 message 的文档了，在这里输入改变之后的 message 保存退出即可。</p>
+<p><img src="/images/pasted-55.png" alt="upload successful"><br>注意：这种方式修改之后会导致该 commit 及后面 commit 的 hash_value 都被改变掉，所以不适合团队集成开发中使用。</p>
+<ol start="3">
+<li>把连续的多个 commit 合并成一个 — rebase + squash<br>输入如下命令，</li>
+</ol>
+<p>git rebase -i hash_value # hash_value 是要合并的 commit 的父亲 commit<br>输入之后会发生一系列的交互，如下所示，</p>
+<p><img src="/images/pasted-56.png" alt="upload successful"><br>假如我想要把上面两个 commit 合并成一个，需要使用 squash ，版本历史中较早的 commit 在上面，较晚的 commit 在下面，进行合并的话，是把较早的保留，较晚的合并到较早中去，所以要将上述两个 commit 进行合并的话，修改为如下所示，并保存退出</p>
+<p><img src="/images/pasted-57.png" alt="upload successful"><br>之后会进入另一个交互，在下面填写更改之后的 message 信息，保存退出之后即可。</p>
+<p><img src="/images/pasted-58.png" alt="upload successful"><br>4. 把间隔的几个 commit 合并成一个 — rebase + squash<br>与上述类似，就是把间隔的 commit 移到一块即可。同样首先是输入如下命令，hash_value 是间隔多个 commit 中的最开始那个 commit 的父亲 commit 的 hash_value</p>
+<p>git rebase -i hash_value<br>之后会进入交互界面，</p>
+<p><img src="/images/pasted-59.png" alt="upload successful"><br>比如想要合并 760df21 和 2234131 这两个 commit的话，那么修改为如下内容，保存退出即可</p>
+<p><img src="/images/pasted-60.png" alt="upload successful"><br>之后会进入修改 message 的页面，修改之后保存退出即可</p>
+<p><img src="/images/pasted-61.png" alt="upload successful"><br>5. rebase 其他操作<br>上述都使用了 git rebase 的命令，rebase 的意思是说改变基底，把版本历史中的某些 commit 给修改了。</p>
+<p>git rebase origin/master # 把当前分支基于 origin/master 做 rebase 操作，也就相当于把当前分支的东西加到 origin/master 中<br>git rerere      # 记录冲突解决的方式，然后可以在 rebase 的时候反复应用，可以和 rebase 结合用<br>6. 碎碎念<br>上述对 commit 的修改和合并，会导致该 commit 及后面 commit 的 hash_value 都被改变掉，所以不适合团队集成开发中使用。</p>
+<p>假如 commit 修改和合并这一步操作完成之后不是直接进入修改 message 的页面，请根据提示进行进一步操作，比如git rebase –continue。</p>
+<p>假如合并的包含了根 commit，那么 hash_value 则是根 commit 的 hash_value，之后在交互文档中把根 commit 填入即可，只需要填入要操作的名称和 hash_value 即可。</p>
+<p>在合并 commit 中，假如一个 commit 没有被 pick 的话，比如注释了或者删除，那么在完成一系列操作中之后，这个 commit 将会被丢弃。如下图所示，275a765 这个 commit 被注释掉了的话，那么在完成之后，这个 commit 将会被丢弃。</p>
+<p><img src="/images/pasted-62.png" alt="upload successful"></p>
+<h4 id="回滚操作-—-git-reset"><a href="#回滚操作-—-git-reset" class="headerlink" title="回滚操作 — git reset"></a>回滚操作 — git reset</h4><ol>
+<li>暂存区恢复成和 HEAD 一样<br>git reset HEAD<br>git reset HEAD – file_name1 file_name2 # 暂存区部分文件变得跟 HEAD 一样<br>比如一开始的话，HEAD 、暂存区和工作目录都是一样的，都是状态A，并且 readme*.md 文件都已经被跟踪起来了。下面我们修改 readme3.md 文件，之后把它 add 到暂存区。那么这样子工作目录和暂存区都是状态 B，而 HEAD 是状态 A。那么使用上述命令之后，会将暂存区恢复成状态 A。</li>
+</ol>
+<p><img src="/images/pasted-63.png" alt="upload successful"><br>2. 工作目录恢复为和暂存区一样<br>git checkout – file_name # 工作目录中指定文件恢复为和暂存区一样<br>git checkout – *|. ## 工作目录全部文件恢复为和暂存区一样</p>
+<p><img src="/images/pasted-64.png" alt="upload successful"><br>3. 回滚到某个 commit<br>git reset –hard hash_value # 把 HEAD、暂存区、工作目录都回滚到 hash_value 所代表的 commit 中。<br>git reset –hard  # 把暂存区里面的修改去掉，也就是让暂存区、工作目录默认恢复到 HEAD 的位置</p>
+<p><img src="/images/pasted-65.png" alt="upload successful"></p>
+<p><img src="/images/pasted-66.png" alt="upload successful"><br>4. 碎碎念<br>工作目录内容的修改使用 git checkout，</p>
+<p>暂存区内容的修改使用 git reset</p>
+<p>版本历史的修改使用 git rabase</p>
+<h4 id="工作目录、暂存区的更改状态保存下来"><a href="#工作目录、暂存区的更改状态保存下来" class="headerlink" title="工作目录、暂存区的更改状态保存下来"></a>工作目录、暂存区的更改状态保存下来</h4><p>这个应用在开发中临时加塞了紧急任务的情况，可以把处理了一半，还在工作目录、暂存区的更改状态保存下来。</p>
+<p>git stash # 把相应的修改内容给存下来，之后 git status 查看的话又变为什么都没改变的了<br>git stash list # 查看存下来的内容<br>git stash apply # 存下来的内容又恢复了，但是存下来的内容还在 stash 中<br>git stash pop   # 存下来的内容恢复了，但是存下来的内容也没了</p>
+<p><img src="/images/pasted-67.png" alt="upload successful"></p>
+<h4 id="git-merge"><a href="#git-merge" class="headerlink" title="git merge"></a>git merge</h4><p>将两个分支或者两个 commit 进行 merge，merge 之后也会产生一个 commit</p>
+<p>git merge branch_name1 branch_name2<br>git merge hash_value1 hash_value2<br>git merge –squash # 以 squash 方式进行 merge<br>在 merge 的过程中有时候会产生冲突，比如两个分支修改或者两个 commit 修改的是同文件的同一区域，那么就会发生冲突，那么会在相应文件冲突的地方有提示，大致如下所示。</p>
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD<br>windows<br>=======<br>root</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>origin/master<br>通过协商和决定之后，确定文件最终内容，同时把上述内容删除。之后 git add 、git commit 即可。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>不同人修改了不同文件不会产生冲突。比如说两个人维护一个仓库，一个人修改 A 文件，另一个修改 B 文件，那么 merge 的话不会产生冲突，直接将内容合并在一起。</p>
+<p>不同人修改了同文件不同区域不会产生冲突。merge 的话直接将内容合并在一起。</p>
+<p>同一文件改成不同的文件名会产生冲突。同上，一个人把文件名改成了 rename1，另一个人把文件名改成了 rename2，那么 merge 会发生冲突，需要进行协商确定最终的文件名。</p>
+<p>不同人修改了同文件的同一区域会产生冲突。merge 的话因为不能确定保留谁的内容所以会产生冲突。</p>
+<h4 id="分离头指针"><a href="#分离头指针" class="headerlink" title="分离头指针"></a>分离头指针</h4><p>分离头指针的例子如下所示，上面提到切换到某个分支的用法是</p>
+<p>$ git checkout branch_name<br>那么假如把 branch_name 变成了 hash_value，那么这个就相当于“分离头指针”（PS：个人的理解是相当于创建了一个匿名 branch，这个匿名的 branch 是从 hash_value 的地方分出来的）</p>
+<p>$ git checkout hash_value<br>之后的 commit 都是基于这个分离头指针的位置开始的，这些 commit 都没有基于某个 branch，相当于都是“游离”状态的。那么当切回到某个分支之后，这些 commit 都会被当成垃圾一样清理掉。如果这些 commit 很重要，那么请把这些 commit 跟某个 branch 绑在一起。</p>
+<p>另外分类头指针也是可以用的，比如我们先用分离头指针进行一波修改和测试，如果测试不错，那么就把这些修改的 commit 添加成 branch。</p>
+<h4 id="gitignore-—-指定不需要-git-管理的文件"><a href="#gitignore-—-指定不需要-git-管理的文件" class="headerlink" title=".gitignore — 指定不需要 git 管理的文件"></a>.gitignore — 指定不需要 git 管理的文件</h4><p>git 更多是管理代码的版本控制，而代码构建出来的东西可以不用管理，因为这些是可以复现的。那么 .gitignore 这个文件就是告诉 git 哪些文件不需要被纳入版本控制系统的，也就是相当于会被忽视。</p>
+<p>doc  # doc 文件和 doc 目录都不会被管理<br>doc/  # 只指定 doc 目录不会被管理，但是 doc 文件没被说明，假如 doc 在的话，还是会被管理起来的<br>上面内容的有效范围是在整个项目中，即包括子目录等</p>
+<p><img src="/images/pasted-68.png" alt="upload successful"></p>
+<p><img src="/images/pasted-69.png" alt="upload successful"><br>.gitignore 可以借助 github 创建仓库时生成，常用的 .gitignore 如下所示，自己写的时候也值得参考一波：<a href="https://github.com/github/gitignore" target="_blank" rel="noopener">https://github.com/github/gitignore</a> ；</p>
+<p>另外想要 git 不管理某些文件，只能在 .gitignore 文件中指定；</p>
+<h4 id="团队合作注意事项"><a href="#团队合作注意事项" class="headerlink" title="团队合作注意事项"></a>团队合作注意事项</h4><p>如果你的 git 仓库是跟其他人一起维护的，那么请注意一下几点：</p>
+<p>git push -f 不能使用</p>
+<p>公共的分支严禁拉倒本地做 rebase 操作的，因为一旦做了 rebase 操作之后，历史的 commit 就变了，但是其他人那边还是老旧的 commit，他们是基于老旧的 commit 做事情的，而你是几于新的 commit 做事情了，那么就相当于是两条分支了。所以记住了，不能向集成分支执行变更历史操作，建议的方式是在现在 commit 的基础之上再做调整。</p>
+<p><img src="/images/pasted-70.png" alt="upload successful"><br>A 在 temp 分支上做 rabase 操作，那么 temp 分支就会和 master 分开。如下图所示，</p>
+<p><img src="/images/pasted-71.png" alt="upload successful"><br>然而在另一个人，还是基于如下情况做的 commit 等，那么这样，就出现问题了</p>
+<p><img src="/images/pasted-72.png" alt="upload successful"></p>
+<h3 id="git-中的对象及其操作"><a href="#git-中的对象及其操作" class="headerlink" title="git 中的对象及其操作"></a>git 中的对象及其操作</h3><p>git 中的对象有三种：commit、tree、blob。下面对这三种对象进行阐述。</p>
+<h4 id="commit"><a href="#commit" class="headerlink" title="commit"></a>commit</h4><p>每次执行git commit都会创建一个commit对象，一个 commit 对象只包含一个 tree 对象，这个 tree 对象是 .git 所在父目录的对象， 那么这样子的话，一次 commit 就相当于把当前目录的情况给记录下来了。</p>
+<h4 id="tree"><a href="#tree" class="headerlink" title="tree"></a>tree</h4><p>目录的对象，那么由于目录中可以包含目录，也可以包含文件，所以 tree 对象可以包含 tree 对象，也可以包含 blob 对象。</p>
+<h4 id="blob"><a href="#blob" class="headerlink" title="blob"></a>blob</h4><p>blob 是一个文件的具体对象，比如png图像，css文件，这些文件都会对应一个blob对象，可以说是 git 对象中最基本的。另外，blob 跟文件名一点关系都么有，只要文件内容相同，不管文件名叫什么，blob 只有一份。</p>
+<p>新建的Git 仓库中，有且仅有一个 commit，仅仅包含了 /doc/readme，请问内含多少个 tree，多个 blob？</p>
+<p>含两个 tree，一个 blob。首先是 git 仓库所在目录是一个 tree (也就是 /doc/readme 的父目录)，doc 是一个tree，而 readme 文件是唯一 blob。</p>
+<h4 id="对象的相关操作"><a href="#对象的相关操作" class="headerlink" title="对象的相关操作"></a>对象的相关操作</h4><p>git cat-file -t|p|s hash_value # 显示版本库对象的内容，类型及大小信息<br>git cat-file -t hash_value  # 查看版本库对象的类型<br>git cat-file -p hash_value  # 查看版本库对象的内容<br>git cat-file -s hash_value  # 查看版本库对象的大小</p>
+<h3 id="git-目录探索"><a href="#git-目录探索" class="headerlink" title=".git 目录探索"></a>.git 目录探索</h3><h4 id="HEAD-文件"><a href="#HEAD-文件" class="headerlink" title="HEAD 文件"></a>HEAD 文件</h4><p>HEAD文件的内容显示了 HEAD 当前所指的分支信息，通过下面的内容可以佐证上面 HEAD 说到的一点：HEAD 指向的是某个分支，但通过查看分支文件内容可以发现里面其实是 commit 的 hash_value，也就是说 HEAD 实际指向的是某个commit。</p>
+<p><img src="/images/pasted-73.png" alt="upload successful"><br>git_head_temp</p>
+<p>使用 git checkout 命令之后，查看HEAD 文件的内容</p>
+<p><img src="/images/pasted-74.png" alt="upload successful"><br>git_head_chang_to_master</p>
+<h4 id="config-文件"><a href="#config-文件" class="headerlink" title="config 文件"></a>config 文件</h4><p>存放本地仓库（local）相关的配置信息，假如之前设置了 local 下的 user.name ，那么会在这个文件中存储相关的内容等信息。修改 config 文件中 user.name 配置项的内容，使用命令查看到的也是修改之后的。</p>
+<h4 id="refs-目录"><a href="#refs-目录" class="headerlink" title="refs 目录"></a>refs 目录</h4><ol>
+<li>heads 子目录<br>目录中包含的是各分支信息，每一个文件的内容都是 hash value，这个是值是该分支最后一次 commit 的 hash_value 值</li>
+</ol>
+<p>…/.git/refs/heads# ls<br>master  temp  temp2<br>…/.git/refs/heads# cat master<br>9ef147d58eb7e09987cf5ce92254b1600ac92cd9<br>2. tags 子目录<br>里面显示的是标签的信息，Git 仓库可以有很多标签，项目开发到一定程度，是一个关键的成果了，比如开发到 v1.0，那可以打上一个标签了。</p>
+<h4 id="objects-目录"><a href="#objects-目录" class="headerlink" title="objects 目录"></a>objects 目录</h4><p>存放对象的目录。git 中的对象都是由 40 位字符组成，前两位字符用来当 object 目录中子目录名，后 38 位做文件名。</p>
+]]></content>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git常用操作</title>
+    <url>/2020/07/14/Git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<p><img src="/images/pasted-34.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<p> 常用命令<br>1.1. git 配置</p>
+<h1 id="显示-config-的配置-加–list"><a href="#显示-config-的配置-加–list" class="headerlink" title="显示 config 的配置 加–list"></a>显示 config 的配置 加–list</h1><h1 id="优先级：local-gt-global-gt-system"><a href="#优先级：local-gt-global-gt-system" class="headerlink" title="优先级：local &gt; global &gt; system"></a>优先级：local &gt; global &gt; system</h1><p>git config –list –local # local 的范围是某个仓库<br>git config –list –global # global 的范围是登录的用户<br>git config –list –system # system 的范围是系统所有登录的用户</p>
+<h1 id="配置用户-name-和-email"><a href="#配置用户-name-和-email" class="headerlink" title="配置用户 name 和 email"></a>配置用户 name 和 email</h1><p>git config –global user.name ‘your_name ‘<br>git config –global user.email ‘your_email@domain.com’</p>
+<h1 id="清除配置信息"><a href="#清除配置信息" class="headerlink" title="清除配置信息"></a>清除配置信息</h1><p>git config –unset –global user.name<br>1.2. 仓库初始化</p>
+<h1 id="将执行该命令时所在的目录初始化为一个-git-仓库（如：进入某目录后执行该命令会将该目录初始化为一个-git-仓库）"><a href="#将执行该命令时所在的目录初始化为一个-git-仓库（如：进入某目录后执行该命令会将该目录初始化为一个-git-仓库）" class="headerlink" title="将执行该命令时所在的目录初始化为一个 git 仓库（如：进入某目录后执行该命令会将该目录初始化为一个 git 仓库）"></a>将执行该命令时所在的目录初始化为一个 git 仓库（如：进入某目录后执行该命令会将该目录初始化为一个 git 仓库）</h1><p>git init</p>
+<h1 id="会在当前路径下创建和项目名称同名的文件夹，并将其初始化为-git-仓库"><a href="#会在当前路径下创建和项目名称同名的文件夹，并将其初始化为-git-仓库" class="headerlink" title="会在当前路径下创建和项目名称同名的文件夹，并将其初始化为 git 仓库"></a>会在当前路径下创建和项目名称同名的文件夹，并将其初始化为 git 仓库</h1><p>git init your_project<br>1.3. git add<br>git add readme.md # 将 readme.md 文件添加到暂存区<br>git add . # 将当前工作目录的所有文件添加到暂存区<br>git add -u # 把修改之后的文件（这些文件已经被管理起来了）一次性提交到暂存区<br>1.4. git status<br>git status # 查看工作目录和暂存区的状态<br>1.5. git commit<br>git commit -m ‘Add readme.md’ # -m 指定 commit 的信息<br>git commit # 这时候会跳出一个文本输入界面，让你输入更多的 commit 信息<br>1.6. git mv<br>git mv readme readme.md # 将 git 管理的文件进行重命名<br>1.7. git rm<br>git rm filename # 从 git 管理的文件删除某个已管理的文件，同时把修改的情况添加到暂存区<br>1.8. git log<br>git log # 只查看当前分支(Head所指的分支)的log情况<br>git log –oneline # 简洁的显示版本更新信息<br>git log -n2  # n2 代表查看最近两次commit历史<br>git log -2   # 2 代表查看最近两次commit历史<br>git log -n2 –oneline # 简洁的显示最近两次的版本更新信息<br>git log branch_name # 后面跟上分支名表示查看该分支的log日志<br>git log -all # 列出所有分支的log<br>git log –all –graph # 以图形化的方式查看<br>git log –oneline –all # 以简洁的方式查看所有分支的log<br>git log –oneline –all -n4# 以简洁的方式查看所有分支的log<br>git help log # 以web的方式查看log的帮助文档，等同于<br>git help –web log # 和上面那条效果一样<br>2. 分支相关<br>git branch -v # 查看本地分支的详细情况<br>git branch -a # 查看所有分支，包括远端分支，但没有过于详细的信息<br>git branch -av # 查看所有分支情况<br>git branch branch_name hash_value # 创建一个新的分支，基于 hash_value 的这个 commit 创建一个新的分支，hash_value 可以省略，那么默认是基于当前分支的最后一个 commit 创建。<br>git branch -d branch_name<br>git branch -D branch_name  # 这个分支已经有了一些 commit<br>git checkout branch_name # 切换分支<br>git checkout master<br>git checkout -b branch_name git_id # 创建一个新的分支并切换过去，git_id可以是hash_value，也可以是某个分支的名字（分支的名字其实就指向了某个 commit）<br>git checkout -b temp 9ef147d<br>git checkout -b temp2 master<br>git checkout hash_value  # 分离头指针<br>3. 比较<br>git diff hash_value1 hash_value2 # hash_value1 对应的 comimit 和 hash_value2 对应的 commit 进行比较<br>git diff hash_value1 hash_value2 – file_name1 file_name2 # 在上述基础之上，只比较 file_name1、file_name2 这两个文件<br>git diff branch_name1 branch_name2 # 对两个分支进行比较，也可以跟 – 只看某些文件<br>git diff HEAD HEAD^  # HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较<br>git diff HEAD HEAD^^ # HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较<br>git diff HEAD HEAD~  # HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较<br>git diff HEAD HEAD<del>1 # 同上<br>git diff HEAD HEAD</del>2 # HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较<br>git diff –cached  # 暂存区和 HEAD 做比较，也可以跟 – 只看某些文件<br>git diff      # 工作目录和暂存区中所有文件进行比较，也可以跟 – 只看某些文件<br>4. 版本历史更改<br>git commit –amend # 最近一次 commit 的 message 修改<br>git rebase -i hash_value # 交互文件中选择 reword，老旧 commit 的 message 修改。hash_value，是需要的 commit 的父亲 commit 的 hash_value<br>git rabase -i hash_value # 交互文件中选择 squash，多个连续 commit 合并成一个，hash_value 同上<br>git rebase -i hash_value # 交互文件中选择 squash，把间隔的 commit 移到一块，即可合并成一个，hash_value<br>git rebase origin/master # 把当前分支基于 origin/master 做 rebase 操作，也就相当于把当前分支的东西加到 origin/master 中<br>5. 回滚操作<br>git reset HEAD        # 暂存区恢复成和 HEAD 一样<br>git reset HEAD – file_name1 file_name2 # 暂存区部分文件变得跟 HEAD 一样<br>git checkout – file_name # 工作目录指定文件恢复为和暂存区一样<br>git checkout – *|. ## 工作目录全部文件恢复为和暂存区一样<br>git reset –hard hash_value # 把 HEAD、暂存区、工作目录都回滚到 hash_value 所代表的 commit 中。<br>git reset –hard  # 把暂存区里面的修改去掉，也就是让暂存区、工作目录默认恢复到 HEAD 的位置<br>6. 工作目录、暂存区状态保存<br>git stash # 把相应的修改内容给存下来，之后 git status 查看的话又变为什么都没改变的了<br>git stash list # 查看存下来的内容<br>git stash apply # 存下来的内容又恢复了，但是存下来的内容还在 stash 中<br>git stash pop   # 存下来的内容恢复了，但是存下来的内容也没了<br>7. 合并<br>git merge branch_name1 branch_name2<br>git merge hash_value1 hash_value2<br>git merge –squash # 以 squash 方式进行 merge<br>8. Git 对象操作<br>git cat-file -t|p|s hash_value # 显示版本库对象的内容，类型及大小信息<br>git cat-file -t hash_value  # 查看版本库对象的类型<br>git cat-file -p hash_value  # 查看版本库对象的内容<br>git cat-file -s hash_value  # 查看版本库对象的大小<br>9. Git 远端操作<br>git remote add &lt;远端名&gt; &lt;远端仓库地址&gt; # 这边远端名的意思是远端仓库的别名，push、pull 都将用到远端名<br>git remote -v  # 查看远端仓库连接情况<br>git remote set-url &lt;远端名&gt; 你新的远程仓库地址 # 修改远端仓库地址<br>git remote rm &lt;远端名&gt;      # 删除远端仓库<br>git clone &lt;远端仓库地址&gt; # 把远端仓库 clone 下来<br>git clone –bare  &lt;远端仓库地址&gt; # bare 是指不带工作目录，也就相当于只 clone .git 目录<br>git push &lt;远端名&gt; &lt;本地分支名&gt;<br>git push -u &lt;远端名&gt; &lt;本地分支名&gt; # -u 表示将本地分支的内容推到远端分支，并且将本地分支和远端分支关联起来<br>git push -u origin master # 表示把本地 master 分支的内容推到远端分支 origin/master，并且将本地分支 master 和远端分支 origin/master 关联起来<br>git push # 这条命令也可以使用，默认是将当前本地所在分支推到相关联的远端分支<br>git fetch &lt;远端名&gt; &lt;本地分支名&gt;<br>git fetch origin master # 将远端分支 origin/master fetch 到本地<br>git pull &lt;远端名&gt; &lt;本地分支名&gt; # 将远端分支 fetch 到本地，并且将远端分支和本地所处分支进行合并<br>git pull –rebase # 以 rebase 方式进行合并，也就是将本地分支 rebase 到远端分支</p>
+]]></content>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Redis - 基础</title>
+    <url>/2020/07/21/Redis-%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<h4 id="什么是Redis"><a href="#什么是Redis" class="headerlink" title="什么是Redis"></a>什么是Redis</h4><p>我们先看看Redis官网给的介绍：</p>
+<blockquote>
+<p>Redis is an open source (BSD licensed), in-memory data structure store, used as a database, cache and message broker. It supports data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs, geospatial indexes with radius queries and streams. Redis has built-in replication, Lua scripting, LRU eviction, transactions and different levels of on-disk persistence, and provides high availability via Redis Sentinel and automatic partitioning with Redis Cluster.</p>
+</blockquote>
+<p>简而言之，Redis是一个开源的使用ANSI C语言编写、遵守BSD协议、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种数据类型，功能挺强。</p>
+<a id="more"></a>
+
+<h4 id="Redis之父"><a href="#Redis之父" class="headerlink" title="Redis之父"></a>Redis之父</h4><p>Redis之父是Salvatore Sanfilippo，一名来自意大利西西里岛的程序员，大家更习惯称呼他Antirez。如果你对他感兴趣，可以去他的博客逛逛，或者去关注他的github。</p>
+<h4 id="Redis有什么优势"><a href="#Redis有什么优势" class="headerlink" title="Redis有什么优势"></a>Redis有什么优势</h4><ul>
+<li>速度快：Redis使用内存来存储数据集，且支持Pipelining命令，可以一次发送多条命令。</li>
+<li>持久化：可以把内存中的数据保存在磁盘中，在重启时可重新加载使用。</li>
+<li>原子性：所有操作都是原子性的，同时支持事务。</li>
+<li>数据结构丰富：支持字符串、列表、哈希、集合及有序集合，满足大多数使用需求。</li>
+<li>支持多种语言：Redis支持许多语言，如C、C++、C#、Go、Java、JavaScript、PHP等等。</li>
+<li>多种特性：Redis还支持publish/subscribe, 通知, key 过期等特性。</li>
+</ul>
+<h4 id="Redis能做什么"><a href="#Redis能做什么" class="headerlink" title="Redis能做什么"></a>Redis能做什么</h4><p>因为Redis交换数据速度快，所以常在服务器中被用于存储一些需要频繁调取的数据，相比于直接读取磁盘来获得数据，使用Redis可以节省大量时间，提升效率。举个例子：</p>
+<blockquote>
+<p>某视频网站每天有100万人访问首页推荐视频专栏，如果都从数据库查询读取，那么每天都至少要多出100万次数据库查询请求。若使用了Redis，将常被调取的数据存到内存中，每次节约0.1秒，100万次就有10万秒，极大程度提高了速度与开销。</p>
+</blockquote>
+<p>总之，Redis的应用场景十分广泛，且价值极高，现在就开始学学基础。</p>
+<h4 id="安装Redis"><a href="#安装Redis" class="headerlink" title="安装Redis"></a>安装Redis</h4><p>工欲善其事必先利其器，学习Redis的第一步肯定就是安装Redis。由于我的环境是Windows系统，就只演示Windows下安装Redis。如果你不想安装Redis，但想体验一番，可以去官网提供的在线测试网站，里面也附有简单的介绍和教程。</p>
+<ul>
+<li>Windows下安装Redis下载地址：<a href="https://github.com/microsoftarchive/redis/releases/tag/win-3.2.100这里我们下载Redis-x64-3.2.100.zip压缩包文件(如果有更新版本，可以下载最近更新的稳定版本)。" target="_blank" rel="noopener">https://github.com/microsoftarchive/redis/releases/tag/win-3.2.100这里我们下载Redis-x64-3.2.100.zip压缩包文件(如果有更新版本，可以下载最近更新的稳定版本)。</a></li>
+</ul>
+<p><img src="/images/pasted-84.png" alt="upload successful"></p>
+<p>下载好之后解压到自己的文件夹中。例如我解压到D:\redis中。</p>
+<p><img src="/images/pasted-85.png" alt="upload successful"><br>打开一个cmd窗口，使用cd命令切换目录到解压后的文件夹路径（例如我切换目录到D:\redis），然后运行命令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis-server.exe redis.windows.conf。</span><br></pre></td></tr></table></figure>
+<p>输入之后会显示如下界面：</p>
+<p><img src="/images/pasted-86.png" alt="upload successful"></p>
+<p>这样我们就打开了一个redis服务端，从图中我们可以看到一些信息，比如端口号为6379。如果要使用redis服务端，我们需要再打开一个cmd窗口，原来的不要关闭，不然就不能访问服务端了。同样将路径切换到redis目录下，然后运行：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis-cli.exe -h 127.0.0.1 -p 6379</span><br></pre></td></tr></table></figure>
+
+<p>存入一个键值对：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">set firstkey &quot;hello redis&quot;</span><br></pre></td></tr></table></figure>
+
+<p>取出键值对：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">get firstkey</span><br></pre></td></tr></table></figure>
+
+<p>关闭连接：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">quit</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/pasted-87.png" alt="upload successful"></p>
+<p>这样我们就完成了Redis在Windows下的安装并初次体验了Redis的key-value存储方式。</p>
+<h4 id="Redis数据结构"><a href="#Redis数据结构" class="headerlink" title="Redis数据结构"></a>Redis数据结构</h4><p>Redis支持五种数据结构：String(字符串)、Hash(哈希)、List(列表)、Set(集合)以及SortedSet(有序集合)。下面我们简单介绍下每一种数据结构以及他们的基本命令。</p>
+<p>String String是Redis最基本的数据结构，也是任何存储系统都必备的数据类型。String类型是二进制安全的，简单来说，基本上你什么都能用字符串存储，你可以把图片文件的内容或者序列化的对象作为字符串来存储。String类型的值最大可以存512MB，确实基本什么都够存了。</p>
+<ul>
+<li><p>set key value：设置指定键的值</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; set mykey &quot;hello world&quot;</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>get key：获取指定键的值</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; gey mykey</span><br><span class="line">&quot;hello world&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>getrange key start end：返回key中字符串的子串</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; getrange mykey 6 10</span><br><span class="line">&quot;world&quot;</span><br><span class="line">&gt; getrange mykey 0 20</span><br><span class="line">&quot;hello world&quot;</span><br><span class="line">&gt; getrange mykey 0 -1</span><br><span class="line">&quot;hello world&quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips：从上面几个实例，我们不难看出字符串起始从0开始；若end大于字符串长度时返回完整字符串；而当end为-1时，end为字符串最后一个字符。</p>
+</blockquote>
+</li>
+<li><p>getset key value：设置指定键的新值，并返回旧值</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; getset database &quot;mysql&quot;</span><br><span class="line">(nil)</span><br><span class="line">&gt; get database</span><br><span class="line">&quot;mysql&quot;</span><br><span class="line">&gt; getset database &quot;redis&quot;</span><br><span class="line">&quot;mysql&quot;</span><br><span class="line">&gt; get database</span><br><span class="line">&quot;redis&quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips: 当键未设置时，会返回(nil)。</p>
+</blockquote>
+</li>
+<li><p>strlen key：返回键所存储的字符串值的长度</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; strlen mykey</span><br><span class="line">(integer) 11</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>append key value：如果可以已存在且是一个字符串，则将指定value添加到原值末尾,会返回操作后字符串长度</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; append mykey &quot;, hello redis&quot;</span><br><span class="line">24</span><br><span class="line">&gt;get mykey</span><br><span class="line">&quot;hello world, hello redis&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>incr key：整数值+1</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; set incr_num 10</span><br><span class="line">OK</span><br><span class="line">&gt;get incr_num</span><br><span class="line">&quot;10&quot;</span><br><span class="line">&gt;incr incr_num</span><br><span class="line">(integer) 11</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>incrby key increment：整数值增加给定整数值(increment)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; incrby incr_num 4</span><br><span class="line">(intrger) 15</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>incrbyfloat key increment：数字值增加给定浮点值(increment)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; incrbyfloat incr_num 0.5</span><br><span class="line">15.5</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips：整数值会显示为integer，当变为浮点型后并不会提示为float</p>
+</blockquote>
+</li>
+<li><p>decr key：整数值-1</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; set decr_num 10</span><br><span class="line">OK</span><br><span class="line">&gt; get decr_num</span><br><span class="line">&quot;10&quot;</span><br><span class="line">&gt; decr decr_num</span><br><span class="line">(integer) 9</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>decrby key decrement：整数值减少给定整数值(decrement)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; decrby decr_num 4</span><br><span class="line">(integer) 5</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips：redis并没有数字值减少给定浮点值的命令，如果我们想要decr_num减少2.5，可以用incrbyfloat命令执行incrbyfloat decr_num -2.5。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; incrbyfloat decr_num -2.5</span><br><span class="line">2.5</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>Hash Hash存储的是field和value的映射关系，适合用户存储对象。比如要存储一个用户的姓名、年龄、地址等，就可以使用Hash。每个Hash可以存储232&gt;-1个field-value对(4294967295，40多亿)。</p>
+<ul>
+<li><p>hset key field value：设置哈希表中key中field的值为value</p>
+</li>
+<li><p>hget key field：获取哈希表key中field对应的value</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; hset myhash name &quot;test&quot;</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; hget myhash name</span><br><span class="line">&quot;NPC&quot;</span><br><span class="line">&gt; hset myhash name &quot;NPC&quot;</span><br><span class="line">(integer) 0</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips：使用hset命令，新建字段并设置值成功后返回1，如果修改已有字段的值则返回0。</p>
+</blockquote>
+</li>
+<li><p>hmset key field1 value1 [field2 value2]：同时设置哈希表key中的多个field-value对。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; hmset myhash age &quot;20&quot; country &quot;China&quot;</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hexists key field：查看field是否存在于哈希表key中</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; hexists myhash name</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; hexists myhash phone</span><br><span class="line">(integer) 0</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips：哈希表key中含有字段field返回1，不含有或对应key不存在返回0。</p>
+</blockquote>
+</li>
+<li><p>hmget key field1 [field2]：获取哈希表key中所有给定field的value</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; hmget myhash name age phone</span><br><span class="line">1) &quot;NPC&quot;</span><br><span class="line">2) &quot;20&quot;</span><br><span class="line">3) (nil)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hgetall key：获取哈希表key中所有field-value对</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; hgetall myhash</span><br><span class="line">1) &quot;name&quot;</span><br><span class="line">2) &quot;NPC&quot;</span><br><span class="line">3) &quot;age&quot;</span><br><span class="line">4) &quot;20&quot;</span><br><span class="line">5) &quot;country&quot;</span><br><span class="line">6) &quot;China&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hkeys key：获取哈希表key中所有field</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; hkeys myhash</span><br><span class="line">1) &quot;name&quot;</span><br><span class="line">2) &quot;age&quot;</span><br><span class="line">3) &quot;country&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hvals key：获取哈希表key中所有value</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; hvals myhash</span><br><span class="line">1) &quot;NPC&quot;</span><br><span class="line">2) &quot;20&quot;</span><br><span class="line">3) &quot;China&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hlen key：获取哈希表key中字段的数量</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; hlen myhash</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hdel key field1：删除哈希表key中一个field</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; hdel myhash age</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+<p>List Redis的List类型是简单的字符串列表，在底层实现上相当于一个链表，我们可以在列表的头部(左边)或尾部(右边)添加值。列表最多可以存储232&gt;-1个元素(4294967295，40多亿)。</p>
+</li>
+<li><p>lpush key value1 [value2]：将一个或多个值插入到列表头部(左边)</p>
+</li>
+<li><p>rpush key value1 [value2]：将一个或多个值插入到列表尾部(右边)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; lpush mylist &quot;a&quot; &quot;b&quot;</span><br><span class="line">(integer) 2</span><br><span class="line">&gt; rpush mylist &quot;c&quot; &quot;d&quot;</span><br><span class="line">(integer) 4</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips：执行lpush和rpush命令后返回列表的长度。</p>
+</blockquote>
+</li>
+<li><p>llen key：获取列表长度</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; llen mylist</span><br><span class="line">(integer) 4</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>lrange key start end：获取列表指定范围内的值</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; lrange mylist 0 -1</span><br><span class="line">1) &quot;b&quot;</span><br><span class="line">2) &quot;a&quot;</span><br><span class="line">3) &quot;c&quot;</span><br><span class="line">4) &quot;d&quot;</span><br><span class="line">&gt; lrange mylist 1 -2</span><br><span class="line">1) &quot;a&quot;</span><br><span class="line">2) &quot;c&quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips：由上述例子我们不难看出lrange命令中的start和end参数都是索引值，其中0代表第一个元素，-1表示最后一个元素。</p>
+</blockquote>
+</li>
+<li><p>lindex key index：通过索引获取列表中元素</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; lindex mylist 0</span><br><span class="line">&quot;b&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>lpop key：移除并获取列表头部的值</p>
+</li>
+<li><p>rpop key：移除并获取列表尾部的值</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; lpop mylist</span><br><span class="line">&quot;b&quot;</span><br><span class="line">&gt; rpop mylist</span><br><span class="line">&quot;d&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>lrem key count value：根据count的值，移除列表中与参数value相等的元素</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; rpush rem &quot;hello&quot; &quot;hello&quot; &quot;redis&quot; &quot;hello&quot;</span><br><span class="line">(integer) 4</span><br><span class="line">&gt; lrange rem 0 -1</span><br><span class="line">1) &quot;hello&quot;</span><br><span class="line">2) &quot;hello&quot;</span><br><span class="line">3) &quot;redis&quot;</span><br><span class="line">4) &quot;hello&quot;</span><br><span class="line">&gt; lrem rem -2 &quot;hello&quot;</span><br><span class="line">(integer) 2</span><br><span class="line">&gt;lrange rem 0 -1</span><br><span class="line">1) &quot;hello&quot;</span><br><span class="line">2) &quot;redis&quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>count&gt;0：从左往右搜索列表，移除与value相等的元素，数量为count。 count&lt;0：从右往左搜索列表，移除与value相等的元素，数量为count的绝对值。 count=0：移除列表中所有与value相等的元素。</p>
+</blockquote>
+</li>
+</ul>
+<p>Set Set(集合)存储string类型的值，集合不允许重复元素，但集合里面的元素没有先后顺序。集合中最大的成员数为232&gt;-1(4294967295，40多亿)。</p>
+<ul>
+<li><p>sadd key member1 [member2]：向集合添加一个或多个成员</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; sadd myset1 &quot;hello&quot; &quot;redis&quot;</span><br><span class="line">(integer) 2</span><br><span class="line">&gt; sadd myset1 &quot;hello&quot;</span><br><span class="line">(integer) 0</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips：当向集合添加重复成员时，返回0</p>
+</blockquote>
+</li>
+<li><p>scard key：获取集合成员数量</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; scard myset1</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>smembers key：返回集合中的所有成员</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; smembers myset1</span><br><span class="line">1) &quot;hello&quot;</span><br><span class="line">2) &quot;redis&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>sdiff key1 [key2]：返回所有给定集合的差集</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; sadd myset2 &quot;hello&quot; &quot;world&quot;</span><br><span class="line">(integer) 2</span><br><span class="line">&gt; sdiff myset1 myset2</span><br><span class="line">1) &quot;redis&quot;</span><br><span class="line">&gt; sdiff myset2 myset1</span><br><span class="line">1) &quot;world&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>sinter key1 [key2]：返回所有给定集合的交集</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; sinter myset1 myset2</span><br><span class="line">1) &quot;hello&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>sunion key1 [key2]：返回所有给定集合的并集</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; sunion myset1 myset2</span><br><span class="line">1) &quot;hello&quot;</span><br><span class="line">2) &quot;redis&quot;</span><br><span class="line">3) &quot;world&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>spop key：移除并返回集合中的一个随机元素</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; sadd myset1 &quot;NPC&quot;</span><br><span class="line">(integer) 1</span><br><span class="line">&gt;spop myset1</span><br><span class="line">&quot;redis&quot;</span><br><span class="line">&gt;smembers myset1</span><br><span class="line">1) &quot;NPC&quot;</span><br><span class="line">2) &quot;hello&quot;</span><br></pre></td></tr></table></figure>
+<p>SortedSet 除了无序集合(Set)，Redis还提供了有序集合(SortedSet)，有序集合不允许重复的成员，且每个不同的成员都关联一个double类型的分数，redis通过这些分数对成员进行从小到大排序。有序集合有时也被称为ZSet，因为其命令都是以字母Z开头的。</p>
+</li>
+<li><p>zadd key score1 member1 [score2 member2]：向有序集合中添加一个或多个成员，或者更新已有成员分数</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; zadd myzset 10 &quot;one&quot; 20 &quot;two&quot; 30 &quot;three&quot;</span><br><span class="line">(integer) 3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>zcard key：获取有序集合的成员数量</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; zcard myzset</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>zscore key member：返回指定成员的分数</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; zscore myzset &quot;one&quot;</span><br><span class="line">10.0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>zrange key start end [withscores]：通过索引start和end从小到大返回成员</p>
+</li>
+<li><p>zrevrange key start end [withscores]：通过索引start和end从大到小返回成员</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; zrange myzset 0 -1</span><br><span class="line">1) &quot;one&quot;</span><br><span class="line">2) &quot;two&quot;</span><br><span class="line">3) &quot;three&quot;</span><br><span class="line">&gt; zrange myzset 0 -1 withscores</span><br><span class="line">1) &quot;one&quot;</span><br><span class="line">2) 10.0</span><br><span class="line">3) &quot;two&quot;</span><br><span class="line">4) 20.0</span><br><span class="line">5) &quot;three&quot;</span><br><span class="line">6) 30.0</span><br><span class="line">&gt; zrevrange myzset 0 -1 withscores</span><br><span class="line">1) &quot;three&quot;</span><br><span class="line">2) 30.0</span><br><span class="line">3) &quot;two&quot;</span><br><span class="line">4) 20.0</span><br><span class="line">5) &quot;one&quot;</span><br><span class="line">6) 10.0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>zrank key member：返回指定成员的排名，从小到大排序</p>
+</li>
+<li><p>zrevrank key member：返回指定成员的排名，从大到小排序</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; zrank myzset &quot;one&quot;</span><br><span class="line">0</span><br><span class="line">&gt;zrank myzset &quot;three&quot;</span><br><span class="line">2</span><br><span class="line">&gt; zrevrank myzset &quot;one&quot;</span><br><span class="line">2</span><br><span class="line">&gt; zrevrank myzset &quot;three&quot;</span><br><span class="line">0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>zcount key min max：返回分数在min和max之间的成员数量</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; zcount myzset 15 40</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>zincrby key increment member：将指定成员的分数增加increment</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; zrange myzset 0 -1 withscores</span><br><span class="line">1) &quot;one&quot;</span><br><span class="line">2) 10.0</span><br><span class="line">3) &quot;two&quot;</span><br><span class="line">4) 20.0</span><br><span class="line">5) &quot;three&quot;</span><br><span class="line">6) 30.0</span><br><span class="line">&gt; zincrby myzset 40 &quot;one&quot;</span><br><span class="line">50.0</span><br><span class="line">&gt; zrange myzset 0 -1 withscores</span><br><span class="line">1) &quot;two&quot;</span><br><span class="line">2) 20.0</span><br><span class="line">3) &quot;three&quot;</span><br><span class="line">4) 30.0</span><br><span class="line">5) &quot;one&quot;</span><br><span class="line">6) 50.0</span><br></pre></td></tr></table></figure></li>
+</ul>
+]]></content>
+      <tags>
+        <tag>Redis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SQL分页</title>
+    <url>/2020/07/14/SQL%E5%88%86%E9%A1%B5/</url>
+    <content><![CDATA[<h2 id="请不要将OFFSET和LIMIT用于分页"><a href="#请不要将OFFSET和LIMIT用于分页" class="headerlink" title="请不要将OFFSET和LIMIT用于分页"></a>请不要将OFFSET和LIMIT用于分页</h2><p><img src="/images/pasted-27.png" alt="upload successful"></p>
+<p>不再需要担心数据库性能优化的日子已经一去不复返了。</p>
+<p>随着时代的发展，每个新企业家都希望建立下一个Facebook，并结合收集每个可能的数据点以提供更好的机器学习预测的心态，作为开发人员，我们需要比以往更好地准备我们的API，以提供可靠，高效的端点，应该能够毫不费力地浏览大量数据。</p>
+<p>如果您已经进行了一段时间的后端或数据库体系结构，则可能已经完成了分页查询，如下所示：</p>
+<p><img src="/images/pasted-28.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<p>对？<br>但是，如果您确实建立了这样的分页，很遗憾地说，您做错了。<br>你不同意我吗？你 并不 需要 到。 Slack， Shopify和Mixmax使用我们今天将要讨论的相同概念对API进行分页。<br>我想请您说说一个单一的后端开发人员，该人员从来没有为了分页目的而需要处理OFFSET和LIMIT。对于MVP和低数据列表中的分页，它“有效”。<br>但是，当您想从头开始构建可靠而有效的系统时，也可以直接进行。<br>今天，我们将讨论（错误地）广泛使用的实现所存在的问题以及如何实现高效的分页。</p>
+<h3 id="OFFSET和LIMIT有什么问题？"><a href="#OFFSET和LIMIT有什么问题？" class="headerlink" title="OFFSET和LIMIT有什么问题？"></a>OFFSET和LIMIT有什么问题？</h3><p>正如我们在上几段中简要探讨的那样，OFFSET和LIMIT非常适合于数据使用量很少甚至没有的项目。</p>
+<p>当数据库开始收集的数据量超出服务器可以存储在内存中的数据量时，仍然会出现问题，而您仍然需要对它们全部进行性能分页。</p>
+<p>为此，每次您请求分页时，数据库都需要执行低效的全表扫描（插入和删除可能同时发生，我们不希望数据过时！）。</p>
+<blockquote>
+<p>什么是全表扫描？全表扫描（又称顺序扫描）是在数据库中进行的扫描，其中顺序读取表中的每一行，然后检查遇到的列是否符合条件。由于从磁盘进行大量的I / O读取（包括多次搜寻）以及昂贵的磁盘到内存传输，这种类型的扫描被认为是最慢的。</p>
+</blockquote>
+<p>这意味着，如果您有100.000.000用户，而您要求的偏移量为50.000.000，则它将需要获取所有这些记录（甚至不需要！），并将它们存储在内存中，只有在获得之后， LIMIT中指定了20个结果。</p>
+<p>因此，要在网站上显示这样的分页：<br>50.000至50.020之100.000<br>它首先需要获取50.000行。看看这效率低下吗？<br>如果您不相信我，请看一下我创建的这个小提琴。在左侧面板中，您有一个基本架构，该架构将为我们的测试插入100.000行，而在右侧，则是有问题的查询和我们的解决方案。只需单击顶部的“运行 ”，然后比较每个执行时间。＃1（问题查询）至少需要30秒钟的时间才能运行。<br>随着更多的数据，情况变得更加糟糕。看看我的1000万行概念证明。<br>现在，这应该使您对幕后发生的事情有所了解。如果您喜欢阅读的内容，请在此处订阅以获取更多类似内容。<br>TLDR；偏移量越高，查询将花费的时间越长。</p>
+<h3 id="您应该使用什么"><a href="#您应该使用什么" class="headerlink" title="您应该使用什么"></a>您应该使用什么</h3><p>这是您应该使用的：</p>
+<p><img src="/images/pasted-31.png" alt="upload successful"></p>
+<p>这是基于游标的分页。<br>您应该存储最后接收到的主键（通常是一个ID）和LIMIT，而不是在本地存储当前的OFFSET和LIMIT并随每个请求传递它，因此查询最终可能与此类似。<br>为什么？因为通过显式传递最新的读取行，您可以根据有效的索引键告诉数据库确切从哪里开始搜索，而不必考虑该范围之外的任何行。<br>以下面的比较为例：</p>
+<p><img src="/images/pasted-32.png" alt="upload successful"><br>针对我们的优化版本：</p>
+<p><img src="/images/pasted-33.png" alt="upload successful"><br>接收到的记录完全相同，但是第一个查询花费了12.80秒，第二个查询花费了0.01秒。你能体会到差异吗？</p>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>为了使Cursor Pagination无缝地工作，您将需要具有一个唯一的顺序列（或多个列），例如唯一的整数ID或时间戳记字段，在某些特定情况下，这可能会破坏交易。</p>
+<p>与往常一样，我的建议是始终考虑每种表体系结构的优缺点以及在每种表体系结构中需要执行哪种查询。</p>
+<p>如果您需要在查询中处理大量相关数据，Rick James的“ 列表”文章可能会为您提供更深入的指导。如果我们遇到的问题与没有主键有关，例如，如果我们有多对多关系表，则在这些情况下始终可以使用传统的OFFSET / LIMIT方法，但这将重新引入潜在的较慢查询。因此，我建议在要分页的表中使用自动递增的主键，即使只是出于分页的目的。</p>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>这样做的主要要点是始终检查查询的性能是1k行还是1M。可伸缩性至关重要，如果从一开始就正确实施，肯定会避免将来出现很多麻烦。<br>哦。并且，请不要忘记学习索引。并解释查询。</p>
+]]></content>
+      <tags>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SQL - 命名约定 </title>
+    <url>/2020/07/20/Untitled/</url>
+    <content><![CDATA[<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><blockquote>
+<p>“计算机科学中只有两个难题：缓存失效和命名。”<br>-菲尔·卡尔顿</p>
+</blockquote>
+<p>在这篇文章中，我将介绍后者。具体来说，我将描述数据库对象的命名约定，它们为何如此重要以及您应该做什么和不应该做什么。</p>
+<p>警告！ 这是一个很自以为是的帖子，我欢迎人们提出替代方案的反馈。</p>
+<a id="more"></a>
+
+<h3 id="目标观众"><a href="#目标观众" class="headerlink" title="目标观众"></a>目标观众</h3><p>我们的公司JackDB在内部使用PostgreSQL来存储持久状态，而本文中的命名约定是考虑到PostgreSQL编写的。大多数建议对于其他关系数据库（例如MySQL，Oracle或Microsoft SQL Server）应同样有效。</p>
+<p>尽管不是全部，但它们中的许多也将适用于NoSQL数据库。例如，以下建议使用完整的英语单词与在MongoDB中为字段命名的建议方法背道而驰。如有疑问，请查找针对您的特定数据库类型的指南。</p>
+<h3 id="为什么命名约定很重要"><a href="#为什么命名约定很重要" class="headerlink" title="为什么命名约定很重要"></a>为什么命名约定很重要</h3><h4 id="名字长寿"><a href="#名字长寿" class="headerlink" title="名字长寿"></a>名字长寿</h4><p>数据结构的使用寿命要比应用程序代码长得多。在长期运行的系统上工作的任何人都可以证明这一点。</p>
+<p>定义明确的数据结构和表布局将使任何应用程序代码无法生存。看到应用程序完全重写而未对其数据库架构进行任何更改的情况并不少见。</p>
+<h4 id="名字就是合同"><a href="#名字就是合同" class="headerlink" title="名字就是合同"></a>名字就是合同</h4><p>数据库对象通过名称来引用，因此对象名称是对象合同的一部分。在某种程度上，您可以将数据库表和列名视为数据模型的API。</p>
+<p>设置它们后，对其进行更改可能会破坏依赖的应用程序。这就是在首次使用之前正确命名事物的更多原因。</p>
+<h4 id="开发者上下文切换"><a href="#开发者上下文切换" class="headerlink" title="开发者上下文切换"></a>开发者上下文切换</h4><p>在整个数据模型中使用一致的命名约定意味着开发人员将需要花费更少的时间查找表，视图和列的名称。当您知道person_id必须是表id字段的外键时，编写和调试SQL会更容易person。</p>
+<h3 id="命名约定"><a href="#命名约定" class="headerlink" title="命名约定"></a>命名约定</h3><p>避免引号。如果必须引用标识符，则应将其重命名。带引号的标识符是一个严重的难题。使用加引号的标识符手动编写SQL令人沮丧，而编写包含加引号的标识符的动态SQL则更加令人沮丧。</p>
+<p>这也意味着您不应在标识符名称中包含空格。</p>
+<p>例如：避免使用诸如”FirstName”或的名称”All Employees”。</p>
+<p>小写字母。标识符应全部用小写字母书写。这包括表，视图，列以及其他所有内容。大小写混合的标识符名称意味着标识符的每次使用都需要用双引号引起来（我们已经说过不允许这样做）。</p>
+<p>例如：使用first_name，而不是”First_Name”。</p>
+<p>数据类型不是名称。数据库对象名称，尤其是列名称，应该是描述字段或对象的名词。避免使用仅是数据类型（例如text或）的单词timestamp。后者特别糟糕，因为它提供了零上下文。</p>
+<p>下划线分开。被由多个单词对象名称应该用下划线（分离即蛇情况下）。</p>
+<p>例如：使用word_count或team_member_id，不使用wordcount或wordCount。</p>
+<p>完整的单词，而不是缩写。对象名称应为全英文单词。通常，避免使用缩写词，尤其是仅用于去除元音的缩写词。大多数SQL数据库至少支持30个字符的名称，对于两个英文单词来说，这应该绰绰有余。PostgreSQL最多支持63个字符的标识符。</p>
+<p>例如：使用middle_name，而不是mid_nm。</p>
+<p>使用常见的缩写。对于一些长单词，缩写都比单词本身更常见。“国际化”和“本土化”是拿出最经常被视为两个i18n和l10n分别。在这些情况下，请使用缩写。</p>
+<p>如有疑问，请使用完整的英语单词。缩写有意义的地方应该很明显。</p>
+<p>避免保留字。避免在您使用的数据库中使用任何被视为保留字的字。没有太多的人，所以选择一个不同的词不需要太多的努力。根据上下文，保留字可能需要引用。这意味着有时您会写”user”，有时只是user。</p>
+<p>避免使用保留字的另一个好处是，少于智能的编辑器语法突出显示不会错误地突出显示它们。</p>
+<p>例如：避免使用单词喜欢user，lock或table。</p>
+<p>这是PostgreSQL，MySQL，Oracle和MSSQL保留字的列表。</p>
+<h3 id="奇异关系"><a href="#奇异关系" class="headerlink" title="奇异关系"></a>奇异关系</h3><p>包含数据的表，视图和其他关系应使用单数名称，而不是复数。这意味着我们的表和视图将被命名team，不teams。</p>
+<p>与其讨论关系代数为何正确的原因，不如给出一些实际的原因。</p>
+<p>他们是一致的。 可能有一个仅包含一行的关系。还是复数吗？</p>
+<p>他们是明确的。 仅使用单数名称意味着您无需确定如何使名词复数。</p>
+<p>例如：一个“人”对象进入一个“人”关系还是一个“人”关系？一个“ 八达通 ”物体怎么样？章鱼？章鱼？八极杆？</p>
+<p>简单的4GL翻译。 单个名称使您可以直接从4GL对象转换为数据库关系。您可能需要删除一些下划线并切换到驼峰式大小写，但名称翻译将始终简单明了。</p>
+<p>例如：team_member毫无疑问地成为TeamMemberJava中的类或team_memberPython中的变量。</p>
+<h3 id="关键领域"><a href="#关键领域" class="headerlink" title="关键领域"></a>关键领域</h3><h4 id="主键"><a href="#主键" class="headerlink" title="主键"></a>主键</h4><p>单列主键字段应命名为id。它简短，简单且明确。这意味着在编写SQL时，您不必记住要加入的字段的名称。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">CREATE TABLE person (</span><br><span class="line">  id            bigint PRIMARY KEY,</span><br><span class="line">  full_name     text NOT NULL,</span><br><span class="line">  birth_date    date NOT NULL);</span><br></pre></td></tr></table></figure>
+<p>一些指南建议在主键字段名称（即。person_idVS id。额外的前缀是多余的。非平凡的SQL语句中的所有字段名称（即具有多个表的 SQL语句）都应明确限定，并且以命名方式对字段名称进行前缀是一个坏主意。</p>
+<h4 id="外键"><a href="#外键" class="headerlink" title="外键"></a>外键</h4><p>外键字段应该是引用表的名称和引用字段的名称的组合。对于单列外键（到目前为止最常见的情况）类似于foo_id。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">CREATE TABLE team_member (</span><br><span class="line">  team_id       bigint NOT NULL REFERENCES team(id),</span><br><span class="line">  person_id     bigint NOT NULL REFERENCES person(id),</span><br><span class="line">  CONSTRAINT team_member_pkey PRIMARY KEY (team_id, person_id));</span><br></pre></td></tr></table></figure>
+
+<h3 id="前缀和后缀（不好）"><a href="#前缀和后缀（不好）" class="headerlink" title="前缀和后缀（不好）"></a>前缀和后缀（不好）</h3><h4 id="关系类型前缀"><a href="#关系类型前缀" class="headerlink" title="关系类型前缀"></a>关系类型前缀</h4><p>一些（较旧的）准则建议使用TB_前缀命名表，使用前缀命名视图VW_或使用前缀命名存储过程SP_。这样做的理由是，程序员通读一些未知的SQL会立即识别出这一点并根据名称知道对象类型。这是一个坏主意。</p>
+<p>对象名称中不应包含对象类型。这样，您以后就可以更改它。用表替换的视图保持视图的原始协定（例如：您可以从中进行选择）。更改后，不需要更新从属系统。</p>
+<p>我已经看到过许多这样的系统，在某些情况下，视图将成为表格。然后，您将获得向发出INSERT语句的代码vw_foobar。PostgreSQL甚至有一个非常强大的功能，它允许您在视图上定义DML规则（即，您可以从视图上进行INSERT / UPDATE / DELETE）。</p>
+<p>添加对象类型前缀现在会增加额外的键入内容，并会带来更多的混乱。</p>
+<h4 id="应用程序名称前缀"><a href="#应用程序名称前缀" class="headerlink" title="应用程序名称前缀"></a>应用程序名称前缀</h4><p>另一个（较旧的）建议是为所有数据库对象使用通用前缀。例如，我们的应用程序“Foobar的”将有表名Foobar_Users，Foobar_Teams等再次，这是一个坏主意。</p>
+<p>所有现代数据库都支持某种形式的命名空间。例如，在PostgreSQL中，您可以创建模式以对数据库对象进行分组。如果您有多个应用程序共享同一个数据库，并且想要防止它们相互破坏，请改用模式。那正是他们的目的！</p>
+<p>大多数人甚至都不需要它们。数据库与单个逻辑数据模型一起使用比与多个单独的数据模型一起使用更为普遍。因此，将不需要架构。如果确实需要它们，则应该很明显。</p>
+<p>该规则的例外是，如果您正在开发数据库不可知代码库，例如框架或插件。支持多种命名空间方法非常复杂，因此许多框架都依赖于应用程序名称前缀。</p>
+<p>但是，大多数人开发的是应用程序，而不是插件或框架，它们的应用程序将自己驻留在单一类型的数据库中。因此，没有理由向所有数据库对象添加应用程序名称前缀。</p>
+<h4 id="数据类型后缀"><a href="#数据类型后缀" class="headerlink" title="数据类型后缀"></a>数据类型后缀</h4><p>一些指南（通常还是较旧的指南）建议在字段名称的数据类型后缀后缀。例如，名称的文本字段为name_tx。甚至会有大量的列表可以将数据类型转换为后缀，文本-&gt; tx，日期-&gt; dt等。</p>
+<p>这是一个坏主意！</p>
+<p>字段数据类型可以更改。日期字段可以成为时间戳，整数可以成为bigint或数字。</p>
+<h3 id="显式命名"><a href="#显式命名" class="headerlink" title="显式命名"></a>显式命名</h3><p>某些创建数据库对象的数据库命令不需要您指定名称。对象名称将随机生成（例如：fk239nxvknvsdvi）或通过公式生成（例如：foobar_ix_1）。除非您确切知道如何生成名称并且对它感到满意，否则应该明确指定名称。</p>
+<p>这也包括由ORM生成的名称。许多ORM默认使用长乱码生成的名称来创建索引和约束。在短期内节省几分钟的时间，不值得记住fkas9dfnksdfnks长期内的含义。</p>
+<h4 id="指标"><a href="#指标" class="headerlink" title="指标"></a>指标</h4><p>索引应明确命名，并包括被索引的表名和列名。包括列名使它多少容易阅读通过SQL解释计划。如果命名了索引，foobar_ix1则您需要查找索引涵盖的列以了解索引的使用方式是否正确。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">CREATE TABLE person (</span><br><span class="line">  id          bigserial PRIMARY KEY,</span><br><span class="line">  email       text NOT NULL,</span><br><span class="line">  first_name  text NOT NULL,</span><br><span class="line">  last_name   text NOT NULL,</span><br><span class="line">  CONSTRAINT person_ck_email_lower_case CHECK (email &#x3D; LOWER(email)));</span><br><span class="line">  </span><br><span class="line">CREATE INDEX person_ix_first_name_last_name ON person (first_name, last_name);</span><br></pre></td></tr></table></figure>
+<p>解释计划现在将很容易理解。我们可以清楚地看到名字和姓氏即索引。person_ix_first_name_last_name，正在使用：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x3D;# EXPLAIN SELECT * FROM person WHERE first_name &#x3D; &#39;alice&#39; AND last_name &#x3D; &#39;smith&#39;;</span><br><span class="line"></span><br><span class="line">                                          QUERY PLAN                                          </span><br><span class="line">----------------------------------------------------------------------------------------------</span><br><span class="line"> Index Scan using person_ix_first_name_last_name on person  (cost&#x3D;0.15..8.17 rows&#x3D;1 width&#x3D;72)</span><br><span class="line">   Index Cond: ((first_name &#x3D; &#39;alice&#39;::text) AND (last_name &#x3D; &#39;smith&#39;::text))</span><br><span class="line">(2 rows)</span><br></pre></td></tr></table></figure>
+
+<h4 id="约束条件"><a href="#约束条件" class="headerlink" title="约束条件"></a>约束条件</h4><p>与索引类似，约束应使用描述性名称。对于检查约束尤其如此。如果违反的检查约束条件让您知道原因，则诊断出错误的插入要容易得多。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">CREATE TABLE team (</span><br><span class="line">  id          bigserial PRIMARY KEY,</span><br><span class="line">  name        text NOT NULL);</span><br><span class="line"></span><br><span class="line">CREATE TABLE team_member (</span><br><span class="line">  team_id     bigint REFERENCES team(id),</span><br><span class="line">  person_id   bigint REFERENCES person(id),</span><br><span class="line">  CONSTRAINT team_member_pkey PRIMARY KEY (team_id, person_id));</span><br></pre></td></tr></table></figure>
+<p>注意PostgreSQL如何很好地为外键约束提供描述性名称。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x3D;# \d team_member</span><br><span class="line">   Table &quot;public.team_member&quot;</span><br><span class="line">  Column   |  Type  | Modifiers </span><br><span class="line">-----------+--------+-----------</span><br><span class="line"> team_id   | bigint | not null</span><br><span class="line"> person_id | bigint | not null</span><br><span class="line">Indexes:</span><br><span class="line">    &quot;team_member_pkey&quot; PRIMARY KEY, btree (team_id, person_id)</span><br><span class="line">Foreign-key constraints:</span><br><span class="line">    &quot;team_member_person_id_fkey&quot; FOREIGN KEY (person_id) REFERENCES person(id)</span><br><span class="line">    &quot;team_member_team_id_fkey&quot; FOREIGN KEY (team_id) REFERENCES team(id)</span><br></pre></td></tr></table></figure>
+<p>如果尝试插入违反这些约束之一的行，我们将仅根据约束名称立即知道原因：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x3D;&gt; INSERT INTO team_member(team_id, person_id) VALUES (1234, 5678);</span><br><span class="line">ERROR:  insert or update on table &quot;team_member&quot; violates foreign key constraint &quot;team_member_team_id_fkey&quot;</span><br><span class="line">DETAIL:  Key (team_id)&#x3D;(1234) is not present in table &quot;team&quot;.</span><br></pre></td></tr></table></figure>
+<p>同样，如果我们尝试person在上面创建的表中插入一个非小写的电子邮件地址，则会收到一个违反约束的错误，该错误会告诉我们确切的错误所在：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-- This insert will work:</span><br><span class="line">&#x3D;&gt; INSERT INTO person (email, first_name, last_name) VALUES (&#39;alice@example.com&#39;, &#39;Alice&#39;, &#39;Anderson&#39;);</span><br><span class="line">INSERT 0 1</span><br><span class="line"></span><br><span class="line">-- This insert will not work:</span><br><span class="line">&#x3D;&gt; INSERT INTO person (email, first_name, last_name) VALUES (&#39;bob@EXAMPLE.com&#39;, &#39;Bob&#39;, &#39;Barker&#39;);</span><br><span class="line">ERROR:  new row for relation &quot;person&quot; violates check constraint &quot;person_ck_email_lower_case&quot;</span><br><span class="line">DETAIL:  Failing row contains (2, bob@EXAMPLE.com, Bob, Barker).</span><br></pre></td></tr></table></figure>
+
+<h3 id="最后的想法"><a href="#最后的想法" class="headerlink" title="最后的想法"></a>最后的想法</h3><p>如果您要开始一个新项目，那么我建议您遵循此处概述的约定。如果您正在处理现有项目，则在创建任何新对象时都需要多加注意。</p>
+<p>唯一比糟糕的命名约定更糟糕的是多个命名约定。如果您现有的项目已经具有命名其数据库对象的标准方法，请继续使用它。</p>
+]]></content>
+      <tags>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>单点登录</title>
+    <url>/2020/07/16/%E5%AE%9E%E7%8E%B0%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95/</url>
+    <content><![CDATA[<h3 id="单点登录简介"><a href="#单点登录简介" class="headerlink" title="单点登录简介"></a>单点登录简介</h3><p>假设一个场景：公司内部有财务、OA、订单服务等各类相互独立的应用系统，员工张三对这些系统有操作权限，如果张三想要登录某个系统进行业务操作，那么他需要输入相应的账号与密码。想象一下，当公司内部有 100 个应用系统，张三是不是要输入 100 次用户名和密码进行登录，然后分别才能进行业务操作呢？显然这是很不好的体验，因此我们需要引入一个这样的机制：张三只要输入一次用户名和密码登录，成功登录后，他就可以访问财务系统、OA 系统、订单服务等系统。这就是单点登录。</p>
+<p><img src="/images/pasted-47.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<p>单点登录的英文全称是 Single Sign On，简称是 SSO。它的意思是说用户只需要登录一次，就可以在个人权限范围内，访问所有相互信任应用的功能模块，不管整个应用群的内部有多么复杂，对用户而言，都是一个统一的整体。用户访问 Web 系统的整个应用群与访问单个系统一样，登录和注销分别只要一次就够了。举个简单的例子，你登录了百度网页之后，点击跳转到百度贴吧，这时可以发现你已经自动登录了百度贴吧。</p>
+<h3 id="我们的技术实现"><a href="#我们的技术实现" class="headerlink" title="我们的技术实现"></a>我们的技术实现</h3><p><img src="/images/pasted-48.png" alt="upload successful"></p>
+<p>SSO 的技术实现要想做好并不容易，我们认为需求优先级应该先是单点登录和单点注销功能，然后是应用接入的门槛，最后是数据安全性，安全性对于 SSO 也非常重要。SSO 的核心是认证中心，但要实现用户一次登录，到处访问的效果，技术实现需要建立在用户系统、认证中心、权限系统、企业门户的基础上，各职责如下：</p>
+<ul>
+<li>用户系统：负责用户名、密码等帐户信息管理，包括增加、修改、启用、停用用户帐号，同时为认证中心提供对用户名和密码的校验。</li>
+<li>认证中心：负责凭证 token 的生成、加密、颁发、验证、销毁、登入 Login、登出 Logout。用户只有拥有凭证并验证通过才能访问企业门户。</li>
+<li>权限系统：负责角色管理、资源设置、授权设置、鉴定权限，具体实现可参考 RBAC。权限系统可为企业门户提供用户权限范围内的导航。</li>
+<li>企业门户：作为应用系统的集成门户 (Portal)，集成了多个应用系统的功能，为用户提供链接导航、用户信息和登出功能等。</li>
+</ul>
+<ol>
+<li>服务端功能实现</li>
+</ol>
+<ul>
+<li>登录认证：接收登录帐号信息，让用户系统验证用户的登录信息。</li>
+<li>凭证生成：创建授权凭证 token，生成的凭证一般包含用户帐号信息、过期时间等信息，它是一串加密的字符串，加密算法如 AES｛凭证明文 +MD5 加信息｝，可采用 JWT 标准。</li>
+<li>凭证颁发：与 SSO 客户端通信，发送凭证给 SSO 客户端。</li>
+<li>凭证验证：接收并校验来自 SSO 客户端的凭证有效性，凭证验证包括算法验证和数据验证。</li>
+<li>凭证销毁与登出：接收来自 SSO 客户端的登出请求，记录并销毁凭证，跳转至登录页面。</li>
+</ul>
+<ol start="2">
+<li>客户端功能实现</li>
+</ol>
+<ul>
+<li>请求拦截：拦截应用未登录请求，跳转至登录页面。</li>
+<li>获取凭证：接收并存储由 SSO 服务端发来的凭证，凭证存储的方式有 Cookie、Session、网址传参、Header 等。</li>
+<li>提交凭证验证：与 SSO 服务端通信，发出校验凭证有效性的请求。</li>
+<li>获取用户权限：获取该凭证的用户权限，并返回受保护资源给用户。</li>
+<li>凭证销毁与登出：销毁本地会话，然后跳转至登出页面。</li>
+</ul>
+<ol start="3">
+<li>用户单点登录流程<br><img src="/images/pasted-49.png" alt="upload successful"></li>
+</ol>
+<ul>
+<li>登录：将用户输入的用户名和密码发送至认证中心，然后认证中心调用用户系统来验证登录信息。</li>
+<li>生成并颁发凭证：通过登录信息的验证后，认证中心创建授权凭证 token，然后把这个授权凭证 token 返回给 SSO 客户端。SSO 客户端拿到这个 token，进行存储。在后续请求中，在 HTTP 请求数据中都得加上这个 token。</li>
+<li>凭证验证：SSO 客户端发送凭证 token 给认证中心，认证中心校验这个 token 的有效性。凭证验证有算法验证和数据验证，算法验证可在 SSO 客户端完成。</li>
+</ul>
+<ol start="4">
+<li>用户访问流程和单点注销</li>
+</ol>
+<p><img src="/images/pasted-50.png" alt="upload successful"></p>
+<p>以上是用户的访问流程，如果用户没有有效的凭证，认证中心将强制用户进入登录流程。对于单点注销，用户如果注销了应用群内的其中一个应用，那么全局 token 也会被销毁，应用群内的所有应用将不能再被访问。</p>
+<ol start="5">
+<li>具体接入与集成</li>
+</ol>
+<p><img src="/images/pasted-51.png" alt="upload successful"></p>
+<p>我们的应用接入与集成具体如下：</p>
+<ul>
+<li>用户系统：接入国内机票平台的用户系统，负责登录认证。</li>
+<li>权限系统：接入国内机票平台的权限系统。</li>
+<li>认证中心：负责生成并颁发凭证、销毁凭证，改造国内机票平台的登入、登出。</li>
+<li>凭证验证：在国内机票、国际机票应用系统中调用 SSO 客户端组件实现凭证的验证。</li>
+<li>企业门户：由国内机票平台、国际机票平台承担。</li>
+</ul>
+<h3 id="JWT-标准"><a href="#JWT-标准" class="headerlink" title="JWT 标准"></a>JWT 标准</h3><p><img src="/images/pasted-52.png" alt="upload successful"></p>
+<p>JSON Web Token (JWT) 是目前应用最为广泛的 token 格式，是为了在网络应用环境间传递声明而执行的一种基于 JSON 的开放标准（RFC 7519)。该 token 设计紧凑且安全，特别适用于分布式站点的单点登录、API 网关等场景。JWT 的声明一般被用来在身份提供者和服务提供者间传递被认证的用户身份信息，以便于从资源服务器获取资源，也可以增加一些额外的其它业务逻辑所必须的声明信息。该 token 也可直接被用于认证，也可被加密。JWT 信息体由 3 部分构成：头 Header+ 载荷 Payload+ 签名 Signature，具体优点如下：</p>
+<ul>
+<li>JWT 支持多种语言，C#、Java、JavaScript、Node.js、PHP 等很多语言都可以使用。</li>
+<li>JWT 可以自身存储一些和业务逻辑有关的所必要的非敏感信息，因为有了 Payload 部分。</li>
+<li>利于传输，因为 JWT 的构成非常简单，字节占用很小。</li>
+<li>不需要在服务端保存会话信息，不仅省去服务端资源开销，而且使得应用易于扩展。</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>单点登录</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>开发者必备的Mysql命令</title>
+    <url>/2020/07/10/%E5%BC%80%E5%8F%91%E8%80%85%E5%BF%85%E5%A4%87%E7%9A%84Mysql%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<blockquote>
+<p>开发者必备Mysql常用命令，涵盖了数据定义语句、数据操纵语句及数据控制语句，基于Mysql5.7。</p>
+</blockquote>
+<h2 id="数据定义语句-DDL"><a href="#数据定义语句-DDL" class="headerlink" title="数据定义语句(DDL)"></a>数据定义语句(DDL)</h2><h3 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h3><ul>
+<li><p>登录数据库：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mysql -uroot -proot</span><br><span class="line">Copy to clipboardErrorCopied</span><br></pre></td></tr></table></figure></li>
+<li><p>创建数据库：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">create database test</span><br></pre></td></tr></table></figure></li>
+<li><p>查看所有数据库：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">show databases</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-17.png" alt="upload successful"></p>
+</li>
+<li><p>选择数据库并使用：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">use test</span><br></pre></td></tr></table></figure></li>
+<li><p>查看所有数据表：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">show tables</span><br></pre></td></tr></table></figure></li>
+<li><p>删除数据库：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">drop database test</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<a id="more"></a>
+
+<h3 id="表操作"><a href="#表操作" class="headerlink" title="表操作"></a>表操作</h3><ul>
+<li><p>创建表：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">create table emp(ename varchar(10),hiredate date,sal decimal(10,2),deptno int(2))  </span><br><span class="line">create table dept(deptno int(2),deptname varchar(10))</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-18.png" alt="upload successful"></p>
+</li>
+<li><p>查看表的定义：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">desc emp</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-19.png" alt="upload successful"></p>
+</li>
+<li><p>查看表定义（详细）：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">show create table emp \G</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-20.png" alt="upload successful"></p>
+</li>
+<li><p>删除表：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">drop table emp</span><br></pre></td></tr></table></figure></li>
+<li><p>修改表字段：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">alter table emp modify ename varchar(20)</span><br></pre></td></tr></table></figure></li>
+<li><p>添加表字段：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">alter table emp add column age int(3)</span><br></pre></td></tr></table></figure></li>
+<li><p>删除表字段：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">alter table emp drop column age</span><br></pre></td></tr></table></figure></li>
+<li><p>字段改名；</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">alter table emp change age age1 int(4)</span><br></pre></td></tr></table></figure></li>
+<li><p>修改表名：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">alter table emp rename emp1</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="数据操纵语句-DML"><a href="#数据操纵语句-DML" class="headerlink" title="数据操纵语句(DML)"></a>数据操纵语句(DML)</h2><h3 id="插入记录"><a href="#插入记录" class="headerlink" title="插入记录"></a>插入记录</h3><ul>
+<li><p>指定名称插入：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">insert into emp (ename,hiredate,sal,deptno) values (&#39;zhangsan&#39;,&#39;2018-01-01&#39;,&#39;2000&#39;,1)</span><br></pre></td></tr></table></figure></li>
+<li><p>不指定名称插入：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">insert into emp values (&#39;lisi&#39;,&#39;2018-01-01&#39;,&#39;2000&#39;,1)</span><br></pre></td></tr></table></figure></li>
+<li><p>批量插入数据：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">insert into dept values(1,&#39;dept1&#39;),(2,&#39;dept2&#39;)</span><br></pre></td></tr></table></figure>
+<h3 id="修改记录"><a href="#修改记录" class="headerlink" title="修改记录"></a>修改记录</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">update emp set sal&#x3D;&#39;4000&#39;,deptno&#x3D;2 where ename&#x3D;&#39;zhangsan&#39;</span><br></pre></td></tr></table></figure>
+<h3 id="删除记录"><a href="#删除记录" class="headerlink" title="删除记录"></a>删除记录</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">delete from emp where ename&#x3D;&#39;zhangsan&#39;</span><br></pre></td></tr></table></figure>
+<h3 id="查询记录"><a href="#查询记录" class="headerlink" title="查询记录"></a>查询记录</h3></li>
+<li><p>查询所有记录：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">select * from emp</span><br></pre></td></tr></table></figure></li>
+<li><p>查询不重复的记录：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">select distinct deptno from emp</span><br></pre></td></tr></table></figure></li>
+<li><p>条件查询：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">select * from emp where deptno&#x3D;1 and sal&lt;3000</span><br></pre></td></tr></table></figure></li>
+<li><p>排序和限制：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">select * from emp order by deptno desc limit 2</span><br></pre></td></tr></table></figure></li>
+<li><p>分页查询(查询从第0条记录开始10条)：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">select * from emp order by deptno desc limit 0,10</span><br></pre></td></tr></table></figure></li>
+<li><p>聚合(查询部门人数大于1的部门编号)：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">select deptno,count(1) from emp group by deptno having count(1) &gt; 1</span><br></pre></td></tr></table></figure></li>
+<li><p>连接查询：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">select * from emp e left join dept d on e.deptno&#x3D;d.deptno</span><br></pre></td></tr></table></figure></li>
+<li><p>子查询：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">select * from emp where deptno in (select deptno from dept)</span><br></pre></td></tr></table></figure></li>
+<li><p>记录联合：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">select deptno from emp union select deptno from dept</span><br></pre></td></tr></table></figure>
+<h2 id="数据控制语句-DCL"><a href="#数据控制语句-DCL" class="headerlink" title="数据控制语句(DCL)"></a>数据控制语句(DCL)</h2><h3 id="权限相关"><a href="#权限相关" class="headerlink" title="权限相关"></a>权限相关</h3></li>
+<li><p>授予操作权限(将test数据库中所有表的select和insert权限授予test用户)：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">grant select,insert on test.* to &#39;test&#39;@&#39;localhost&#39; identified by &#39;123&#39;</span><br></pre></td></tr></table></figure></li>
+<li><p>查看账号权限：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">show grants for &#39;test&#39;@&#39;localhost&#39;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-21.png" alt="upload successful"></p>
+</li>
+<li><p>收回操作权限：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">revoke insert on test.* from &#39;test&#39;@&#39;localhost&#39;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-22.png" alt="upload successful"></p>
+</li>
+<li><p>授予所有数据库的所有权限：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">grant all privileges on *.* to &#39;test&#39;@&#39;localhost&#39;</span><br></pre></td></tr></table></figure></li>
+<li><p>授予所有数据库的所有权限(包括grant)：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">grant all privileges on *.* to &#39;test&#39;@&#39;localhost&#39; with grant option</span><br></pre></td></tr></table></figure></li>
+<li><p>授予SUPER PROCESS FILE权限（系统权限不能指定数据库）：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">grant super,process,file on *.* to &#39;test&#39;@&#39;localhost&#39;</span><br></pre></td></tr></table></figure></li>
+<li><p>只授予登录权限：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">grant usage on *.* to &#39;test&#39;@&#39;localhost&#39;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="帐号相关"><a href="#帐号相关" class="headerlink" title="帐号相关"></a>帐号相关</h3><ul>
+<li><p>删除账号：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">drop user &#39;test&#39;@&#39;localhost&#39;</span><br></pre></td></tr></table></figure></li>
+<li><p>修改自己的密码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">set password &#x3D; password(&#39;123&#39;)</span><br></pre></td></tr></table></figure></li>
+<li><p>管理员修改他人密码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">set password for &#39;test&#39;@&#39;localhost&#39; &#x3D; password(&#39;123&#39;)</span><br></pre></td></tr></table></figure>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="字符集相关"><a href="#字符集相关" class="headerlink" title="字符集相关"></a>字符集相关</h3></li>
+<li><p>查看字符集：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">show variables like &#39;character%&#39;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-23.png" alt="upload successful"></p>
+</li>
+<li><p>创建数据库时指定字符集：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">create database test2 character set utf8</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-24.png" alt="upload successful"></p>
+</li>
+</ul>
+<h3 id="时区相关"><a href="#时区相关" class="headerlink" title="时区相关"></a>时区相关</h3><ul>
+<li><p>查看当前时区（UTC为世界统一时间，中国为UTC+8）：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">show variables like &quot;%time_zone%&quot;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-25.png" alt="upload successful"></p>
+</li>
+<li><p>修改mysql全局时区为北京时间，即我们所在的东8区：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">set global time_zone &#x3D; &#39;+8:00&#39;;</span><br></pre></td></tr></table></figure></li>
+<li><p>修改当前会话时区：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">set time_zone &#x3D; &#39;+8:00&#39;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-26.png" alt="upload successful"></p>
+</li>
+<li><p>立即生效：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">flush privileges</span><br></pre></td></tr></table></figure></li>
+</ul>
+]]></content>
+      <tags>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>库</title>
     <url>/2020/07/04/%E6%8E%A8%E8%8D%90%E5%BA%93/</url>
     <content><![CDATA[<h1 id="前端"><a href="#前端" class="headerlink" title="前端"></a>前端</h1><p><a href="https://github.com/sweetalert2/sweetalert2" target="_blank" rel="noopener">sweetalert2</a> 一个自适应，且自定义性强的弹出框（零依赖）</p>
@@ -8,6 +1136,55 @@
       <tags>
         <tag>推荐库</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>项目开发中我用的顺手工具</title>
+    <url>/2020/07/09/%E6%88%91%E7%94%A8%E7%9A%84%E9%A1%BA%E6%89%8B%E7%9A%84%E5%B7%A5%E5%85%B7/</url>
+    <content><![CDATA[<p>之前经常有朋友问我一些常用的工具，比如我的架构图是用什么工具做的？我的数据库是用什么工具设计的？今天给大家介绍下我用的顺手的工具！</p>
+<p>IntelliJ IDEA</p>
+<p><img src="/images/pasted-5.png" alt="upload successful"><br>业界公认最好的Java开发工具，平时用的最多。可以安装大量插件丰富功能，开发前端应用也不在话下！</p>
+<p>X-shell</p>
+<p><img src="/images/pasted-6.png" alt="upload successful"><br>一款强大的安全终端模拟软件，可以用来连接和管理远程Linux服务器。</p>
+<p>Postman</p>
+<p><img src="/images/pasted-7.png" alt="upload successful"><br>API接口调试工具，平时用来测试开发好的接口，有时也用来格式化下JSON字符串。</p>
+<p>PowerDesigner</p>
+<p><img src="/images/pasted-8.png" alt="upload successful"></p>
+<p>数据库设计工具，平时用来设计数据库表，设计完成之后可以直接导出数据库表。</p>
+<p>Navicat</p>
+<p><img src="/images/pasted-9.png" alt="upload successful"><br>数据库可视化工具，支持多种数据库，平时用来连接并管理数据库，项目上线的时候可以用来同步表结构。</p>
+<p>RedisDesktop</p>
+<p><img src="/images/pasted-10.png" alt="upload successful"><br>Redis可视化工具，平时用来查看和管理Redis缓存中的数据，有时候需要清空缓存的时候就用到它了。</p>
+<p>Robomongo</p>
+<p><img src="/images/pasted-11.png" alt="upload successful"><br>MongoDB可视化工具，平时用来查看和管理MongoDB中的数据。</p>
+<p>Typora</p>
+<p><img src="/images/pasted-12.png" alt="upload successful"><br>平时用来写文章的Markdown编辑器，编辑与预览二合一，界面简洁且功能强大！</p>
+<p>ProcessOn</p>
+<p><img src="/images/pasted-13.png" alt="upload successful"><br>作图工具，可以用来制作思维导图和流程图，mall项目的架构图就是用这个画的！</p>
+<p>MindMaster</p>
+<p><img src="/images/pasted-14.png" alt="upload successful"></p>
+<p>好用的思维导图制作工具，设计功能的时候可以用来整理下思路。</p>
+<p>Snipaste</p>
+<p><img src="/images/pasted-15.png" alt="upload successful"><br>一款好用的截屏工具，文章中很多图片都是用这个截的。</p>
+<p>ScreenToGif</p>
+<p><img src="/images/pasted-16.png" alt="upload successful"><br>用来制作Gif的工具，mall项目功能演示的Gif就是用这个做的。</p>
+<h2 id="官网地址"><a href="#官网地址" class="headerlink" title="官网地址"></a>官网地址</h2><ul>
+<li>IntelliJ IDEA：<a href="https://www.jetbrains.com/idea/download" target="_blank" rel="noopener">https://www.jetbrains.com/idea/download</a></li>
+<li>X-shell：<a href="http://www.netsarang.com/download/software.html" target="_blank" rel="noopener">http://www.netsarang.com/download/software.html</a></li>
+<li>Postman：<a href="https://www.postman.com/" target="_blank" rel="noopener">https://www.postman.com/</a></li>
+<li>PowerDesigner：<a href="http://powerdesigner.de/" target="_blank" rel="noopener">http://powerdesigner.de/</a></li>
+<li>Navicat：<a href="http://www.formysql.com/xiazai.html" target="_blank" rel="noopener">http://www.formysql.com/xiazai.html</a></li>
+<li>RedisDesktop：<a href="https://redisdesktop.com/download" target="_blank" rel="noopener">https://redisdesktop.com/download</a></li>
+<li>Robomongo：<a href="https://robomongo.org/download" target="_blank" rel="noopener">https://robomongo.org/download</a></li>
+<li>Typora：<a href="https://typora.io/" target="_blank" rel="noopener">https://typora.io/</a></li>
+<li>ProcessOn：<a href="https://processon.com/" target="_blank" rel="noopener">https://processon.com/</a></li>
+<li>MindMaster：<a href="http://www.edrawsoft.cn/mindmaster" target="_blank" rel="noopener">http://www.edrawsoft.cn/mindmaster</a></li>
+<li>Snipaste：<a href="https://www.snipaste.com/" target="_blank" rel="noopener">https://www.snipaste.com/</a></li>
+<li>ScreenToGif：<a href="https://www.screentogif.com" target="_blank" rel="noopener">https://www.screentogif.com</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
   </entry>
   <entry>
     <title>数据结构与算法 - 开篇</title>
@@ -777,75 +1954,84 @@ return movies(n - 1) + 1;</code></pre><p>}<br>复制代码</p>
       </tags>
   </entry>
   <entry>
-    <title>数据结构与算法 - 链表</title>
-    <url>/2020/07/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A8/</url>
-    <content><![CDATA[<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>链表与数组一样，都是常用的基础数据结构，它通过“指针”将一组零散的内存块串联起来使用。每一个零散的内存块称为：节点。</p>
-<p>为了将所有节点串联起来，每个链表节点除了存储数据，还需要存储链上下一个节点的地址，我们把存储下一个节点地址的指针，称为：后继指针。</p>
-<p>链表有两个特殊的节点：头节点、尾节点</p>
-<p>头节点：第一个节点</p>
-<p>尾节点：后继指针指向null的节点</p>
-<p><img src="/images/pasted-0.png" alt="upload successful"></p>
-<h2 id="差异"><a href="#差异" class="headerlink" title="差异"></a>差异</h2><h3 id="内存空间"><a href="#内存空间" class="headerlink" title="内存空间"></a>内存空间</h3><p>数组的一个特点：需要连续的内存空间。链表与数组刚好相反，链表不需要连续的内存空间，它是通过“指针”将一组零散的内存块串联起来使用</p>
-<p><img src="/images/pasted-1.png" alt="upload successful"></p>
-<h3 id="操作方式"><a href="#操作方式" class="headerlink" title="操作方式"></a>操作方式</h3><ol>
-<li><p>插入、删除</p>
-<p>数组的插入、删除操作，需要向后，向前移动数据，时间复杂度是：O(n)<br> 链表的插入、删除操作，只需要改变节点指针，不需要移动数据，时间复杂度是：O(1)</p>
-</li>
+    <title>设计思想</title>
+    <url>/2020/07/15/%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3/</url>
+    <content><![CDATA[<blockquote>
+<p>一直在说互联网系统应该是design for failure，今天看到的这篇文介绍的虽是简单几句话，但妥妥的设计思想，还是蛮契合SRE精髓。作为一名designer或者developer，应该要对墨菲定律心存敬畏，以下讲一下我对这16中设计思想的一个大致看法吧。</p>
+</blockquote>
+ <a id="more"></a>
+
+<h3 id="防御性设计（Defensive-Design）"><a href="#防御性设计（Defensive-Design）" class="headerlink" title="防御性设计（Defensive Design）"></a>防御性设计（Defensive Design）</h3><p>所谓的防御性设计实际上就是“防呆”，英文叫Idiot Proofing。说白了就是用户有时候会不自觉的做一些蠢事，我们在设计的时候要尽量考虑到一些不规范的交互行为，如果你的用户是一只猴子，你要写包单保证系统不被玩坏。例如，在Android开发中使用到的Monkey Test就是用于这样的目的。</p>
+<h3 id="边界情况（Edge-Case）"><a href="#边界情况（Edge-Case）" class="headerlink" title="边界情况（Edge Case）"></a>边界情况（Edge Case）</h3><p>这个设计思想在测试领域比较常见，就是我们在设计我们的设计案例的时候有没有充分考虑在边界情况下的系统行为。比较常见的例如，闰年情况、跨日情况等边界。想起刚入行我leader跟我说你的程序在你脑袋有没有跑过一遍所有能想到的情况，没有的话重做。</p>
+<h3 id="防误措施（Mistake-Proofing）"><a href="#防误措施（Mistake-Proofing）" class="headerlink" title="防误措施（Mistake Proofing）"></a>防误措施（Mistake Proofing）</h3><p>怎么保证不会发生错误。例如在人机交互环节，能不能进行输入校验？</p>
+<h3 id="解耦（Decoupling）"><a href="#解耦（Decoupling）" class="headerlink" title="解耦（Decoupling）"></a>解耦（Decoupling）</h3><p>设计的时候，哪怕是最基础的代码也应该符合开闭原则。远的不说，就单单Spring的IOC就是为了把对象创建及维护从原来的由引用类负责这种强耦合模式转成通过spring容器负责。且解耦一般的做法是通过把内部逻辑封装起来，暴露对外统一API接口，调用方不需要了解被调用方的内部逻辑实现，只需要知道提供什么功能即可。这样再引申一下，解耦的作用就在于复用，把所有的高内聚功能独立成一个个模块，然后就可以像乐高积木一样根据调用方的实际需求进行组装。</p>
+<p>宏观的系统设计就更是如此，例如微服务中的Eureka。首先，Eureka客户端通过把自己注册到Eureka服务端（如IP、端口），然后其他服务在调用前通过Eureka获取被调用方的信息，然后再去调用被调用方，然后他们的调用关系就是这样解耦的。</p>
+<p><img src="/images/pasted-35.png" alt="upload successful"></p>
+<p>熔断本质上就是一种防御性设计或者策略。假设一个微服务体系下的系统，其中A服务调用B服务。系统的QPS是千级别，当时如果B服务挂掉的话A的线程绝对在短时间内占满耗尽而导致假死，从而形成大量A请求积压而导致情况恶化，最终形成雪崩。</p>
+<p>在SpringCloud技术体系中，熔断就是Hystrix所体现的另外一种思想。Hystrix可以通过监控一段事件内的异常次数和响应速度来判断当前服务的健康状况，若服务健康状况不佳则进行熔断，熔断之后新的请求将不会调用实际的业务，而是通过快速失败或优雅降级的方式来快速给用户进行响应。</p>
+<h3 id="舱壁模式（Bulkhead）"><a href="#舱壁模式（Bulkhead）" class="headerlink" title="舱壁模式（Bulkhead）"></a>舱壁模式（Bulkhead）</h3><p>在分布式系统的设计中有一种舱壁模式。目前比较火的微服务架构我理解实际上就是隔板模式的一个体现。这种模式把系统中的各个功能模块实体进行进程、资源上的隔离，使得系统不会因为某个功能模块试题（即微服务）的局部失败而导致全局失败。</p>
+<ol>
+<li>资源隔离：</li>
 </ol>
-<p><img src="/images/pasted-2.png" alt="upload successful"></p>
+<p>微服务里面的Hystrix则是遵守了该模式，通过为每个单独的服务提供独立的线程池而进行资源隔离。在Hystrix中实际上通过两种方式进行资源隔离：</p>
+<blockquote>
+<p>信号量隔离策略（ ExecutionIsolationStrategy.SEMAPHORE）<br>Semaphores 隔离就是利用了java.util.concurrent.Semaphore 的功能，从信号量获取到许可才允许执行，否则不允许执行，执行完成后要释放之前获取到的许可。同样的每一个服务依赖都有一个自己的信号量，当该信号量的许可被获取完之后，再有线程要进行依赖调用，发现已经没有可用的信号量，这时候就会被拒绝调用。信号量隔离始终都是运行在 Container 线程内的。它的优势就在于造成的开销更低。<br>线程隔离策略（ ExecutionIsolationStrategy.THREAD）<br>所谓的线程隔离，实际上就是每一个依赖调用都有自己的线程池来负责处理，依赖调用都运行在自己线程池中的线程上，当同一个依赖调用使用的线程池中的 Queue  size 达到设置的阙值时就会拒绝进行依赖的调用。<br>具体用法可以通过继承@HystrixCommand实现线程隔离或者交易隔离。</p>
+</blockquote>
 <ol start="2">
-<li><p>查找</p>
-<p> 数组的内存空间是连续的，支持随机访问操作，根据下标索引访问，时间复杂度是：O(1)<br> 链表的内存空间不连续，不支持随机访问操作，从头节点遍历访问，时间复杂度是：O(n)</p>
-</li>
+<li>数据隔离</li>
 </ol>
-<h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
-<li><p>你能用自己的话描述链表吗？</p>
-<ol>
-<li>链表与数组一样，都是常用的基础数据结构</li>
-<li>链表通过“指针”将一组零散的内存块串联起来使用</li>
-<li>每一个零散的内存块称为：节点</li>
-<li>链表的每个节点，除了存储数据以外，还需要存储一个指向下一个节点的指针</li>
-<li>通常我们把指向下一个节点的指针，称为：后继指针</li>
-</ol>
-</li>
-<li><p>你知道链表和数组的区别吗？</p>
-<ol>
-<li>数组需要连续的内存空间，链表不需要</li>
-<li>插入、删除操作<ol>
-<li>数组需要移动数据，时间复杂度是：O(n)</li>
-<li>链表不需要移动数据，时间复杂度是：O(1)</li>
-</ol>
-</li>
-<li>查找操作<ol>
-<li>数组支持随机访问操作，时间复杂度是：O(1)</li>
-<li>链表需要从头节点遍历，不支持随机访问操作，时间复杂度是：O(n)</li>
-</ol>
-</li>
-</ol>
-</li>
-<li><p>你知道都有哪些常用的链表吗？</p>
-<ol>
-<li>单链表</li>
-<li>双向链表</li>
-<li>循环链表</li>
-</ol>
-</li>
-</ol>
+<p>上面讲的都是线程隔离，当然数据隔离这个一般的做法有库隔离、表隔离、按字段区分这三种租户隔离的方法。</p>
+<h3 id="冗余（Redundancy）"><a href="#冗余（Redundancy）" class="headerlink" title="冗余（Redundancy）"></a>冗余（Redundancy）</h3><p>所谓的冗余指的通过重复配置关键组件或部件，保证在关键组件失效的情况下还有备份组件运作以便保证系统可以继续提供服务。生活中的例子请参与飞机的双引擎设计。</p>
+<p>主从模式就是冗余的体现。在正常情况下，主实例负责提供全部的服务，从实例在主实例整体或部分不可用的情况下，完全替代主实例整体或局部而对外提供服务。</p>
+<h3 id="重试（Retry）"><a href="#重试（Retry）" class="headerlink" title="重试（Retry）"></a>重试（Retry）</h3><p>重试是在分布式系统下处理瞬态故障的一个基本手段，简单有效（当然重试的前提是要求幂等）。但是重试也是可以很危险的，它能够引起把一个局部小时间迅速升级为一个系统重大故障，严重者导致系统假死。</p>
+<p><img src="/images/pasted-36.png" alt="upload successful"></p>
+<p>举个简单例子：如果我们的链路类似上图，这里会发生什么问题？在极端情况下，重试次数达到5<em>5</em>5*5=625次。当链路中的其中一个服务故障率异常的时候，那重试风暴便开启了，因为重试为服务器带来额外的开销和线程的占用，然后其他新来的请求又形成排队，这样的话就形成了类似的DDos恶性事件。根据我们平时的项目经验：</p>
+<blockquote>
+<p>相对较好的是选用3次；<br>且重试的时间一定要设定一定的时间间隔（因为很多时候的瞬态故障更多是网络抖动）<br>尽量只在应用层做重试。</p>
+</blockquote>
+<h3 id="撤销（Undo）"><a href="#撤销（Undo）" class="headerlink" title="撤销（Undo）"></a>撤销（Undo）</h3><p>这个没什么好说，撤销这个功能应该是标配吧。</p>
+<h3 id="冷备（Cold-Standby）"><a href="#冷备（Cold-Standby）" class="headerlink" title="冷备（Cold Standby）"></a>冷备（Cold Standby）</h3><p>冷备实际上也是冗余设计的其中一种体现，只是它会更侧重于“冷”，意思是当系统发生宕机时，这个系统是需要手动启动用于替换下线的主实例，它是跟热备是不一样，热备更多体现在自动切换。</p>
+<h3 id="熔断（Derating）"><a href="#熔断（Derating）" class="headerlink" title="熔断（Derating）"></a>熔断（Derating）</h3><p><img src="/images/pasted-37.png" alt="upload successful"></p>
+<p>熔断本质上就是一种防御性设计或者策略。假设一个微服务体系下的系统，其中A服务调用B服务。系统的QPS是千级别，当时如果B服务挂掉的话A的线程绝对在短时间内占满耗尽而导致假死，从而形成大量A请求积压而导致情况恶化，最终形成雪崩。</p>
+<p>在SpringCloud技术体系中，熔断就是Hystrix所体现的另外一种思想。Hystrix可以通过监控一段事件内的异常次数和响应速度来判断当前服务的健康状况，若服务健康状况不佳则进行熔断，熔断之后新的请求将不会调用实际的业务，而是通过快速失败或优雅降级的方式来快速给用户进行响应。</p>
+<p>具体断路器可以参考以下文章：</p>
+<blockquote>
+<p>Netflix：<a href="https://github.com/Netflix/Hystrix/wiki/How-it-Works#CircuitBreaker" target="_blank" rel="noopener">https://github.com/Netflix/Hystrix/wiki/How-it-Works#CircuitBreaker</a><br>Martin Fowler的Circuit Breaker。</p>
+</blockquote>
+<h3 id="容错（Error-Tolerance）"><a href="#容错（Error-Tolerance）" class="headerlink" title="容错（Error Tolerance）"></a>容错（Error Tolerance）</h3><p>狭义的容错泛指人机交互界面的时候需要对用户输入进行输入校验，保证数据准确性。</p>
+<p>广义的容错应该是两个具有明确边界的事物（如服务间，系统间）交互时候针对可能发生的一切主客观异常情况的防御性手段。常见的容错机制有failsafe、failback、failover、failfast。</p>
+<p>failfast更多指的是快速失败。当系统遭遇一定概率的故障时，可预见这不是偶发性故障，然后就要开启类似断路器开关，让后续打进来的流量直接失败快速返回，避免线程积压导致系统滚雪球式崩溃。</p>
+<p>failover指的是失效转移。请参考我的上一篇redis的文章《玩转Redis高可用-哨兵模式》，里面的主库崩掉后通过选举重新选定新主库的情况就是失效转移。</p>
+<p>failsafe指的是失效安全，具体参考以下第12点。</p>
+<p>failback指的是失效自动恢复，具体是指主实例发生故障而导致系统切换到备实例，在主实例恢复后自动转移回主实例上。这种容错在Hystrix的自恢复能力可以得到体现（详看下图）。</p>
+<p><img src="/images/pasted-38.png" alt="upload successful"></p>
+<p>上图断路器的原理具体看以下三个关键参数，大体逻辑如下：</p>
+<p>// 这个用于设定断路器触发的异常比例阈值，正常情况下断路器处于关闭状态。假设阈值为50%，当在一定时间内（如1分钟），异常调用次数/总调用次数&gt;50%的话，断路器打开，后续所有的请求全部调用getFallback()进行failfast.</p>
+<p>HystrixCommandProperties.Setter().withCircuitBreakerErrorThresholdPercentage(50%)</p>
+<p>// 上面说的一定的采样周期内的流量至少要达到100，Hystrix才会进行采样统计并计算异常比例，再跟上面设定的异常比例阈值进行比较。</p>
+<p>HystrixCommandProperties.Setter().withCircuitBreakerRequestVolumeThreshold(100)</p>
+<p>// 当断路器状态为打开后，在下面预设的6000毫秒时间内所有请求被快速failfast；当时间一过，Hystrix会试探性允许一个请求进来，这个时候断路器处于半开状态；如果调用成功，断路器自动关闭，然后应用恢复正常状态。</p>
+<p>HystrixCommandProperties.Setter().withCircuitBreakerSleepWindowInMilliseconds(6000)</p>
+<h3 id="失效安全（Fail-safe）"><a href="#失效安全（Fail-safe）" class="headerlink" title="失效安全（Fail safe）"></a>失效安全（Fail safe）</h3><p>所谓的失效安全，就是指在特定失效的情况下，一个系统或者服务也不会对业务造成损害。实际上，我们使用token进行安全登录也是一种失效安全的体现，如果token失效了（如时间过期），用户是无法登录的，因为正常登录需要token有一种约束因素，这种因素就是时间。如果时间过了，代表这种约束因素不存在或者不再有效了，登录功能就不能正常工作了，这个是一个极好的设计理念。</p>
+<p>有点抽象？跟你介绍一个生活的例子。电梯之所以可以正常升降，是因为在通电的过程中，正常工作的约束因素（brake）是关闭的；如果某个特殊情况（如没电），这个约束因素不存在或不再有效了，brake是打开的，因此电梯是不会因为没电而下坠的。这个可以理解了吧？</p>
+<h3 id="优雅降级（Graceful-Degradation）"><a href="#优雅降级（Graceful-Degradation）" class="headerlink" title="优雅降级（Graceful Degradation）"></a>优雅降级（Graceful Degradation）</h3><p>服务降级跟熔断还是挺像的，只是降级来得更加温和和优雅一点。熔断是直接断掉防止异常进一步扩大而导致雪崩，但是我们的终极目标是提供尽可能多的服务，这个就是优雅降级的理念。在一些异常情况或者秒杀场景下，为了保证核心服务（如商品下单、支付）的正常可用，会放弃掉一些非核心服务（如历史账单查询），这就是所谓的服务降级。</p>
+<p>在微服务框架中，一般会使用Hystrix的@HystrixCommand或Feign的@FeignClient对服务进行声明，然后为每个服务配置相应的fallback类，最终结合起来进行服务降级。</p>
+<h3 id="监控（Monitoring）"><a href="#监控（Monitoring）" class="headerlink" title="监控（Monitoring）"></a>监控（Monitoring）</h3><p>我们的系统有哪几个纬度的监控，估计最多就是常规的硬件状态监控。当然这里的监控我理解除了技术指标监控，还更应该有业务指标监控，否则我们都在裸泳，等海水退下去后就一览无遗。</p>
+<p>监控实际上是为了更好的主动防御，下图展示一下本人前司的一个运维监控与开发协同的机制（从每个序号顺序往下走）。大家可以看出，一套完善的告警监控系统，能够快速通知开发与运维，开发侧能够完成紧急修复并能够协同运维进行快速部署。在笔者前司经历中，正是有着完善的监控告警系统，大部分故障基本可以在业务发现问题得到有效解决（麻蛋一般在晚上爆问题，那段时间太美好了）。</p>
+<p><img src="/images/pasted-39.png" alt="upload successful"></p>
+<h3 id="耐用性（Durability）"><a href="#耐用性（Durability）" class="headerlink" title="耐用性（Durability）"></a>耐用性（Durability）</h3><p>这里我理解的是系统或数据的耐受性。例如数据，为什么我们一定要持久化到数据库，因为就是要借助数据库硬件各种维度的耐受性。</p>
+<h3 id="回弹性（Resilience）"><a href="#回弹性（Resilience）" class="headerlink" title="回弹性（Resilience）"></a>回弹性（Resilience）</h3><p>这里我看到网上有一个更恰当的翻译，叫“韧性”，就是说我们的设计应该在一些特殊情况下还能通过一系列的手段继续提供尽可能多的服务，你也可以理解为“可靠性”。实际上，我的理解是上面说到的基本上都是回弹性的范畴之内。</p>
+<blockquote>
+<p>服务降级<br>限流<br>重试<br>舱壁模式<br>防御性设计</p>
+</blockquote>
+<p>当然，现在为了提升系统服务的回弹性，部分头部公司也会使用一些故障注入的办法进行混沌工程式训练，如Netflix的ChaosMonkey，阿里的ChaosBlade等。</p>
+<p>参考：</p>
+<p><a href="https://simplicable.com/new/design-for-failure" target="_blank" rel="noopener">https://simplicable.com/new/design-for-failure</a></p>
+<p><a href="https://github.com/Netflix/Hystrix/wiki/How-it-Works#CircuitBreaker" target="_blank" rel="noopener">https://github.com/Netflix/Hystrix/wiki/How-it-Works#CircuitBreaker</a></p>
+<p>Martin Fowler的Circuit Breaker。</p>
 ]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
       <tags>
-        <tag>数据结构与算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据结构与算法 - 链表2</title>
-    <url>/2020/07/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A82/</url>
-    <content><![CDATA[<p><img src="/images/pasted-3.png" alt="upload successful"></p>
-]]></content>
-      <tags>
-        <tag>数据结构与算法</tag>
+        <tag>设计</tag>
       </tags>
   </entry>
   <entry>
@@ -978,5 +2164,109 @@ n = capacity;</code></pre><p>  }</p>
       <tags>
         <tag>数据结构与算法</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>数据结构与算法 - 链表2</title>
+    <url>/2020/07/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A82/</url>
+    <content><![CDATA[<p><img src="/images/pasted-3.png" alt="upload successful"></p>
+]]></content>
+      <tags>
+        <tag>数据结构与算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据结构与算法 - 链表</title>
+    <url>/2020/07/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A8/</url>
+    <content><![CDATA[<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>链表与数组一样，都是常用的基础数据结构，它通过“指针”将一组零散的内存块串联起来使用。每一个零散的内存块称为：节点。</p>
+<p>为了将所有节点串联起来，每个链表节点除了存储数据，还需要存储链上下一个节点的地址，我们把存储下一个节点地址的指针，称为：后继指针。</p>
+<p>链表有两个特殊的节点：头节点、尾节点</p>
+<p>头节点：第一个节点</p>
+<p>尾节点：后继指针指向null的节点</p>
+<p><img src="/images/pasted-0.png" alt="upload successful"></p>
+<h2 id="差异"><a href="#差异" class="headerlink" title="差异"></a>差异</h2><h3 id="内存空间"><a href="#内存空间" class="headerlink" title="内存空间"></a>内存空间</h3><p>数组的一个特点：需要连续的内存空间。链表与数组刚好相反，链表不需要连续的内存空间，它是通过“指针”将一组零散的内存块串联起来使用</p>
+<p><img src="/images/pasted-1.png" alt="upload successful"></p>
+<h3 id="操作方式"><a href="#操作方式" class="headerlink" title="操作方式"></a>操作方式</h3><ol>
+<li><p>插入、删除</p>
+<p>数组的插入、删除操作，需要向后，向前移动数据，时间复杂度是：O(n)<br> 链表的插入、删除操作，只需要改变节点指针，不需要移动数据，时间复杂度是：O(1)</p>
+</li>
+</ol>
+<p><img src="/images/pasted-2.png" alt="upload successful"></p>
+<ol start="2">
+<li><p>查找</p>
+<p> 数组的内存空间是连续的，支持随机访问操作，根据下标索引访问，时间复杂度是：O(1)<br> 链表的内存空间不连续，不支持随机访问操作，从头节点遍历访问，时间复杂度是：O(n)</p>
+</li>
+</ol>
+<h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li><p>你能用自己的话描述链表吗？</p>
+<ol>
+<li>链表与数组一样，都是常用的基础数据结构</li>
+<li>链表通过“指针”将一组零散的内存块串联起来使用</li>
+<li>每一个零散的内存块称为：节点</li>
+<li>链表的每个节点，除了存储数据以外，还需要存储一个指向下一个节点的指针</li>
+<li>通常我们把指向下一个节点的指针，称为：后继指针</li>
+</ol>
+</li>
+<li><p>你知道链表和数组的区别吗？</p>
+<ol>
+<li>数组需要连续的内存空间，链表不需要</li>
+<li>插入、删除操作<ol>
+<li>数组需要移动数据，时间复杂度是：O(n)</li>
+<li>链表不需要移动数据，时间复杂度是：O(1)</li>
+</ol>
+</li>
+<li>查找操作<ol>
+<li>数组支持随机访问操作，时间复杂度是：O(1)</li>
+<li>链表需要从头节点遍历，不支持随机访问操作，时间复杂度是：O(n)</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>你知道都有哪些常用的链表吗？</p>
+<ol>
+<li>单链表</li>
+<li>双向链表</li>
+<li>循环链表</li>
+</ol>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>数据结构与算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>高效工作与学习的免费工具1</title>
+    <url>/2020/07/08/%E9%AB%98%E6%95%88%E5%B7%A5%E4%BD%9C%E4%B8%8E%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%85%8D%E8%B4%B9%E5%B7%A5%E5%85%B71/</url>
+    <content><![CDATA[<p><img src="/images/pasted-4.png" alt="upload successful"></p>
+<ol>
+<li><p>PDF在线转换工具支持OCR图片识别：<a href="http://www.onlineocr.net" target="_blank" rel="noopener">http://www.onlineocr.net</a>  ，对于小文件无需注册，大文件注册后依然免费。使用方式也很简单，需要手动选择需要转换的语言比如中文 CHINESESIMPLIFIED</p>
+</li>
+<li><p>音视频倍数播放器：MX Player 支持市面上几乎所有视频格式。支持在线字幕匹配、文件夹播放、儿童锁等。应用市场下载的有广告，可自行搜索无广告版本。</p>
+</li>
+<li><p>Chrome浏览器倍数播放插件：Video Speed Controller 。</p>
+</li>
+<li><p>秘塔写作猫：<a href="https://xiezuocat.com/#/" target="_blank" rel="noopener">https://xiezuocat.com/#/</a>  能自动识别错别字、错别语句并一键修改。注册既能使用。</p>
+</li>
+<li><p>Snipaste 是一个简单但强大的截图工具，也可以让你将截图贴回到屏幕上！下载后即可用。</p>
+</li>
+<li><p>FV悬浮窗(FooView)它的主要功能是可以快速截图支持拼接长截图、文字抓取、手势操作、录制屏幕、图片视频编辑、快速网页浏览 、快速打开本地应用、本地文件管理等等，功能很多。很好很强大。APP官方演示视频:<a href="https://m.youku.com/video/id_XMTU0NTMyMTEzMg==.html" target="_blank" rel="noopener">https://m.youku.com/video/id_XMTU0NTMyMTEzMg==.html</a></p>
+</li>
+<li><p>锤子便签，可以一键把文章以长图形式分享出去。图片效果排版都很好。</p>
+</li>
+<li><p>超级简历，一款免费提供简历模版和排版的工具。在书写过程中还会给很多词汇参考，其他小功能请自行探索。</p>
+</li>
+<li><p>坚果云，同步盘。所谓同步盘就是文件修改后自动同步到其他设备上。每个月上传1G，下载3G的流量。对于同步盘来说足够了。ps: 手机里的视频免费版不支持备份。手机号注册即可使用。</p>
+</li>
+<li><p>印象笔记，可以做为自己的知识库，随时记录自己的想法、在浏览器上遇到好的内容，支持一键剪藏。搜索起来很方便。免费版只能同步2台设备、60M的上传流量。</p>
+</li>
+</ol>
+<p>11.扫描全能王，合同、收据等商务文档签署或盖章后的照片，通过扫描全能王的智能裁剪效果更好、体积更小。</p>
+<ol start="12">
+<li>接听宝AI电话助手，通过拨打运营商转接电话，把拒接的、飞行模式的来电的全都自动帮你应答。可以自定义助理声音。在某些特定场景中这个工具很好用。</li>
+</ol>
+]]></content>
   </entry>
 </search>
