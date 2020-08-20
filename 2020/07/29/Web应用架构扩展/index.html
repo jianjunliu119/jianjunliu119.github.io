@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="description" content="岁月的痕迹" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Web应用架构扩展 |  印记
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Web应用架构扩展"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Web应用架构扩展
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/29/Web%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84%E6%89%A9%E5%B1%95/" class="article-date">
+  <time datetime="2020-07-29T01:03:00.000Z" itemprop="datePublished">2020-07-29</time>
+</a>  
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><img src="/images/pasted-152.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<p>从单个服务器到能够为数百万用户提供服务的Web应用程序。</p>
+<p>扩展。这意味着它必须能够：</p>
+<ul>
+<li>同时服务于更多顾客</li>
+<li>始终无停机</li>
+<li>为全球用户服务</li>
+<li>缩放如何工作</li>
+</ul>
+<p>几年前，将首先讨论“垂直”与“水平”缩放（也称为“放大”与“缩小”）。简而言之，垂直缩放意味着在功能更强大的计算机上运行同一事物，而水平缩放意味着并行运行许多进程。</p>
+<p>如今，几乎没有人在垂直扩展。原因很简单：</p>
+<ul>
+<li>计算机越强大，它们的价格就成倍增长</li>
+<li>一台计算机只能如此之快，这对一台计算机可以垂直扩展的范围施加了严格的限制</li>
+<li>多核CPU意味着即使一台计算机都可以有效地并行化-那么为什么不从一开始就并行化呢？</li>
+</ul>
+<p>好吧，它是水平缩放！但是需要哪些步骤？</p>
+<h3 id="单个服务器-数据库"><a href="#单个服务器-数据库" class="headerlink" title="单个服务器+数据库"></a>单个服务器+数据库</h3><p><img src="/images/pasted-153.png" alt="upload successful"></p>
+<p>这可能是您的后端最初的外观。运行您的业务逻辑的单个应用程序服务器和一个用于长期存储数据的数据库。事情既简单又好，但是满足更高需求的唯一方法是在功能更强大的计算机上运行它-不好。</p>
+<h3 id="添加反向代理"><a href="#添加反向代理" class="headerlink" title="添加反向代理"></a>添加反向代理</h3><p><img src="/images/pasted-154.png" alt="upload successful"></p>
+<p>为大规模准备架构的第一步是添加“反向代理”。可以将其视为酒店的前台。当然，您可以只允许客人直接进入他们的房间-但是，实际上，您想要的是一个中介机构，该机构检查是否允许客人进入，是否整理了所有文件并正准备进入实际存在的房间。而且如果房间关闭，您希望有人用友好的声音告诉客人，而不是让他们陷入困境。这正是反向代理的作用。通常，代理只是一个接收和转发请求的过程。通常，这些请求将从我们的服务器发送到Internet。但是，这次，请求来自Internet，需要路由到我们的服务器，因此我们将其称为“反向代理”。</p>
+<p>这样的代理可以完成许多任务：</p>
+<ul>
+<li>运行状况检查可确保我们的实际服务器仍在运行</li>
+<li>路由将请求转发到正确的端点</li>
+<li>身份验证可确保用户实际上具有访问服务器的权限</li>
+<li>防火墙确保用户只能访问他们被允许使用的网络部分…以及更多</li>
+</ul>
+<h3 id="引入负载均衡器"><a href="#引入负载均衡器" class="headerlink" title="引入负载均衡器"></a>引入负载均衡器</h3><p><img src="/images/pasted-155.png" alt="upload successful"></p>
+<p>大多数“逆向代理”还另辟trick径：它们还可以充当负载平衡器。负载均衡器是一个简单的概念：假设有一百个用户准备在给定的分钟内在您的在线商店中付款。不幸的是，您的付款服务器只能同时处理50次付款。解决方案？您只需一次运行两个支付服务器。</p>
+<p>负载平衡器的工作现在是在这两个服务器之间分配传入的付款请求。用户一左移，用户二右移，用户三左移，依此类推。</p>
+<p>如果五百个用户想要一次付款，您该怎么办？确实，您可以扩展到十个支付服务器，然后将其留给负载均衡器在它们之间分配传入的请求。</p>
+<h3 id="扩展数据库"><a href="#扩展数据库" class="headerlink" title="扩展数据库"></a>扩展数据库</h3><p><img src="/images/pasted-156.png" alt="upload successful"></p>
+<p>使用负载平衡器可以使我们在许多服务器之间分配负载。但是您能发现问题吗？尽管我们可以利用数十台，数百台甚至数千台服务器来处理我们的请求，但它们都存储和检索来自同一数据库的数据。</p>
+<p>那么，我们不能仅以相同的方式扩展数据库吗？不幸的是没有。这里的问题是一致性。我们系统的所有部分都需要就其使用的数据达成一致。数据不一致会导致各种各样的毛病-多次执行订单，从持有100美元的帐户中扣除两次90美元的付款，依此类推…那么我们如何在确保一致性的同时扩展数据库？</p>
+<p>我们可以做的第一件事是将其分为多个部分。一个部分专门负责接收和存储数据，其他所有部分则负责检索存储的数据。该解决方案有时称为主/从设置或带有只读副本的写入。假设服务器从数据库中读取数据的方式比写入数据库的方式更多。该解决方案的优点在于，可以保证一致性，因为数据仅写入单个实例，并且从一个实例（从写入到读取）从那里流向。缺点是我们仍然只有一个数据库实例要写入。这对于中小型Web项目是可以的，但是如果您运行大型Web项目，它就不会这么做。</p>
+<h3 id="微服务"><a href="#微服务" class="headerlink" title="微服务"></a>微服务</h3><p><img src="/images/pasted-157.png" alt="upload successful"></p>
+<p>到目前为止，我们只处理一台服务器，该服务器可以完成所有工作：处理付款，订单，库存，为网站提供服务，管理用户帐户等。</p>
+<p>这并不一定是一件坏事-单个服务器意味着较低的复杂性，因此对于我们的开发人员而言，头痛更少。但是随着规模的扩大，事情开始变得复杂和低效：</p>
+<p>我们服务器的不同部分被不同程度地利用-对于每个用户登录，可能要处理几百次浏览量和要提供的资产，但是所有操作都是由同一台服务器完成的<br>我们的开发团队会随着我们的应用程序的发展而增长-但是，随着越来越多的开发人员在同一台服务器上工作，他们更有可能踩到彼此的脚趾。<br>仅拥有一台服务器意味着每当我们要上线新版本时，都必须完成所有工作并进行处理。每当一个团队迅速想要发布更新时，这就会导致危险的相互依赖性，而另一团队仅完成了一半的工作。<br>应对这些挑战的解决方案是一种架构范式，它已席卷开发人员世界：微服务。这个想法很简单-将您的服务器分解为功能单元，并将它们部署为单独的，相互连接的微型服务器。这有很多好处：</p>
+<p>每个服务可以单独缩放，使我们能够更好地适应需求<br>开发团队可以独立工作，每个团队都负责各自微服务的生命周期（创建，部署，更新等）。<br>每个微服务都可以使用自己的资源，例如自己的数据库，从而进一步减少了4.）中描述的问题。</p>
+<h3 id="缓存和内容交付网络"><a href="#缓存和内容交付网络" class="headerlink" title="缓存和内容交付网络"></a>缓存和内容交付网络</h3><p><img src="/images/pasted-158.png" alt="upload successful"></p>
+<p>有什么比提高工作效率更好？根本不用工作！我们的网络应用程序很大一部分是由静态资产组成的，这些资产永远不变，例如图像，JavaScript和CSS文件，某些产品的预渲染目标网页等。与其在每个请求上重新计算或保留这些资产，我们都可以使用“缓存”-一种小型存储，只记住最后的结果并将其分发给所有感兴趣的人，而无需打扰底层服务器。</p>
+<p>缓存的大兄弟被称为“内容交付网络”或CDN-遍布世界各地的大量缓存。这样一来，我们就可以从用户附近的商店向用户提供内容，而不必每次都在全球范围内发送数据。</p>
+<h3 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h3><p><img src="/images/pasted-159.png" alt="upload successful"></p>
+<p>您去过游乐园吗？您只是走到售票柜台买票吗？可能不是-您最终可能在队列中等待。政府机构，邮局和游乐园入口都是“次容量并行性”概念的绝佳示例-是的，它们是并行的：多个售票亭同时出售门票-但似乎永远不足以立即为每个人提供服务，结果，队列开始形成。</p>
+<p>大型Web应用程序使用相同的概念。每分钟将数十万张图像上传到Instagram，Facebook和Co，每个图像都需要进行处理，调整大小，分析和标记-这是一个耗时的过程。因此，与其让用户等到他们的上传完成所有这些步骤，不如让他们等待。接收图像的服务器仅做三件事：</p>
+<p>它存储未处理的原始图像<br>确认上传给用户<br>它将虚拟便签添加到一大堆中，指定需要执行的操作<br>从这里开始，此笔记由任意数量的其他服务器拾取，每个服务器都完成其任务之一，将其选中，然后将笔记放回堆中-直到完成待办事项列表。管理这堆笔记的系统称为“消息队列”。使用这样的队列有许多优点：</p>
+<p>它使任务和处理器分离。有时需要处理大量图像，有时仅需要处理少量图像。有时有很多处理器可用，有时只有几个。通过简单地将任务添加到积压中而不是直接处理它们，可以确保我们的系统保持响应能力，并且不会丢失任何任务。<br>它使我们能够按需扩展。启动更多的处理器需要时间-因此，当许多用户尝试上传图像时，已经为时已晚。通过将我们的任务添加到队列中，我们可以推迟提供更多功能来处理它们的需要<br>好吧，如果我们按照上面的所有步骤进行操作，我们的系统现在就可以提供可观的流量了。但是，如果我们想做大的事情-真的做大了，怎么办？好了，还有一些选择：</p>
+<p>###分片<br><img src="/images/pasted-160.png" alt="upload successful"></p>
+<p>分片是什么？好吧，深吸一口气。你准备好了吗？它去了：</p>
+<p>“共享是一种通过将应用程序的堆栈分成多个单元来并行化应用程序的技术，每个单元负责一个特定的键或名称空间”</p>
+<p>phe 那到底是什么意思呢？实际上很简单：需要为20亿用户提供Facebook个人资料吗？将您的架构分解为例如26个Mini-Facebook，每个Facebook用不同的字母为用户服务。亚伦·亚伯拉罕（Aaron Abrahams）？堆栈A. Zacharias Zuckerberg将为您服务？Z栈是…</p>
+<p>分片不必基于字母，而可以基于任何数量的因素，例如位置，使用频率（电力用户被路由到好的硬件）等等。您可以根据需要以这种方式分片服务器，数据库或堆栈的几乎任何方面。</p>
+<h3 id="负载均衡器"><a href="#负载均衡器" class="headerlink" title="负载均衡器"></a>负载均衡器</h3><p><img src="/images/pasted-161.png" alt="upload successful"></p>
+<p>单个负载平衡器只能带您到现在为止-即使您开始购买一些功能强大（且价格昂贵）的硬件负载平衡器，它们可以处理多少个请求也受到严格限制。</p>
+<p>幸运的是，在全球范围内，分散且难以置信的稳定层甚至可以在流量未达到我们的负载均衡器之前就可以用于负载均衡。最好的是什么？完全免费。该层是“域名系统”-简称DNS。将域名（例如“ arcentry.com”）映射到IP（例如“ 143.204.47.77”）的全球注册表。该注册表允许我们为每个域名指定多个IP，每个IP导致一个不同的负载均衡器。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag">架构</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/07/30/Linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E5%AE%89%E5%85%A8-%E5%9F%BA%E7%A1%80/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Linux服务器的安全 - 基础
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/07/27/%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">网页应用架构</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> JianJian Liu
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="印记"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/jianjunliu119/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/jianjunliu119/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

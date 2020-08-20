@@ -163,131 +163,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Git - 基础篇</title>
-    <url>/2020/07/16/Git-%E5%9F%BA%E7%A1%80%E7%AF%87/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这是程序锅对之前学习和使用 Git 做的一份整理，后头继续使用和学习 Git 的话，还会更新这份内容，所以喜欢的话可以关注一波【多选参数】哦，会第一时间在【多选参数】发布的。因此，这份就算是 v1.0 版本的吧。另外，附上了本篇内容的提纲，后头还会有几篇关于 Git 的，每篇都有这样的一份提纲。    </p>
-<p><img src="/images/pasted-40.png" alt="upload successful"></p>
-<a id="more"></a>
-<h2 id="Git-的三个区域"><a href="#Git-的三个区域" class="headerlink" title="Git 的三个区域"></a>Git 的三个区域</h2><p>在正式 git 之前，我们先来了解一下 git 的 3 个区域，分别是工作目录、暂存区、版本历史。这个知识点是尤为重要的，在理解了这三个区域之后，git 的操作才会显得很容易。</p>
-<ul>
-<li>工作目录是直接跟文件相关的，比如被 git 管理起来的文件被修改了的话，在使用 git status 命令查看的时候会显示出来。显示的内容就是相比之前的版本 A  变更了的哪些文件；</li>
-<li>当使用 git add 命令之后，文件修改的东西就被提交到暂存区了，而工作目录中版本是变化之后了的，比如版本 B。那么使用 git status 之后，暂存区显示的内容是相对版本 A 的变化的文件信息，也相当于是版本 B 的情况；</li>
-<li>当使用 git commit 之后，这个更改就被提交到了版本历史中，那么版本历史就从版本 A 变到了版本 B；</li>
-</ul>
-<p><img src="/images/pasted-41.png" alt="upload successful"></p>
-<h2 id="Git-基础使用"><a href="#Git-基础使用" class="headerlink" title="Git 基础使用"></a>Git 基础使用</h2><ol>
-<li>Git 配置相关<br>在使用 Git 管理文件系统的时候，需要进行一些配置，比如用户信息的配置。 Git 管理文件系统主要分为三个层次，如下所示（PS：只输入下面这些命令是不行的）</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># config的三个作用域</span><br><span class="line"># 缺省等同于local</span><br><span class="line">$ git config --local		# local只对某个仓库有效</span><br><span class="line">$ git config --global 	# global对登录用户所有仓库有效，在用户根目录下，比如 root 用户就在 &#x2F;root 目录下有个关于 git 的配置文件</span><br><span class="line">$ git config --system 	# system对系统所有登录的用户有效，基本不用</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>优先级 local &gt; global &gt; system，也就是说当对一个仓库同时设置了 global 和 local 那么采用local配置的信息。</p>
-</blockquote>
-<ul>
-<li>查看配置信息<br>有些时候我们也会查看 Git 配置信息等，使用如下命令可以查看相应层次的配置信息</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 显示 config 的配置 加--list</span><br><span class="line">$ git config --list --local	# 这个只能在git仓库中使用</span><br><span class="line">$ git config --list --global</span><br><span class="line">$ git config --list --system</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>配置信息—以用户信息为例<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git config --global user.name &#39;your_name &#39;                                             </span><br><span class="line">$ git config --global user.email &#39;your_email@domain.com&#39;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>Git 相对于其他版本控制系统需要这些信息，是因为在版本控制中，做出的修改是跟这些用户信息捆绑在一起的。绑定的 email 是为了，当评审人员对代码提出了相应的修改，那么 Git 管理系统会对修改代码的提交者绑定的 email 发送邮件。所以email 需要是一个有效的 email，能收的到邮件的 email。</p>
-<ul>
-<li>清除配置信息<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git config --unset --local user.name</span><br><span class="line">$ git config --unset --global user.name</span><br></pre></td></tr></table></figure></li>
-</ul>
-<ol start="2">
-<li>建立 Git 仓库</li>
-</ol>
-<ul>
-<li><p>把已有的项目代码纳入 Git 管理</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ cd 项目代码所在的文件夹</span><br><span class="line">$ git init</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>新建的项目直接用Git管理</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git init your_project # 会在当前路径下创建和项目名称同名的文件夹</span><br><span class="line">$ cd your_project</span><br></pre></td></tr></table></figure></li>
-</ul>
-<ol start="3">
-<li>仓库管理常用命令</li>
-</ol>
-<ul>
-<li><p>git add 主要是把新文件或者文件变动的情况添加到暂存区</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git add readme.md	# 将 readme.md 文件添加到暂存区</span><br><span class="line">$ git add .	# 将当前工作目录的所有文件添加到暂存区</span><br><span class="line">$ git add -u # 把修改之后的文件（这些文件已经被管理起来了）一次性提交到暂存区</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>暂存区的文件也是相当于被 git 管理了的。</p>
-</blockquote>
-</li>
-<li><p>git status 可以查看工作目录和暂存区的状态</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git status</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>Tips:假如 bash 有颜色显示的话，会看到红色是代表工作目录，绿色代表暂存区。</p>
-</blockquote>
-</li>
-<li><p>git commit 命令进行提交，提交的历史会被记录下来</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git commit -m &#39;Add readme.md&#39;	# -m 指定 commit 的信息</span><br><span class="line">$ git commit	# 这时候会跳出一个文本输入界面，让你输入更多的 commit 信息</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>git mv  将 git 管理的文件进行重命名</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git mv readme readme.md	# 使用git的方式对文件进行重命名</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>git rm 从 git 管理的文件删除某个已管理的文件，同时把修改的情况添加到暂存区</p>
-</li>
-<li><p>git log 命令查看提交历史，也就是版本演进历史</p>
-</li>
-</ul>
-<p><img src="/images/pasted-42.png" alt="upload successful"></p>
-<p>上面已经稍微使用了一下 git log 命令，这边更加详细的来阐述这个命令</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git log	# 只查看当前分支(Head所指的分支)的log情况</span><br><span class="line">git log --oneline	# 简洁的显示版本更新信息</span><br><span class="line">git log -n2		# n2 代表查看最近两次commit历史</span><br><span class="line">git log -2 		# 2 代表查看最近两次commit历史</span><br><span class="line">git log -n2 --oneline	# 简洁的显示最近两次的版本更新信息</span><br><span class="line">git log branch_name	# 后面跟上分支名表示查看该分支的log日志</span><br><span class="line">git log -all	# 列出所有分支的log</span><br><span class="line">git log --all --graph	# 以图形化的方式查看</span><br><span class="line">git log --oneline --all	# 以简洁的方式查看所有分支的log</span><br><span class="line">git log --oneline --all	-n4# 以简洁的方式查看所有分支的log</span><br><span class="line">git help log	# 以web的方式查看log的帮助文档，等同于</span><br><span class="line">git help --web log # 和上面那条效果一样</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>分支相关<br>分支就相当于一个独立的开发空间，比如前端和后端开发，前端开发可以建立一个分支，后端开发也可以建立一个分支，但是彼此在不同工作空间里面工作的时候是互不影响的，当需要集成的时候又可以把他们集成到一个公共的分支上面去。下面是有关分支的操作：</li>
-</ol>
-<ul>
-<li>HEAD-&gt;temp2 表示当前的 HEAD 指向的是 temp2 分支，那么其实真正指向的是该分支最后一次 commit</li>
-</ul>
-<p><img src="/images/pasted-43.png" alt="upload successful"></p>
-<ul>
-<li>git branch 查看分支情况、创建分支、删除分支<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git branch -v # 查看本地分支的详细情况</span><br><span class="line">git branch -a # 查看所有分支，包括远端分支，但没有过于详细的信息</span><br><span class="line">git branch -av # 查看所有分支情况</span><br><span class="line">git branch branchname hashvalue # 创建一个新的分支，基于 hashvalue 的这个 commit 创建一个新的分支，hashvalue 可以省略，那么默认是基于当前分支的最后一个 commit 创建。</span><br><span class="line">git branch -d branch_name</span><br><span class="line">git branch -D branch_name 	# 这个分支已经有了一些 commit</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>如下图所示，要想删除 temp 分支就得用 -D</p>
-<p><img src="/images/pasted-44.png" alt="upload successful"></p>
-<ul>
-<li>git checkout 切换分支或者创建分支<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git checkout branch_name	# 切换分支</span><br><span class="line">git checkout master</span><br><span class="line">git checkout -b branchname gitid # 创建一个新的分支并切换过去，gitid可以是hashvalue，也可以是某个分支的名字（分支的名字其实就指向了某个 commit）</span><br><span class="line">git checkout -b temp 9ef147d</span><br><span class="line">git checkout -b temp2 master</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>切换分支，必须在.git的同级目录下执行</p>
-</blockquote>
-</li>
-</ul>
-<ol start="5">
-<li>比较 — git diff</li>
-</ol>
-<ul>
-<li><p>不同 commit、分支 之间进行比较</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git diff hash_value1 hash_value2 # hash_value1 对应的 comimit 和 hash_value2 对应的 commit 进行比较</span><br><span class="line">git diff hash_value1 hash_value2 -- file_name1 file_name2	# 在上述基础之上，只比较 file_name1、file_name2 这两个文件</span><br><span class="line">git diff branch_name1 branch_name2	# 对两个分支进行比较</span><br><span class="line">git diff branch_name1 branch_name2	-- file_name1 file_name2</span><br><span class="line">git diff HEAD HEAD^		# HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD^1	# 同上</span><br><span class="line">git diff HEAD HEAD^^	# HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD~		# HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD~1	# 同上</span><br><span class="line">git diff HEAD HEAD~~	# HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD~2	# 同上</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>1.可以直接使用 HEAD，因为 HEAD 实际上指向的是某个 commit 的。同理，比较两个分支的差异其实就是比较两个分支最近 commit 的差异，因为分支名其实就是一个指针，指向的还是分支最近的 commit。<br>2.^ 后面只能跟数字1，一个 ^ 就表示往父亲 commit 这边追溯一个，以此类推<br>3.~ 后面跟任何数字都可，同样一个 ~ 就表示往父亲 commit 这边追溯一个，以此类推</p>
-</blockquote>
-</li>
-<li><p>暂存区和 HEAD 做比较</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git diff --cached</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>比如一开始的话，HEAD 、暂存区和工作目录都是一样的，都是状态A，并且 readme*.md 文件都已经被跟踪起来了。下面我们修改 readme3.md 文件，之后把它 add 到暂存区。然后使用上述命令进行比较，因为 HEAD 中的是历史，还没有被更新，是状态 A，而暂存区是状态 B，所以可以显示出差异。</p>
-<p><img src="/images/pasted-45.png" alt="upload successful"></p>
-<ul>
-<li>工作目录和暂存区做比较<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git diff						# 对所有文件进行比较</span><br><span class="line">git diff -- file_name1 file_name2 # 对指定文件进行比较</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>比如一开始的话，HEAD 、暂存区和工作目录都是一样的，都是状态A，并且 readme*.md 文件都已经被跟踪起来了。下面我们修改 readme3.md 文件，但是不 add 到暂存区，然后使用上述命令进行比较，由于readme3.md 是在工作区中已经被更改了，工作区是版本 B，而暂存区还没更新是版本 A，所以进行比较会有如下结果。</p>
-<p><img src="/images/pasted-46.png" alt="upload successful"></p>
-]]></content>
-      <tags>
-        <tag>Git</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Git 常用操作汇总</title>
     <url>/2020/07/20/Git-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E6%B1%87%E6%80%BB/</url>
     <content><![CDATA[<p><img src="/images/pasted-82.png" alt="upload successful"></p>
@@ -453,131 +328,315 @@
       </tags>
   </entry>
   <entry>
-    <title>Git - 进级篇</title>
-    <url>/2020/07/17/Git-%E8%BF%9B%E7%BA%A7%E7%AF%87/</url>
-    <content><![CDATA[<p><img src="/images/pasted-53.png" alt="upload successful"></p>
-<a id="more"></a>
+    <title>Linux服务器的安全 - 基础</title>
+    <url>/2020/07/30/Linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E5%AE%89%E5%85%A8-%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<p><img src="/images/pasted-162.png" alt="upload successful"></p>
+<h3 id="配置SSH密钥"><a href="#配置SSH密钥" class="headerlink" title="配置SSH密钥"></a>配置SSH密钥</h3><p>要访问远程服务器，您将必须使用密码登录或使用SSH密钥。</p>
+<p>密码的问题在于它们很容易被暴力破解。此外，您需要在需要访问服务器的任何时间键入它们。</p>
+<p>为避免上述缺点，您将必须设置SSH密钥身份验证。它比密码更安全，因为黑客无法对其进行暴力破解。</p>
+<p>由于不需要输入密码，因此连接到服务器也更加轻松快捷。</p>
+<p>这是为服务器设置SSH身份验证的方法。</p>
+<ul>
+<li>在本地计算机上，通过键入以下命令生成SSH密钥对：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh-keygen</span><br></pre></td></tr></table></figure>
 
-<p><img src="/images/pasted-54.png" alt="upload successful"></p>
-<h3 id="Git-进阶使用"><a href="#Git-进阶使用" class="headerlink" title="Git 进阶使用"></a>Git 进阶使用</h3><h4 id="版本历史更改"><a href="#版本历史更改" class="headerlink" title="版本历史更改"></a>版本历史更改</h4><ol>
-<li>最近一次 commit 的 message 修改</li>
-</ol>
-<p>使用如下命令就可以对最近一次 commit 的 message 进行变更了</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>上面的命令将引导您完成一些步骤来生成SSH密钥。记下将存储密钥的文件。</p>
+<ul>
+<li>使用以下命令将公用密钥添加到服务器：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh-copy-id username @ remote_host</span><br></pre></td></tr></table></figure>
 
-<ol start="2">
-<li>老旧 commit 的 message 修改 — rebase + reword<br>输入如下命令</li>
-</ol>
-<p>git rebase -i hash_value # hash_value，是需要的 commit 的父亲 commit 的 hash_value<br>之后会发生一系列交互，比如你想某个 commit 对应的message，那么将该 commit 之前的 pick 改为 reword 或者 r（看下面的注释信息），然后保存退出。之后就跳到了修改 message 的文档了，在这里输入改变之后的 message 保存退出即可。</p>
-<p><img src="/images/pasted-55.png" alt="upload successful"><br>注意：这种方式修改之后会导致该 commit 及后面 commit 的 hash_value 都被改变掉，所以不适合团队集成开发中使用。</p>
-<ol start="3">
-<li>把连续的多个 commit 合并成一个 — rebase + squash<br>输入如下命令，</li>
-</ol>
-<p>git rebase -i hash_value # hash_value 是要合并的 commit 的父亲 commit<br>输入之后会发生一系列的交互，如下所示，</p>
-<p><img src="/images/pasted-56.png" alt="upload successful"><br>假如我想要把上面两个 commit 合并成一个，需要使用 squash ，版本历史中较早的 commit 在上面，较晚的 commit 在下面，进行合并的话，是把较早的保留，较晚的合并到较早中去，所以要将上述两个 commit 进行合并的话，修改为如下所示，并保存退出</p>
-<p><img src="/images/pasted-57.png" alt="upload successful"><br>之后会进入另一个交互，在下面填写更改之后的 message 信息，保存退出之后即可。</p>
-<p><img src="/images/pasted-58.png" alt="upload successful"><br>4. 把间隔的几个 commit 合并成一个 — rebase + squash<br>与上述类似，就是把间隔的 commit 移到一块即可。同样首先是输入如下命令，hash_value 是间隔多个 commit 中的最开始那个 commit 的父亲 commit 的 hash_value</p>
-<p>git rebase -i hash_value<br>之后会进入交互界面，</p>
-<p><img src="/images/pasted-59.png" alt="upload successful"><br>比如想要合并 760df21 和 2234131 这两个 commit的话，那么修改为如下内容，保存退出即可</p>
-<p><img src="/images/pasted-60.png" alt="upload successful"><br>之后会进入修改 message 的页面，修改之后保存退出即可</p>
-<p><img src="/images/pasted-61.png" alt="upload successful"><br>5. rebase 其他操作<br>上述都使用了 git rebase 的命令，rebase 的意思是说改变基底，把版本历史中的某些 commit 给修改了。</p>
-<p>git rebase origin/master # 把当前分支基于 origin/master 做 rebase 操作，也就相当于把当前分支的东西加到 origin/master 中<br>git rerere      # 记录冲突解决的方式，然后可以在 rebase 的时候反复应用，可以和 rebase 结合用<br>6. 碎碎念<br>上述对 commit 的修改和合并，会导致该 commit 及后面 commit 的 hash_value 都被改变掉，所以不适合团队集成开发中使用。</p>
-<p>假如 commit 修改和合并这一步操作完成之后不是直接进入修改 message 的页面，请根据提示进行进一步操作，比如git rebase –continue。</p>
-<p>假如合并的包含了根 commit，那么 hash_value 则是根 commit 的 hash_value，之后在交互文档中把根 commit 填入即可，只需要填入要操作的名称和 hash_value 即可。</p>
-<p>在合并 commit 中，假如一个 commit 没有被 pick 的话，比如注释了或者删除，那么在完成一系列操作中之后，这个 commit 将会被丢弃。如下图所示，275a765 这个 commit 被注释掉了的话，那么在完成之后，这个 commit 将会被丢弃。</p>
-<p><img src="/images/pasted-62.png" alt="upload successful"></p>
-<h4 id="回滚操作-—-git-reset"><a href="#回滚操作-—-git-reset" class="headerlink" title="回滚操作 — git reset"></a>回滚操作 — git reset</h4><ol>
-<li>暂存区恢复成和 HEAD 一样<br>git reset HEAD<br>git reset HEAD – file_name1 file_name2 # 暂存区部分文件变得跟 HEAD 一样<br>比如一开始的话，HEAD 、暂存区和工作目录都是一样的，都是状态A，并且 readme*.md 文件都已经被跟踪起来了。下面我们修改 readme3.md 文件，之后把它 add 到暂存区。那么这样子工作目录和暂存区都是状态 B，而 HEAD 是状态 A。那么使用上述命令之后，会将暂存区恢复成状态 A。</li>
-</ol>
-<p><img src="/images/pasted-63.png" alt="upload successful"><br>2. 工作目录恢复为和暂存区一样<br>git checkout – file_name # 工作目录中指定文件恢复为和暂存区一样<br>git checkout – *|. ## 工作目录全部文件恢复为和暂存区一样</p>
-<p><img src="/images/pasted-64.png" alt="upload successful"><br>3. 回滚到某个 commit<br>git reset –hard hash_value # 把 HEAD、暂存区、工作目录都回滚到 hash_value 所代表的 commit 中。<br>git reset –hard  # 把暂存区里面的修改去掉，也就是让暂存区、工作目录默认恢复到 HEAD 的位置</p>
-<p><img src="/images/pasted-65.png" alt="upload successful"></p>
-<p><img src="/images/pasted-66.png" alt="upload successful"><br>4. 碎碎念<br>工作目录内容的修改使用 git checkout，</p>
-<p>暂存区内容的修改使用 git reset</p>
-<p>版本历史的修改使用 git rabase</p>
-<h4 id="工作目录、暂存区的更改状态保存下来"><a href="#工作目录、暂存区的更改状态保存下来" class="headerlink" title="工作目录、暂存区的更改状态保存下来"></a>工作目录、暂存区的更改状态保存下来</h4><p>这个应用在开发中临时加塞了紧急任务的情况，可以把处理了一半，还在工作目录、暂存区的更改状态保存下来。</p>
-<p>git stash # 把相应的修改内容给存下来，之后 git status 查看的话又变为什么都没改变的了<br>git stash list # 查看存下来的内容<br>git stash apply # 存下来的内容又恢复了，但是存下来的内容还在 stash 中<br>git stash pop   # 存下来的内容恢复了，但是存下来的内容也没了</p>
-<p><img src="/images/pasted-67.png" alt="upload successful"></p>
-<h4 id="git-merge"><a href="#git-merge" class="headerlink" title="git merge"></a>git merge</h4><p>将两个分支或者两个 commit 进行 merge，merge 之后也会产生一个 commit</p>
-<p>git merge branch_name1 branch_name2<br>git merge hash_value1 hash_value2<br>git merge –squash # 以 squash 方式进行 merge<br>在 merge 的过程中有时候会产生冲突，比如两个分支修改或者两个 commit 修改的是同文件的同一区域，那么就会发生冲突，那么会在相应文件冲突的地方有提示，大致如下所示。</p>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD<br>windows<br>=======<br>root</p>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>origin/master<br>通过协商和决定之后，确定文件最终内容，同时把上述内容删除。之后 git add 、git commit 即可。</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-<p>不同人修改了不同文件不会产生冲突。比如说两个人维护一个仓库，一个人修改 A 文件，另一个修改 B 文件，那么 merge 的话不会产生冲突，直接将内容合并在一起。</p>
-<p>不同人修改了同文件不同区域不会产生冲突。merge 的话直接将内容合并在一起。</p>
-<p>同一文件改成不同的文件名会产生冲突。同上，一个人把文件名改成了 rename1，另一个人把文件名改成了 rename2，那么 merge 会发生冲突，需要进行协商确定最终的文件名。</p>
-<p>不同人修改了同文件的同一区域会产生冲突。merge 的话因为不能确定保留谁的内容所以会产生冲突。</p>
-<h4 id="分离头指针"><a href="#分离头指针" class="headerlink" title="分离头指针"></a>分离头指针</h4><p>分离头指针的例子如下所示，上面提到切换到某个分支的用法是</p>
-<p>$ git checkout branch_name<br>那么假如把 branch_name 变成了 hash_value，那么这个就相当于“分离头指针”（PS：个人的理解是相当于创建了一个匿名 branch，这个匿名的 branch 是从 hash_value 的地方分出来的）</p>
-<p>$ git checkout hash_value<br>之后的 commit 都是基于这个分离头指针的位置开始的，这些 commit 都没有基于某个 branch，相当于都是“游离”状态的。那么当切回到某个分支之后，这些 commit 都会被当成垃圾一样清理掉。如果这些 commit 很重要，那么请把这些 commit 跟某个 branch 绑在一起。</p>
-<p>另外分类头指针也是可以用的，比如我们先用分离头指针进行一波修改和测试，如果测试不错，那么就把这些修改的 commit 添加成 branch。</p>
-<h4 id="gitignore-—-指定不需要-git-管理的文件"><a href="#gitignore-—-指定不需要-git-管理的文件" class="headerlink" title=".gitignore — 指定不需要 git 管理的文件"></a>.gitignore — 指定不需要 git 管理的文件</h4><p>git 更多是管理代码的版本控制，而代码构建出来的东西可以不用管理，因为这些是可以复现的。那么 .gitignore 这个文件就是告诉 git 哪些文件不需要被纳入版本控制系统的，也就是相当于会被忽视。</p>
-<p>doc  # doc 文件和 doc 目录都不会被管理<br>doc/  # 只指定 doc 目录不会被管理，但是 doc 文件没被说明，假如 doc 在的话，还是会被管理起来的<br>上面内容的有效范围是在整个项目中，即包括子目录等</p>
-<p><img src="/images/pasted-68.png" alt="upload successful"></p>
-<p><img src="/images/pasted-69.png" alt="upload successful"><br>.gitignore 可以借助 github 创建仓库时生成，常用的 .gitignore 如下所示，自己写的时候也值得参考一波：<a href="https://github.com/github/gitignore" target="_blank" rel="noopener">https://github.com/github/gitignore</a> ；</p>
-<p>另外想要 git 不管理某些文件，只能在 .gitignore 文件中指定；</p>
-<h4 id="团队合作注意事项"><a href="#团队合作注意事项" class="headerlink" title="团队合作注意事项"></a>团队合作注意事项</h4><p>如果你的 git 仓库是跟其他人一起维护的，那么请注意一下几点：</p>
-<p>git push -f 不能使用</p>
-<p>公共的分支严禁拉倒本地做 rebase 操作的，因为一旦做了 rebase 操作之后，历史的 commit 就变了，但是其他人那边还是老旧的 commit，他们是基于老旧的 commit 做事情的，而你是几于新的 commit 做事情了，那么就相当于是两条分支了。所以记住了，不能向集成分支执行变更历史操作，建议的方式是在现在 commit 的基础之上再做调整。</p>
-<p><img src="/images/pasted-70.png" alt="upload successful"><br>A 在 temp 分支上做 rabase 操作，那么 temp 分支就会和 master 分开。如下图所示，</p>
-<p><img src="/images/pasted-71.png" alt="upload successful"><br>然而在另一个人，还是基于如下情况做的 commit 等，那么这样，就出现问题了</p>
-<p><img src="/images/pasted-72.png" alt="upload successful"></p>
-<h3 id="git-中的对象及其操作"><a href="#git-中的对象及其操作" class="headerlink" title="git 中的对象及其操作"></a>git 中的对象及其操作</h3><p>git 中的对象有三种：commit、tree、blob。下面对这三种对象进行阐述。</p>
-<h4 id="commit"><a href="#commit" class="headerlink" title="commit"></a>commit</h4><p>每次执行git commit都会创建一个commit对象，一个 commit 对象只包含一个 tree 对象，这个 tree 对象是 .git 所在父目录的对象， 那么这样子的话，一次 commit 就相当于把当前目录的情况给记录下来了。</p>
-<h4 id="tree"><a href="#tree" class="headerlink" title="tree"></a>tree</h4><p>目录的对象，那么由于目录中可以包含目录，也可以包含文件，所以 tree 对象可以包含 tree 对象，也可以包含 blob 对象。</p>
-<h4 id="blob"><a href="#blob" class="headerlink" title="blob"></a>blob</h4><p>blob 是一个文件的具体对象，比如png图像，css文件，这些文件都会对应一个blob对象，可以说是 git 对象中最基本的。另外，blob 跟文件名一点关系都么有，只要文件内容相同，不管文件名叫什么，blob 只有一份。</p>
-<p>新建的Git 仓库中，有且仅有一个 commit，仅仅包含了 /doc/readme，请问内含多少个 tree，多个 blob？</p>
-<p>含两个 tree，一个 blob。首先是 git 仓库所在目录是一个 tree (也就是 /doc/readme 的父目录)，doc 是一个tree，而 readme 文件是唯一 blob。</p>
-<h4 id="对象的相关操作"><a href="#对象的相关操作" class="headerlink" title="对象的相关操作"></a>对象的相关操作</h4><p>git cat-file -t|p|s hash_value # 显示版本库对象的内容，类型及大小信息<br>git cat-file -t hash_value  # 查看版本库对象的类型<br>git cat-file -p hash_value  # 查看版本库对象的内容<br>git cat-file -s hash_value  # 查看版本库对象的大小</p>
-<h3 id="git-目录探索"><a href="#git-目录探索" class="headerlink" title=".git 目录探索"></a>.git 目录探索</h3><h4 id="HEAD-文件"><a href="#HEAD-文件" class="headerlink" title="HEAD 文件"></a>HEAD 文件</h4><p>HEAD文件的内容显示了 HEAD 当前所指的分支信息，通过下面的内容可以佐证上面 HEAD 说到的一点：HEAD 指向的是某个分支，但通过查看分支文件内容可以发现里面其实是 commit 的 hash_value，也就是说 HEAD 实际指向的是某个commit。</p>
-<p><img src="/images/pasted-73.png" alt="upload successful"><br>git_head_temp</p>
-<p>使用 git checkout 命令之后，查看HEAD 文件的内容</p>
-<p><img src="/images/pasted-74.png" alt="upload successful"><br>git_head_chang_to_master</p>
-<h4 id="config-文件"><a href="#config-文件" class="headerlink" title="config 文件"></a>config 文件</h4><p>存放本地仓库（local）相关的配置信息，假如之前设置了 local 下的 user.name ，那么会在这个文件中存储相关的内容等信息。修改 config 文件中 user.name 配置项的内容，使用命令查看到的也是修改之后的。</p>
-<h4 id="refs-目录"><a href="#refs-目录" class="headerlink" title="refs 目录"></a>refs 目录</h4><ol>
-<li>heads 子目录<br>目录中包含的是各分支信息，每一个文件的内容都是 hash value，这个是值是该分支最后一次 commit 的 hash_value 值</li>
-</ol>
-<p>…/.git/refs/heads# ls<br>master  temp  temp2<br>…/.git/refs/heads# cat master<br>9ef147d58eb7e09987cf5ce92254b1600ac92cd9<br>2. tags 子目录<br>里面显示的是标签的信息，Git 仓库可以有很多标签，项目开发到一定程度，是一个关键的成果了，比如开发到 v1.0，那可以打上一个标签了。</p>
-<h4 id="objects-目录"><a href="#objects-目录" class="headerlink" title="objects 目录"></a>objects 目录</h4><p>存放对象的目录。git 中的对象都是由 40 位字符组成，前两位字符用来当 object 目录中子目录名，后 38 位做文件名。</p>
-]]></content>
+</li>
+</ul>
+<p>确保用您的真实用户名和服务器的IP地址替换username和remote_host。系统将提示您输入密码。</p>
+<ul>
+<li>尝试使用以下命令登录到服务器：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh username @ remote_host</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>不要忘记用服务器的详细信息替换username和remote_host。您应该注意，这次不会提示您输入密码。</p>
+<h3 id="保持系统时间为最新"><a href="#保持系统时间为最新" class="headerlink" title="保持系统时间为最新"></a>保持系统时间为最新</h3><p>许多安全协议利用系统时间来运行cron作业，日期日志和执行其他关键任务。<br>如果系统时间不正确，则可能会对服务器造成负面影响。为了防止这种情况发生，您可以安装NTP客户端。该客户端将使您的系统时间与全局NTP服务器保持同步。</p>
+<p>使用以下命令安装NTP客户端：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo apt install ntp</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看活动端口"><a href="#查看活动端口" class="headerlink" title="查看活动端口"></a>查看活动端口</h3><p>服务器上的应用程序公开某些端口，以便网络中的其他应用程序可以访问它们。<br>黑客还可以在您的服务器上安装后门，并公开用于控制服务器的端口。<br>因此，我们不希望您的服务器在不知道的端口上侦听请求。</p>
+<p>要查看活动端口，请使用以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo ss -lntup</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置防火墙"><a href="#设置防火墙" class="headerlink" title="设置防火墙"></a>设置防火墙</h3><p>防火墙允许您停止/允许来自服务器特定端口的通信。为此，我通常使用UFW（简单的防火墙）。<br>UFW的工作原理是让您配置以下规则：</p>
+<ul>
+<li>允许或拒绝</li>
+<li>传入或传出流量</li>
+<li>往返</li>
+<li>特定或所有端口</li>
+</ul>
+<h4 id="设置UFW"><a href="#设置UFW" class="headerlink" title="设置UFW"></a>设置UFW</h4><ul>
+<li><p>安装ufw。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo apt-get install ufw</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>您可以拒绝所有传出的流量…</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo ufw default deny outgoing comment &#39;deny all outgoing traffic&#39;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>…或允许所有传出流量。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo ufw default allow outgoing comment &#39;allow all outgoing traffic&#39;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>接下来，我们要拒绝所有传入的流量…</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo ufw default deny incoming comment &#39;deny all incoming traffic&#39;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>…除SSH连接外，以便我们可以访问系统。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo ufw limit in ssh comment &#39;allow SSH connections in&#39;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果将UFW配置为拒绝所有传出流量，请不要忘记根据需要允许特定的流量。以下是一些示例：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># allow traffic out on port 53 -- DNS</span><br><span class="line">sudo ufw allow out 53 comment &#39;allow DNS calls out&#39;</span><br><span class="line"># allow traffic out on port 123 -- NTP</span><br><span class="line">sudo ufw allow out 123 comment &#39;allow NTP out&#39;</span><br><span class="line"># allow traffic out for HTTP, HTTPS, or FTP</span><br><span class="line"># apt might needs these depending on which sources you&#39;re using</span><br><span class="line">sudo ufw allow out http comment &#39;allow HTTP traffic out&#39;</span><br><span class="line">sudo ufw allow out https comment &#39;allow HTTPS traffic out&#39;</span><br><span class="line">sudo ufw allow out ftp comment &#39;allow FTP traffic out&#39;</span><br><span class="line"># allow whois</span><br><span class="line">sudo ufw allow out whois comment &#39;allow whois&#39;</span><br><span class="line"># allow traffic out on port 68 -- the DHCP client</span><br><span class="line"># you only need this if you&#39;re using DHCP</span><br><span class="line">sudo ufw allow out 68 comment &#39;allow the DHCP client to update&#39;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>要拒绝端口99上的任何流量，请使用以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo ufw deny 99</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>最后，使用以下命令启动UFW：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo ufw enable</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>您还可以使用以下命令查看UFW状态：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo ufw status</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="防止自动攻击"><a href="#防止自动攻击" class="headerlink" title="防止自动攻击"></a>防止自动攻击</h3><p>有两种实用程序可用来阻止大多数自动攻击：</p>
+<ul>
+<li>PSAD。</li>
+<li>Fail2Ban。</li>
+</ul>
+<h4 id="PSAD和Fail2Ban之间的区别"><a href="#PSAD和Fail2Ban之间的区别" class="headerlink" title="PSAD和Fail2Ban之间的区别"></a>PSAD和Fail2Ban之间的区别</h4><p>我们了解到，端口可以访问服务器上的应用程序。</p>
+<p>攻击者可能决定扫描您的服务器以查找开放端口，然后他们可以使用这些开放端口来访问服务器。</p>
+<p><strong>PSAD</strong>监视网络活动，以检测并有选择地阻止此类扫描和其他类型的可疑流量，例如DDoS或OS指纹尝试。</p>
+<p>另一方面，<strong>Fail2Ban</strong>扫描各种应用程序（例如FTP）的日志文件，并自动禁止显示恶意迹象的IP（例如自动登录尝试）。</p>
+<h3 id="安装logwatch"><a href="#安装logwatch" class="headerlink" title="安装logwatch"></a>安装logwatch</h3><p>服务器上的应用程序通常会将日志消息保存到日志文件中。除非打算手动监视日志文件，否则需要安装logwatch。</p>
+<p>logwatch扫描系统日志文件并对其进行汇总。</p>
+<p>您可以直接从命令行运行它，也可以计划将其按定期计划运行。例如，您可以将logwatch配置为通过电子邮件向您发送日志文件的每日摘要。请注意，您的服务器将需要能够发送电子邮件才能正常工作。</p>
+<p>logwatch使用服务文件来了解如何读取和总结日志文件。您可以在中查看所有库存服务文件/usr/share/logwatch/scripts/services。</p>
+<p>logwatch的配置文件/usr/share/logwatch/default.conf/logwatch.conf指定默认选项。您可以通过命令行参数覆盖它们。</p>
+<p>要在Ubuntu或Debian上安装logwatch，请运行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apt-get install logwatch</span><br></pre></td></tr></table></figure>
+
+<p>对于使用其他Linux发行版的用户，请查看Linode的本史诗指南。</p>
+<p>如果需要查看收集到的样本，可以尝试直接运行logwatch。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo &#x2F;usr&#x2F;sbin&#x2F;logwatch --output stdout --format text --range yesterday --service all</span><br></pre></td></tr></table></figure>
+
+<p>最后，告诉logwatch向我们发送包含我们的日志文件摘要的每日电子邮件。为此，请打开文件/etc/cron.daily/00logwatch并找到执行行，然后将其更改为以下内容：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;sbin&#x2F;logwatch --output mail --format html --mailto root --range yesterday --service all</span><br></pre></td></tr></table></figure>
+
+<h3 id="进行安全审核"><a href="#进行安全审核" class="headerlink" title="进行安全审核"></a>进行安全审核</h3><p>保护Linux服务器安全之后，应执行安全审核，以发现可能遗漏的任何安全漏洞。</p>
+<p>为此，您可以使用Lynis，该开源软件可以执行以下操作：</p>
+<ul>
+<li>安全审核。</li>
+<li>一致性测试（例如PCI，HIPAA，SOx）。</li>
+<li>渗透测试。</li>
+<li>漏洞检测。</li>
+<li>系统强化。</li>
+</ul>
+<h4 id="如何使用Lynis"><a href="#如何使用Lynis" class="headerlink" title="如何使用Lynis"></a>如何使用Lynis</h4><p>首先，通过克隆Github存储库来安装Lynis。这可以确保您安装Lynis的最新版本。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;CISOfy&#x2F;lynis</span><br></pre></td></tr></table></figure>
+
+<p>切换到我们将Lynis克隆到的目录：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd lynis</span><br></pre></td></tr></table></figure>
+
+<p>最后，使用以下命令运行第一次审核：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">lynis audit system</span><br></pre></td></tr></table></figure>]]></content>
       <tags>
-        <tag>Git</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
-    <title>Git常用操作</title>
-    <url>/2020/07/14/Git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</url>
-    <content><![CDATA[<p><img src="/images/pasted-34.png" alt="upload successful"></p>
+    <title>Python技术问题</title>
+    <url>/2020/08/19/Python%E9%97%AE%E7%AD%94/</url>
+    <content><![CDATA[<p><img src="/images/pasted-163.png" alt="upload successful"></p>
 <a id="more"></a>
 
-<p> 常用命令<br>1.1. git 配置</p>
-<h1 id="显示-config-的配置-加–list"><a href="#显示-config-的配置-加–list" class="headerlink" title="显示 config 的配置 加–list"></a>显示 config 的配置 加–list</h1><h1 id="优先级：local-gt-global-gt-system"><a href="#优先级：local-gt-global-gt-system" class="headerlink" title="优先级：local &gt; global &gt; system"></a>优先级：local &gt; global &gt; system</h1><p>git config –list –local # local 的范围是某个仓库<br>git config –list –global # global 的范围是登录的用户<br>git config –list –system # system 的范围是系统所有登录的用户</p>
-<h1 id="配置用户-name-和-email"><a href="#配置用户-name-和-email" class="headerlink" title="配置用户 name 和 email"></a>配置用户 name 和 email</h1><p>git config –global user.name ‘your_name ‘<br>git config –global user.email ‘your_email@domain.com’</p>
-<h1 id="清除配置信息"><a href="#清除配置信息" class="headerlink" title="清除配置信息"></a>清除配置信息</h1><p>git config –unset –global user.name<br>1.2. 仓库初始化</p>
-<h1 id="将执行该命令时所在的目录初始化为一个-git-仓库（如：进入某目录后执行该命令会将该目录初始化为一个-git-仓库）"><a href="#将执行该命令时所在的目录初始化为一个-git-仓库（如：进入某目录后执行该命令会将该目录初始化为一个-git-仓库）" class="headerlink" title="将执行该命令时所在的目录初始化为一个 git 仓库（如：进入某目录后执行该命令会将该目录初始化为一个 git 仓库）"></a>将执行该命令时所在的目录初始化为一个 git 仓库（如：进入某目录后执行该命令会将该目录初始化为一个 git 仓库）</h1><p>git init</p>
-<h1 id="会在当前路径下创建和项目名称同名的文件夹，并将其初始化为-git-仓库"><a href="#会在当前路径下创建和项目名称同名的文件夹，并将其初始化为-git-仓库" class="headerlink" title="会在当前路径下创建和项目名称同名的文件夹，并将其初始化为 git 仓库"></a>会在当前路径下创建和项目名称同名的文件夹，并将其初始化为 git 仓库</h1><p>git init your_project<br>1.3. git add<br>git add readme.md # 将 readme.md 文件添加到暂存区<br>git add . # 将当前工作目录的所有文件添加到暂存区<br>git add -u # 把修改之后的文件（这些文件已经被管理起来了）一次性提交到暂存区<br>1.4. git status<br>git status # 查看工作目录和暂存区的状态<br>1.5. git commit<br>git commit -m ‘Add readme.md’ # -m 指定 commit 的信息<br>git commit # 这时候会跳出一个文本输入界面，让你输入更多的 commit 信息<br>1.6. git mv<br>git mv readme readme.md # 将 git 管理的文件进行重命名<br>1.7. git rm<br>git rm filename # 从 git 管理的文件删除某个已管理的文件，同时把修改的情况添加到暂存区<br>1.8. git log<br>git log # 只查看当前分支(Head所指的分支)的log情况<br>git log –oneline # 简洁的显示版本更新信息<br>git log -n2  # n2 代表查看最近两次commit历史<br>git log -2   # 2 代表查看最近两次commit历史<br>git log -n2 –oneline # 简洁的显示最近两次的版本更新信息<br>git log branch_name # 后面跟上分支名表示查看该分支的log日志<br>git log -all # 列出所有分支的log<br>git log –all –graph # 以图形化的方式查看<br>git log –oneline –all # 以简洁的方式查看所有分支的log<br>git log –oneline –all -n4# 以简洁的方式查看所有分支的log<br>git help log # 以web的方式查看log的帮助文档，等同于<br>git help –web log # 和上面那条效果一样<br>2. 分支相关<br>git branch -v # 查看本地分支的详细情况<br>git branch -a # 查看所有分支，包括远端分支，但没有过于详细的信息<br>git branch -av # 查看所有分支情况<br>git branch branch_name hash_value # 创建一个新的分支，基于 hash_value 的这个 commit 创建一个新的分支，hash_value 可以省略，那么默认是基于当前分支的最后一个 commit 创建。<br>git branch -d branch_name<br>git branch -D branch_name  # 这个分支已经有了一些 commit<br>git checkout branch_name # 切换分支<br>git checkout master<br>git checkout -b branch_name git_id # 创建一个新的分支并切换过去，git_id可以是hash_value，也可以是某个分支的名字（分支的名字其实就指向了某个 commit）<br>git checkout -b temp 9ef147d<br>git checkout -b temp2 master<br>git checkout hash_value  # 分离头指针<br>3. 比较<br>git diff hash_value1 hash_value2 # hash_value1 对应的 comimit 和 hash_value2 对应的 commit 进行比较<br>git diff hash_value1 hash_value2 – file_name1 file_name2 # 在上述基础之上，只比较 file_name1、file_name2 这两个文件<br>git diff branch_name1 branch_name2 # 对两个分支进行比较，也可以跟 – 只看某些文件<br>git diff HEAD HEAD^  # HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较<br>git diff HEAD HEAD^^ # HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较<br>git diff HEAD HEAD~  # HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较<br>git diff HEAD HEAD<del>1 # 同上<br>git diff HEAD HEAD</del>2 # HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较<br>git diff –cached  # 暂存区和 HEAD 做比较，也可以跟 – 只看某些文件<br>git diff      # 工作目录和暂存区中所有文件进行比较，也可以跟 – 只看某些文件<br>4. 版本历史更改<br>git commit –amend # 最近一次 commit 的 message 修改<br>git rebase -i hash_value # 交互文件中选择 reword，老旧 commit 的 message 修改。hash_value，是需要的 commit 的父亲 commit 的 hash_value<br>git rabase -i hash_value # 交互文件中选择 squash，多个连续 commit 合并成一个，hash_value 同上<br>git rebase -i hash_value # 交互文件中选择 squash，把间隔的 commit 移到一块，即可合并成一个，hash_value<br>git rebase origin/master # 把当前分支基于 origin/master 做 rebase 操作，也就相当于把当前分支的东西加到 origin/master 中<br>5. 回滚操作<br>git reset HEAD        # 暂存区恢复成和 HEAD 一样<br>git reset HEAD – file_name1 file_name2 # 暂存区部分文件变得跟 HEAD 一样<br>git checkout – file_name # 工作目录指定文件恢复为和暂存区一样<br>git checkout – *|. ## 工作目录全部文件恢复为和暂存区一样<br>git reset –hard hash_value # 把 HEAD、暂存区、工作目录都回滚到 hash_value 所代表的 commit 中。<br>git reset –hard  # 把暂存区里面的修改去掉，也就是让暂存区、工作目录默认恢复到 HEAD 的位置<br>6. 工作目录、暂存区状态保存<br>git stash # 把相应的修改内容给存下来，之后 git status 查看的话又变为什么都没改变的了<br>git stash list # 查看存下来的内容<br>git stash apply # 存下来的内容又恢复了，但是存下来的内容还在 stash 中<br>git stash pop   # 存下来的内容恢复了，但是存下来的内容也没了<br>7. 合并<br>git merge branch_name1 branch_name2<br>git merge hash_value1 hash_value2<br>git merge –squash # 以 squash 方式进行 merge<br>8. Git 对象操作<br>git cat-file -t|p|s hash_value # 显示版本库对象的内容，类型及大小信息<br>git cat-file -t hash_value  # 查看版本库对象的类型<br>git cat-file -p hash_value  # 查看版本库对象的内容<br>git cat-file -s hash_value  # 查看版本库对象的大小<br>9. Git 远端操作<br>git remote add &lt;远端名&gt; &lt;远端仓库地址&gt; # 这边远端名的意思是远端仓库的别名，push、pull 都将用到远端名<br>git remote -v  # 查看远端仓库连接情况<br>git remote set-url &lt;远端名&gt; 你新的远程仓库地址 # 修改远端仓库地址<br>git remote rm &lt;远端名&gt;      # 删除远端仓库<br>git clone &lt;远端仓库地址&gt; # 把远端仓库 clone 下来<br>git clone –bare  &lt;远端仓库地址&gt; # bare 是指不带工作目录，也就相当于只 clone .git 目录<br>git push &lt;远端名&gt; &lt;本地分支名&gt;<br>git push -u &lt;远端名&gt; &lt;本地分支名&gt; # -u 表示将本地分支的内容推到远端分支，并且将本地分支和远端分支关联起来<br>git push -u origin master # 表示把本地 master 分支的内容推到远端分支 origin/master，并且将本地分支 master 和远端分支 origin/master 关联起来<br>git push # 这条命令也可以使用，默认是将当前本地所在分支推到相关联的远端分支<br>git fetch &lt;远端名&gt; &lt;本地分支名&gt;<br>git fetch origin master # 将远端分支 origin/master fetch 到本地<br>git pull &lt;远端名&gt; &lt;本地分支名&gt; # 将远端分支 fetch 到本地，并且将远端分支和本地所处分支进行合并<br>git pull –rebase # 以 rebase 方式进行合并，也就是将本地分支 rebase 到远端分支</p>
+<h2 id="是什么-WHAT"><a href="#是什么-WHAT" class="headerlink" title="是什么(WHAT)"></a>是什么(WHAT)</h2><h3 id="什么是Python？"><a href="#什么是Python？" class="headerlink" title="什么是Python？"></a>什么是Python？</h3><p>Python是一种编程语言，它有对象、模块、线程、异常处理和自动内存管理。可以加入与其他语言的对比。下面是回答这一问题的几个关键点：</p>
+<ul>
+<li>Python是一种解释型语言，python代码在运行之前不需要编译。</li>
+<li>Python是动态类型语言，在声明变量时，不需要说明变量的类型。</li>
+<li>Python适合面向对象的编程，因为它支持通过组合与继承的方式定义类。</li>
+<li>在Python语言中，函数是第一类对象。</li>
+<li>Python代码编写快，但是运行速度比编译语言通常要慢。</li>
+<li>Python用途广泛，常被用作“胶水语言”，可帮助其他语言和组件改善运行状况。</li>
+<li>使用Python，程序员可以专注于算法和数据结构的设计，而不用处理底层的细节。</li>
+</ul>
+<h3 id="什么是Python自省？"><a href="#什么是Python自省？" class="headerlink" title="什么是Python自省？"></a>什么是Python自省？</h3><p>python自省是python具有的一种能力，使程序员面向对象的语言所写的程序在运行时,能够获得对象的类python型。Python是一种解释型语言。为程序员提供了极大的灵活性和控制力。</p>
+<h3 id="什么是PEP-8？"><a href="#什么是PEP-8？" class="headerlink" title="什么是PEP 8？"></a>什么是PEP 8？</h3><p>PEP8是一种编程规范，内容是一些关于如何让你的程序更具可读性的建议。</p>
+<h3 id="什么是pickling和unpickling？"><a href="#什么是pickling和unpickling？" class="headerlink" title="什么是pickling和unpickling？"></a>什么是pickling和unpickling？</h3><p>Pickle模块读入任何Python对象，将它们转换成字符串，然后使用dump函数将其转储到一个文件中——这个过程叫做pickling。反之从存储的字符串文件中提取原始Python对象的过程，叫做unpickling。</p>
+<h3 id="什么是Python装饰器？"><a href="#什么是Python装饰器？" class="headerlink" title="什么是Python装饰器？"></a>什么是Python装饰器？</h3><p>Python装饰器是Python中的特有变动，可以使修改函数变得更容易。</p>
+<h3 id="什么是Python的命名空间？"><a href="#什么是Python的命名空间？" class="headerlink" title="什么是Python的命名空间？"></a>什么是Python的命名空间？</h3><p>在Python中，所有的名字都存在于一个空间中，它们在该空间中存在和被操作——这就是命名空间。它就好像一个盒子，每一个变量名字都对应装着一个对象。当查询变量的时候，会从该盒子里面寻找相应的对象。</p>
+<h3 id="什么是字典推导式和列表推导式？"><a href="#什么是字典推导式和列表推导式？" class="headerlink" title="什么是字典推导式和列表推导式？"></a>什么是字典推导式和列表推导式？</h3><p>它们是可以轻松创建字典和列表的语法结构。</p>
+<h3 id="Lambda函数是什么？"><a href="#Lambda函数是什么？" class="headerlink" title="Lambda函数是什么？"></a>Lambda函数是什么？</h3><p>这是一个常被用于代码中的单个表达式的匿名函数。</p>
+<h3 id="args，-kwargs？参数是什么？"><a href="#args，-kwargs？参数是什么？" class="headerlink" title="args，*kwargs？参数是什么？"></a><em>args，*</em>kwargs？参数是什么？</h3><p>如果我们不确定要往函数中传入多少个参数，或者我们想往函数中以列表和元组的形式传参数时，那就使要用<em>args；如果我们不知道要往函数中传入多少个关键词参数，或者想传入字典的值作为关键词参数时，那就要使用*</em>kwargs。</p>
+<h3 id="什么是Pass语句？"><a href="#什么是Pass语句？" class="headerlink" title="什么是Pass语句？"></a>什么是Pass语句？</h3><p>Pass是一个在Python中不会被执行的语句。在复杂语句中，如果一个地方需要暂时被留白，它常常被用于占位符。</p>
+<h3 id="unittest是什么？"><a href="#unittest是什么？" class="headerlink" title="unittest是什么？"></a>unittest是什么？</h3><p>在Python中，unittest是Python中的单元测试框架。它拥有支持共享搭建、自动测试、在测试中暂停代码、将不同测试迭代成一组，等等的功能。</p>
+<h3 id="构造器是什么？"><a href="#构造器是什么？" class="headerlink" title="构造器是什么？"></a>构造器是什么？</h3><p>构造器是实现迭代器的一种机制。它功能的实现依赖于yield表达式，除此之外它跟普通的函数没有两样。</p>
+<h3 id="doc-string是什么？"><a href="#doc-string是什么？" class="headerlink" title="doc string是什么？"></a>doc string是什么？</h3><p>Python中文档字符串被称为docstring，它在Python中的作用是为函数、模块和类注释生成文档。</p>
+<h3 id="负索引是什么？"><a href="#负索引是什么？" class="headerlink" title="负索引是什么？"></a>负索引是什么？</h3><p>Python中的序列索引可以是正也可以是负。如果是正索引，0是序列中的第一个索引，1是第二个索引。如果是负索引，（-1）是最后一个索引而（-2）是倒数第二个索引。</p>
+<h3 id="模块和包是什么？"><a href="#模块和包是什么？" class="headerlink" title="模块和包是什么？"></a>模块和包是什么？</h3><p>在Python中，模块是搭建程序的一种方式。每一个Python代码文件都是一个模块，并可以引用其他的模块，比如对象和属性。</p>
+<p>一个包含许多Python代码的文件夹是一个包。一个包可以包含模块和子文件夹。</p>
+<h3 id="垃圾回收是什么？"><a href="#垃圾回收是什么？" class="headerlink" title="垃圾回收是什么？"></a>垃圾回收是什么？</h3><p>在Python中，为了解决内存泄露问题，采用了对象引用计数，并基于引用计数实现自动垃圾回收。</p>
+<h3 id="CSRF是什么？"><a href="#CSRF是什么？" class="headerlink" title="CSRF是什么？"></a>CSRF是什么？</h3><p>CSRF是伪造客户端请求的一种攻击，CSRF的英文全称是Cross Site Request Forgery，字面上的意思是跨站点伪造请求。</p>
+<h2 id="如何做-HOW"><a href="#如何做-HOW" class="headerlink" title="如何做(HOW)"></a>如何做(HOW)</h2><h3 id="如何让你的程序更具可读性？"><a href="#如何让你的程序更具可读性？" class="headerlink" title="如何让你的程序更具可读性？"></a>如何让你的程序更具可读性？</h3><p>适当地加入非前导空格，适当的空行以及一致的命名。</p>
+<h3 id="Python是如何被解释的？"><a href="#Python是如何被解释的？" class="headerlink" title="Python是如何被解释的？"></a>Python是如何被解释的？</h3><p>Python是一种解释性语言，它的源代码可以直接运行。Python解释器会将源代码转换成中间语言，之后再翻译成机器码再执行。</p>
+<h3 id="如何在Python中拷贝一个对象？"><a href="#如何在Python中拷贝一个对象？" class="headerlink" title="如何在Python中拷贝一个对象？"></a>如何在Python中拷贝一个对象？</h3><p>如果要在Python中拷贝一个对象，大多时候你可以用copy.copy()或者copy.deepcopy()。但并不是所有的对象都可以被拷贝。</p>
+<h3 id="如何用Python删除一个文件？"><a href="#如何用Python删除一个文件？" class="headerlink" title="如何用Python删除一个文件？"></a>如何用Python删除一个文件？</h3><p>使用函数os.remove(“file”)</p>
+<h3 id="如何将一个数字转换成一个字符串？"><a href="#如何将一个数字转换成一个字符串？" class="headerlink" title="如何将一个数字转换成一个字符串？"></a>如何将一个数字转换成一个字符串？</h3><p>你可以使用自带函数str()将一个数字转换为字符串。如果你想要八进制或者十六进制数，可以用oct()或hex()。</p>
+<h3 id="Python是如何进行内存管理的？"><a href="#Python是如何进行内存管理的？" class="headerlink" title="Python是如何进行内存管理的？"></a>Python是如何进行内存管理的？</h3><p>Python的内存管理是由私有heap空间管理的。所有的Python对象和数据结构都在一个私有heap中。程序员没有访问该heap的权限，只有解释器才能对它进行操作。为Python的heap空间分配内存是由Python的内存管理模块进行的，其核心API会提供一些访问该模块的方法供程序员使用。Python有自带的垃圾回收系统，它回收并释放没有被使用的内存，让它们能够被其他程序使用。</p>
+<h3 id="如何实现tuple和list的转换？"><a href="#如何实现tuple和list的转换？" class="headerlink" title="如何实现tuple和list的转换？"></a>如何实现tuple和list的转换？</h3><p>以list作为参数将tuple类初始化，将返回tuple类型</p>
+<p>以tuple作为参数将list类初始化，将返回list类型</p>
+<h3 id="Python里面如何生成随机数？"><a href="#Python里面如何生成随机数？" class="headerlink" title="Python里面如何生成随机数？"></a>Python里面如何生成随机数？</h3><p>在python中用于生成随机数的模块是random，在使用前需要import. 如下例子可以酌情列举：</p>
+<p>random.random()：生成一个0-1之间的随机浮点数</p>
+<p>random.uniform(a, b)：生成[a,b]之间的浮点数</p>
+<p>random.randint(a, b)：生成[a,b]之间的整数</p>
+<p>random.randrange(a, b, step)：在指定的集合[a,b]中，以step为基数随机取一个数</p>
+<p>random.choice(sequence)：从特定序列中随机取一个元素，这里的序列可以是字符串，列表，元组等</p>
+<h3 id="如何在一个function里面设置一个全局的变量"><a href="#如何在一个function里面设置一个全局的变量" class="headerlink" title="如何在一个function里面设置一个全局的变量"></a>如何在一个function里面设置一个全局的变量</h3><p>如果要给全局变量在一个函数里赋值，必须使用global语句。global VarName的表达式会告诉Python， VarName是一个全局变量，这样Python就不会在局部命名空间里寻找这个变量了</p>
+<h3 id="Python如何实现单例模式？其他23种设计模式python如何实现？"><a href="#Python如何实现单例模式？其他23种设计模式python如何实现？" class="headerlink" title="Python如何实现单例模式？其他23种设计模式python如何实现？"></a>Python如何实现单例模式？其他23种设计模式python如何实现？</h3><p>单例模式主要有四种方法：<strong>new</strong>、共享属性、装饰器、import。</p>
+<p>其他23种设计模式可基本分为创建型、结构型和行为型模式。</p>
+<p>创建模式，提供实例化的方法，为适合的状况提供相应的对象创建方法。</p>
+<p>结构化模式，通常用来处理实体之间的关系，使得这些实体能够更好地协同工作。</p>
+<p>行为模式，用于在不同的实体建进行通信，为实体之间的通信提供更容易，更灵活的通信方法。</p>
+<p>各模式的实现可根据其特点编写代码（限于篇幅，此处不做示例）</p>
+<h3 id="如何判断单向链表中是否有环"><a href="#如何判断单向链表中是否有环" class="headerlink" title="如何判断单向链表中是否有环"></a>如何判断单向链表中是否有环</h3><p>首先遍历链表，寻找是否有相同地址，借此判断链表中是否有环。如果程序进入死循环，则需要一块空间来存储指针，遍历新指针时将其和储存的旧指针比对，若有相同指针，则该链表有环，否则将这个新指针存下来后继续往下读取，直到遇见NULL，这说明这个链表无环。</p>
+<h3 id="如何遍历一个内部未知的文件夹？"><a href="#如何遍历一个内部未知的文件夹？" class="headerlink" title="如何遍历一个内部未知的文件夹？"></a>如何遍历一个内部未知的文件夹？</h3><p>常用的有以下这几种办法：os.path.walk()，os.walk()，listdir</p>
+<h3 id="mysql数据库如何分区、分表？"><a href="#mysql数据库如何分区、分表？" class="headerlink" title="mysql数据库如何分区、分表？"></a>mysql数据库如何分区、分表？</h3><p>分表可以通过三种方式：mysql集群、自定义规则和merge存储引擎。</p>
+<p>分区有四类：</p>
+<ul>
+<li>RANGE 分区：基于属于一个给定连续区间的列值，把多行分配给分区。</li>
+<li>LIST 分区：类似于按RANGE分区，区别在于LIST分区是基于列值匹配一个离散值集合中的某个值来进行选择。</li>
+<li>HASH分区：基于用户定义的表达式的返回值来进行选择的分区，该表达式使用将要插入到表中的这些行的列值进行计算。这个函数可以包含MySQL 中有效的、产生非负整数值的任何表达式。</li>
+<li>KEY 分区：类似于按HASH分区，区别在于KEY分区只支持计算一列或多列，且MySQL 服务器提供其自身的哈希函数。必须有一列或多列包含整数值。</li>
+</ul>
+<h3 id="如何对查询命令进行优化？"><a href="#如何对查询命令进行优化？" class="headerlink" title="如何对查询命令进行优化？"></a>如何对查询命令进行优化？</h3><ul>
+<li>应尽量避免全表扫描，首先应考虑在 where 及 order by 涉及的列上建立索。</li>
+<li>应尽量避免在 where 子句中对字段进行 null 值判断，避免使用!=或&lt;&gt;操作符，避免使用 or 连接条件，或在where子句中使用参数、对字段进行表达式或函数操作，否则会导致权标扫描</li>
+<li>不要在 where 子句中的“=”左边进行函数、算术运算或其他表达式运算，否则系统将可能无法正确使用索引。</li>
+<li>使用索引字段作为条件时，如果该索引是复合索引，那么必须使用到该索引中的第一个字段作为条件时才能保证系统使用该索引，否则该索引将不会被使用。</li>
+<li>很多时候可考虑用 exists 代替 in</li>
+<li>尽量使用数字型字段</li>
+<li>尽可能的使用 varchar/nvarchar 代替 char/nchar</li>
+<li>任何地方都不要使用 select * from t ，用具体的字段列表代替“*”，不要返回用不到的任何字段。</li>
+<li>尽量使用表变量来代替临时表。</li>
+<li>避免频繁创建和删除临时表，以减少系统表资源的消耗。</li>
+<li>尽量避免使用游标，因为游标的效率较差。</li>
+<li>在所有的存储过程和触发器的开始处设置 SET NOCOUNT ON ，在结束时设置 SET NOCOUNT OFF</li>
+<li>尽量避免大事务操作，提高系统并发能力。</li>
+<li>尽量避免向客户端返回大数据量，若数据量过大，应该考虑相应需求是否合理。</li>
+</ul>
+<h3 id="如何理解开源？"><a href="#如何理解开源？" class="headerlink" title="如何理解开源？"></a>如何理解开源？</h3><p>开源，即开放源代码。开源诞生于软件行业，它不仅仅代表软件源代码的开放，本身即意味着自由、共享和充分利用资源。开源是一种精神，是一种文化，如今已经成为软件业发展的大势所趋。</p>
+<h3 id="如何理解MVC-MTV框架？"><a href="#如何理解MVC-MTV框架？" class="headerlink" title="如何理解MVC/MTV框架？"></a>如何理解MVC/MTV框架？</h3><p>MVC就是把Web应用分为模型（M），控制器（C）和视图（V）三层，他们之间以一种插件式的、松耦合的方式连接在一起。MTV模式本质上和MVC是一样的，也是为了各组件间保持松耦合关系，只是定义上有些许不同。</p>
+<h3 id="MSSQL的死锁是如何产生的？"><a href="#MSSQL的死锁是如何产生的？" class="headerlink" title="MSSQL的死锁是如何产生的？"></a>MSSQL的死锁是如何产生的？</h3><p>如下是死锁产生的四个必要条件：</p>
+<ul>
+<li>互斥条件：指进程对所分配到的资源进行排它性使用，即在一段时间内某资源只由一个进程占用。如果此时还有其它进程请求资源，则请求者只能等待，直至占有资源的进程用毕释放。</li>
+<li>请求和保持条件：指进程已经保持至少一个资源，但又提出了新的资源请求，而该资源已被其它进程占有，此时请求进程阻塞，但又对自己已获得的其它资源保持不放。</li>
+<li>不剥夺条件：指进程已获得的资源，在未使用完之前，不能被剥夺，只能在使用完时由自己释放。</li>
+<li>环路等待条件：指在发生死锁时，必然存在一个进程——资源的环形链，即进程集合{P0，P1，P2，···，Pn}中的P0正在等待一个P1占用的资源；P1正在等待P2占用的资源，……，Pn正在等待已被P0占用的资源。</li>
+</ul>
+<h3 id="Sql注入是如何产生的，如何防止？"><a href="#Sql注入是如何产生的，如何防止？" class="headerlink" title="Sql注入是如何产生的，如何防止？"></a>Sql注入是如何产生的，如何防止？</h3><p>程序开发过程中不注意规范书写sql语句和对特殊字符进行过滤，导致客户端可以通过全局变量POST和GET提交一些sql语句正常执行。产生Sql注入。下面是防止办法：</p>
+<ul>
+<li>过滤掉一些常见的数据库操作关键字，或者通过系统函数来进行过滤。</li>
+<li>在PHP配置文件中将Register_globals=off;设置为关闭状态</li>
+<li>SQL语句书写的时候尽量不要省略小引号(tab键上面那个)和单引号</li>
+<li>提高数据库命名技巧，对于一些重要的字段根据程序的特点命名，取不易被猜到的</li>
+<li>对于常用的方法加以封装，避免直接暴漏SQL语句</li>
+<li>开启PHP安全模式：Safe_mode=on;</li>
+<li>打开magic_quotes_gpc来防止SQL注入</li>
+<li>控制错误信息：关闭错误提示信息，将错误信息写到系统日志。</li>
+<li>使用mysqli或pdo预处理。</li>
+</ul>
+<h3 id="xxs如何预防？"><a href="#xxs如何预防？" class="headerlink" title="xxs如何预防？"></a>xxs如何预防？</h3><p>XSS漏洞难以检测，但是为了WEB安全仍需要尽力避免：</p>
+<p>针对反射型和存储型XSS，需要服务端和前端共同预防，针对用户输入的数据做解析和转义，对于前端开发而言，则是善于使用escape，针对data URI内容做正则判断，禁止用户输入非显示信息。</p>
+<p>对于DOM XSS，由于造成XSS的原因在于用户的输入，因此在前端，需要特别注意用户输入源，并对可能造成的XSS的操作需要进行字串转义。</p>
+<h3 id="如何生成共享秘钥？-如何防范中间人攻击？"><a href="#如何生成共享秘钥？-如何防范中间人攻击？" class="headerlink" title="如何生成共享秘钥？ 如何防范中间人攻击？"></a>如何生成共享秘钥？ 如何防范中间人攻击？</h3><p>密钥的生成是通过使用全局配置命令完成的：对于不可输出密钥是&lt;crypto key generate rsa label {label string}，而对于可输出密钥则是&lt;crypto key generate rsa exportable label {label string}&gt;。标记（label）是可选择的；如果没有指定标记，那么密钥名称将是hostname.domain-name。</p>
+<p>对于中间人的攻击，可以采用如下防范手段：</p>
+<ul>
+<li>通过采用动态ARP检测、DHCP Snooping等控制操作来加强网络基础设施</li>
+<li>采用传输加密</li>
+<li>使用CASBs（云访问安全代理）</li>
+<li>创建RASP（实时应用程序自我保护）</li>
+<li>阻止自签名证书</li>
+<li>强制使用SSL pinning</li>
+<li>安装DAM（数据库活动监控）</li>
+</ul>
+<h3 id="如何管理不同版本的代码？"><a href="#如何管理不同版本的代码？" class="headerlink" title="如何管理不同版本的代码？"></a>如何管理不同版本的代码？</h3><p>进行版本管理。可举例告知如何使用Git（或是其他工具）进行追踪。</p>
+<h2 id="说区别、谈优势（Difference）"><a href="#说区别、谈优势（Difference）" class="headerlink" title="说区别、谈优势（Difference）"></a>说区别、谈优势（Difference）</h2><h3 id="数组和元组之间的区别？"><a href="#数组和元组之间的区别？" class="headerlink" title="数组和元组之间的区别？"></a>数组和元组之间的区别？</h3><p>数组在python中叫作列表。列表可以修改，而元组不可以修改，如果元组中仅有一个元素，则要在元素后加上逗号。元组和列表的查询方式一样。元组只可读不可修改，如果程序中的数据不允许修改可用元组。</p>
+<h3 id="new-和-init-的区别？"><a href="#new-和-init-的区别？" class="headerlink" title="_new_和_init_的区别？"></a>_new_和_init_的区别？</h3><p><strong>init</strong>是当实例对象创建完成后被调用的，然后设置对象属性的一些初始值。</p>
+<p><strong>new</strong>是在实例创建之前被调用的，因为它的任务就是创建实例然后返回该实例，是个静态方法。</p>
+<p>也就是，<strong>new</strong>在<strong>init</strong>之前被调用，<strong>new</strong>的返回值（实例）将传递给<strong>init</strong>方法的第一个参数，然后<strong>init</strong>给这个实例设置一些参数。</p>
+<h3 id="Python中单下划线和双下划綫的区别？"><a href="#Python中单下划线和双下划綫的区别？" class="headerlink" title="Python中单下划线和双下划綫的区别？"></a>Python中单下划线和双下划綫的区别？</h3><p>“单下划线” 开始的成员变量叫做保护变量，意思是只有类对象和子类对象自己能访问到这些变量；</p>
+<p>“双下划线” 开始的是私有成员，意思是只有类对象自己能访问，连子类对象也不能访问到这个数据。</p>
+<h3 id="浅拷贝与深拷贝的区别是？"><a href="#浅拷贝与深拷贝的区别是？" class="headerlink" title="浅拷贝与深拷贝的区别是？"></a>浅拷贝与深拷贝的区别是？</h3><p>在python中，对象赋值实际上是对象的引用。浅拷贝，没有拷贝子对象，所以原始数据改变，子对象会改变，而深拷贝，包含对象里面的自对象的拷贝，所以原始对象的改变不会造成深拷贝里任何子元素的改变。</p>
+<h3 id="使用装饰器的单例和使用其他方法的单例，在后续使用中，有何区别？"><a href="#使用装饰器的单例和使用其他方法的单例，在后续使用中，有何区别？" class="headerlink" title="使用装饰器的单例和使用其他方法的单例，在后续使用中，有何区别？"></a>使用装饰器的单例和使用其他方法的单例，在后续使用中，有何区别？</h3><p>Import方法改变了类本身，new方法，但是只是把所有实例对象共享属性，每次产生一个新对象。算作伪单例，共享属性方法实例化了许多个相同属性。所以，装饰器方法最为实用。</p>
+<h3 id="多进程与多线程的区别？"><a href="#多进程与多线程的区别？" class="headerlink" title="多进程与多线程的区别？"></a>多进程与多线程的区别？</h3><ul>
+<li>简而言之,一个程序至少有一个进程，一个进程至少有一个线程。</li>
+<li>线程的划分尺度小于进程，使得多线程程序的并发性高。</li>
+<li>另外，进程在执行过程中拥有独立的内存单元，而多个线程共享内存，从而极大地提高了程序的运行效率。</li>
+<li>线程在执行过程中与进程还是有区别的。每个独立的线程有一个程序运行的入口、顺序执行序列和程序的出口。但是线程不能够独立执行，必须依存在应用程序中，由应用程序提供多个线程执行控制。</li>
+<li>从逻辑角度来看，多线程的意义在于一个应用程序中，有多个执行部分可以同时执行。但操作系统并没有将多个线程看做多个独立的应用，来实现进程的调度和管理以及资源分配。这就是进程和线程的重要区别。<h4 id="select和epoll的区别？"><a href="#select和epoll的区别？" class="headerlink" title="select和epoll的区别？"></a>select和epoll的区别？</h4></li>
+<li>select实现需要自己不断轮询所有fd集合，直到设备就绪，期间可能要睡眠和唤醒多次交替。而epoll其实也需要调用epoll_wait不断轮询就绪链表，期间也可能多次睡眠和唤醒交替，但是它是设备就绪时，调用回调函数，把就绪fd放入就绪链表中，并唤醒在epoll_wait中进入睡眠的进程。虽然都要睡眠和交替，但是select在“醒着”的时候要遍历整个fd集合，而epoll在“醒着”的时候只要判断一下就绪链表是否为空就行了，这节省了大量的CPU时间。</li>
+<li>select每次调用都要把fd集合从用户态往内核态拷贝一次，并且要把current往设备等待队列中挂一次，而epoll只要一次拷贝，而且把current往等待队列上挂也只挂一次（在epoll_wait的开始，注意这里的等待队列并不是设备等待队列，只是一个epoll内部定义的等待队列）。这也能节省不少的开销。</li>
+</ul>
+<h3 id="TCP和UDP的区别？边缘触发和水平触发的区别？"><a href="#TCP和UDP的区别？边缘触发和水平触发的区别？" class="headerlink" title="TCP和UDP的区别？边缘触发和水平触发的区别？"></a>TCP和UDP的区别？边缘触发和水平触发的区别？</h3><ul>
+<li>基本区别：</li>
+</ul>
+<p>基于连接与无连接</p>
+<p>TCP要求系统资源较多，UDP较少； </p>
+<p>UDP程序结构较简单 </p>
+<p>流模式（TCP）与数据报模式(UDP); </p>
+<p>TCP保证数据正确性，UDP可能丢包 </p>
+<p>TCP保证数据顺序，UDP不保证 </p>
+<ul>
+<li>编程中的区别</li>
+</ul>
+<p>socket()的参数不同 </p>
+<p>UDP Server不需要调用listen和accept </p>
+<p>UDP收发数据用sendto/recvfrom函数 </p>
+<p>TCP：地址信息在connect/accept时确定 </p>
+<p>UDP：在sendto/recvfrom函数中每次均 需指定地址信息 </p>
+<p>UDP：shutdown函数无效</p>
+<h3 id="HTTP连接：get和post的区别？"><a href="#HTTP连接：get和post的区别？" class="headerlink" title="HTTP连接：get和post的区别？"></a>HTTP连接：get和post的区别？</h3><p>GET请求，请求的数据会附加在URL之后，以?分割URL和传输数据，多个参数用&amp;连接。URL的编码格式采用的是ASCII编码，而不是uniclde，即是说所有的非ASCII字符都要编码之后再传输。</p>
+<p>POST请求：POST请求会把请求的数据放置在HTTP请求包的包体中。上面的item=bandsaw就是实际的传输数据。</p>
+<p>因此，GET请求的数据会暴露在地址栏中，而POST请求则不会。</p>
+<h3 id="varchar与char的区别？"><a href="#varchar与char的区别？" class="headerlink" title="varchar与char的区别？"></a>varchar与char的区别？</h3><p>char 长度是固定的，不管你存储的数据是多少他都会都固定的长度。而varchar则处可变长度但他要在总长度上加1字符，这个用来存储位置。所以在处理速度上char要比varchar快速很多，但是对费存储空间，所以对存储不大，但在速度上有要求的可以使用char类型，反之可以用varchar类型。</p>
+<h3 id="BTree索引和hash索引的区别？"><a href="#BTree索引和hash索引的区别？" class="headerlink" title="BTree索引和hash索引的区别？"></a>BTree索引和hash索引的区别？</h3><p>Hash 索引因其结构的特殊性，其检索效率非常高，索引的检索可以一次定位，不像B-Tree 索引需要从根节点到枝节点，最后才能访问到页节点这样多次的IO访问，所以 Hash 索引的查询效率要远高于 B-Tree 索引。但也有如下明显的缺点：</p>
+<ul>
+<li>Hash 索引仅仅能满足”=”,”IN”和”&lt;=&gt;”查询，不能使用范围查询。</li>
+<li>Hash 索引无法被用来避免数据的排序操作。</li>
+<li>Hash 索引不能利用部分索引键查询。</li>
+<li>Hash 索引在任何时候都不能避免表扫描。</li>
+<li>Hash 索引遇到大量Hash值相等的情况后性能并不一定就会比B-Tree索引高。</li>
+</ul>
+<h3 id="primary-key和unique的区别？"><a href="#primary-key和unique的区别？" class="headerlink" title="primary key和unique的区别？"></a>primary key和unique的区别？</h3><ul>
+<li>作为Primary Key的域/域组不能为null，而Unique Key可以。 </li>
+<li>在一个表中只能有一个Primary Key，而多个Unique Key可以同时存在。 </li>
+<li>逻辑设计上讲，Primary Key一般在逻辑设计中用作记录标识，这也是设置Primary Key的本来用意，而Unique Key只是为了保证域/域组的唯一性。 </li>
+</ul>
+<h3 id="ecb和cbc模式有什么区别？"><a href="#ecb和cbc模式有什么区别？" class="headerlink" title="ecb和cbc模式有什么区别？"></a>ecb和cbc模式有什么区别？</h3><p>ECB：是一种基础的加密方式，密文被分割成分组长度相等的块（不足补齐），然后单独一个个加密，一个个输出组成密文。</p>
+<p>CBC：是一种循环模式，前一个分组的密文和当前分组的明文异或操作后再加密，这样做的目的是增强破解难度。ECB和CBC的加密结果是不一样的，两者的模式不同，而且CBC会在第一个密码块运算时加入一个初始化向量。 </p>
+<h3 id="对称加密与非对称加密的区别？"><a href="#对称加密与非对称加密的区别？" class="headerlink" title="对称加密与非对称加密的区别？"></a>对称加密与非对称加密的区别？</h3><p>对称加密，需要对加密和解密使用相同密钥的加密算法。由于其速度快，对称性加密通常在消息发送方需要加密大量数据时使用。所以，对称性加密也称为密钥加密。</p>
+<p>而非对称加密算法需要两个密钥：公开密钥和私有密钥。公开密钥与私有密钥是一对，如果用公开密钥对数据进行加密，只有用对应的私有密钥才能解密；如果用私有密钥对数据进行加密，那么只有用对应的公开密钥才能解密。</p>
+<h3 id="Xrange和range的区别？"><a href="#Xrange和range的区别？" class="headerlink" title="Xrange和range的区别？"></a>Xrange和range的区别？</h3><p>range([start,] stop[, step])，根据start与stop指定的范围以及step设定的步长，生成一个序列。xrange 用法与 range 完全相同，所不同的是生成的不是一个list对象，而是一个生成器。要生成很大的数字序列的时候，用xrange会比range性能优很多，因为不需要一上来就开辟一块很大的内存空间。range会直接生成一个list对象，而xrange则不会直接生成一个list，而是每次调用返回其中的一个值。</p>
+<h3 id="os与sys模块的区别？"><a href="#os与sys模块的区别？" class="headerlink" title="os与sys模块的区别？"></a>os与sys模块的区别？</h3><p>前者提供了一种方便的使用操作系统函数的方法。后者提供访问由解释器使用或维护的变量和与解释器进行交互的函数。</p>
+<h3 id="NoSQL和关系数据库的区别？"><a href="#NoSQL和关系数据库的区别？" class="headerlink" title="NoSQL和关系数据库的区别？"></a>NoSQL和关系数据库的区别？</h3><ul>
+<li>SQL数据存在特定结构的表中；而NoSQL则更加灵活和可扩展，存储方式可以省是JSON文档、哈希表或者其他方式。</li>
+<li>在SQL中，必须定义好表和字段结构后才能添加数据，例如定义表的主键(primary key)，索引(index),触发器(trigger),存储过程(stored procedure)等。表结构可以在被定义之后更新，但是如果有比较大的结构变更的话就会变得比较复杂。在NoSQL中，数据可以在任何时候任何地方添加，不需要先定义表。</li>
+<li>SQL中如果需要增加外部关联数据的话，规范化做法是在原表中增加一个外键，关联外部数据表。而在NoSQL中除了这种规范化的外部数据表做法以外，我们还能用如下的非规范化方式把外部数据直接放到原数据集中，以提高查询效率。缺点也比较明显，更新审核人数据的时候将会比较麻烦。</li>
+<li>SQL中可以使用JOIN表链接方式将多个关系数据表中的数据用一条简单的查询语句查询出来。NoSQL暂未提供类似JOIN的查询方式对多个数据集中的数据做查询。所以大部分NoSQL使用非规范化的数据存储方式存储数据。</li>
+<li>SQL中不允许删除已经被使用的外部数据，而NoSQL中则没有这种强耦合的概念，可以随时删除任何数据。</li>
+<li>SQL中如果多张表数据需要同批次被更新，即如果其中一张表更新失败的话其他表也不能更新成功。这种场景可以通过事务来控制，可以在所有命令完成后再统一提交事务。而NoSQL中没有事务这个概念，每一个数据集的操作都是原子级的。</li>
+<li>在相同水平的系统设计的前提下，因为NoSQL中省略了JOIN查询的消耗，故理论上性能上是优于SQL的。</li>
+</ul>
 ]]></content>
       <tags>
-        <tag>Git</tag>
+        <tag>Python</tag>
       </tags>
   </entry>
   <entry>
     <title>Redis - 基础</title>
     <url>/2020/07/21/Redis-%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[<h4 id="什么是Redis"><a href="#什么是Redis" class="headerlink" title="什么是Redis"></a>什么是Redis</h4><p>我们先看看Redis官网给的介绍：</p>
+    <content><![CDATA[<p><img src="/images/pasted-142.png" alt="upload successful"></p>
+<h4 id="什么是Redis"><a href="#什么是Redis" class="headerlink" title="什么是Redis"></a>什么是Redis</h4><p>我们先看看Redis官网给的介绍：</p>
 <blockquote>
 <p>Redis is an open source (BSD licensed), in-memory data structure store, used as a database, cache and message broker. It supports data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs, geospatial indexes with radius queries and streams. Redis has built-in replication, Lua scripting, LRU eviction, transactions and different levels of on-disk persistence, and provides high availability via Redis Sentinel and automatic partitioning with Redis Cluster.</p>
 </blockquote>
@@ -801,6 +860,672 @@
       </tags>
   </entry>
   <entry>
+    <title>Redis - 基础补充</title>
+    <url>/2020/07/23/Redis-%E5%9F%BA%E7%A1%80%E8%A1%A5%E5%85%85/</url>
+    <content><![CDATA[<p><img src="/images/pasted-141.png" alt="upload successful"></p>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>第一篇文章(Redis基础)，在之后的学习中回看这篇文章，觉得有一些纰漏之处，甚是惭愧，这也是本篇文章的由来和内容。</p>
+<a id="more"></a>
+
+<h3 id="Key的命名建议"><a href="#Key的命名建议" class="headerlink" title="Key的命名建议"></a>Key的命名建议</h3><p>虽然Redis单个key最多可以存入512M大小，但这并不意味这我们就可以乱存。我们编写程序代码时，对变量的命名往往有所要求，对于Redis中key的命名有以下三条建议：</p>
+<ol>
+<li>key的命名不要太长，尽量不要超过1024字节，否则对于内存的消耗和查找的效率而言，无疑是一场噩梦。</li>
+<li>key的命名也不要太短，太短的命名往往无法清晰表达key的含义。</li>
+<li>在一个项目中，使用统一的命名模式去规范key。例如user:1:nickname，user:2:nickname。</li>
+</ol>
+<h3 id="Redis键-key-命令"><a href="#Redis键-key-命令" class="headerlink" title="Redis键(key)命令"></a>Redis键(key)命令</h3><p>Redis基础篇中直接收录了Redis的五种数据类型及其常用的一些命令，而对于Redis中对key的一些常用基本命令却没有介绍，在此补上，这些命令对所有数据类型的key都适用。</p>
+<ul>
+<li><p>del key：当key存在时删除key，返回值为被删除key的数量。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; del mykey1	# 键mykey1未设置</span><br><span class="line">(integer) 0</span><br><span class="line">&gt; set mykey1 &quot;redis&quot;	# 设置键mykey1</span><br><span class="line">OK</span><br><span class="line">&gt; del mykey1	# 删除键mykey1</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>exists key：检查key是否存在，存在返回1，否则返回0。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; exists mykey1		# 键mykey1已经用del命令删除</span><br><span class="line">(integer) 0</span><br><span class="line">&gt; set mykey1 &quot;redis&quot;	# 重新设置mykey1</span><br><span class="line">OK</span><br><span class="line">&gt; exists mykey1		# 在此检查键mykey1是否存在</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>expire key seconds：设置key的过期时间，过期后自动删除，以秒为单位。设置成功返回1，当key不存在或不能设置时返回0。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; expire time1 2	# 为不存在的键time1设置过期时间</span><br><span class="line">(integer) 0</span><br><span class="line">&gt; set time1 &quot;2s&quot;	# 设置键time1</span><br><span class="line">OK</span><br><span class="line">&gt; expire time1 2</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>expireat key timestamp：以秒级时间戳设置key的过期时间。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; set time2 &quot;2020年3月10日20时过期&quot;</span><br><span class="line">OK</span><br><span class="line">&gt;expireat time2 1583841600</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>pexpire key milliseconds：设置key的过期时间，以毫秒为单位。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; set time3 &quot;3000ms&quot;</span><br><span class="line">OK</span><br><span class="line">&gt; pexire time3 3000</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>pexpireat key milliseconds-timestamp：以毫秒级时间戳设置key的过期时间。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; set time4 &quot;2020年3月10日21时过期&quot;</span><br><span class="line">OK</span><br><span class="line">&gt; pexireat time4 1583845200000</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<blockquote>
+<ul>
+<li>expire、expireat、pexpire和pexpireat命令都是设置成功时返回1，当key不存在或无法设置时返回0。</li>
+<li>时间戳是指格林威治时间1970年01月01日00时00分00秒(北京时间1970年01月01日08时00分00秒)起至现在的总毫秒数。在实际应用中时间戳有秒级和毫秒级，一般我们常用秒级。</li>
+</ul>
+</blockquote>
+<ul>
+<li><p>ttl key：当key不存在时，返回-2；当key存在但没有设置过期时间时，返回-1；否则，以秒为单位返回key的剩余过期时间。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; ttl time5		# time5不存在</span><br><span class="line">(integer) -2</span><br><span class="line">&gt; set time5 &quot;5s&quot;	#设置time5但不设置过期时间</span><br><span class="line">OK</span><br><span class="line">&gt; ttl time5</span><br><span class="line">(integer) -1	# time5永久保持有效</span><br><span class="line">&gt;expire time5 5		# 设置5秒后过期</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; ttl time5</span><br><span class="line">(integer) 2</span><br><span class="line">&gt; ttl time5</span><br><span class="line">(integer) -2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>pttl key:当key不存在时，返回-2；当key存在但没有设置过期时间时，返回-1；否则，以毫秒秒为单位返回key的剩余过期时间。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; ttl time6		# time6不存在</span><br><span class="line">(integer) -2</span><br><span class="line">&gt; set time5 &quot;6s&quot;	#设置time6但不设置过期时间</span><br><span class="line">OK</span><br><span class="line">&gt; ttl time6</span><br><span class="line">(integer) -1	# time6永久保持有效</span><br><span class="line">&gt;expire time6 6		# 设置6秒后过期</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; ttl time6</span><br><span class="line">(integer) 2</span><br><span class="line">&gt; ttl time6</span><br><span class="line">(integer) -2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>persist key：移除key的过期时间，使其永久保持有效。移除成功返回1，若key不存在或未设置过期时间时返回0。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; persist time7</span><br><span class="line">(integer) 0</span><br><span class="line">&gt; set time7 &quot;7s&quot;</span><br><span class="line">OK</span><br><span class="line">&gt; expire time7 7</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; ttl time7</span><br><span class="line">(integer) 4</span><br><span class="line">&gt; persist time7</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; ttl time7</span><br><span class="line">(integer) -1	# ttl命令返回值-1表示time7永久有效</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>keys pattern：查找所有符合给定模式pattern的key</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;mset NPC1 &quot;NO.1&quot; NPC2 &quot;NO.2&quot; NPC3 &quot;NO.3&quot; NPC4 &quot;NO.4&quot;</span><br><span class="line">OK</span><br><span class="line">&gt; keys NPC*</span><br><span class="line">1) &quot;NPC3&quot;</span><br><span class="line">2) &quot;NPC4&quot;</span><br><span class="line">3) &quot;NPC1&quot;</span><br><span class="line">4) &quot;NPC2&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>randomkey：随机返回一个key</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; randomkey</span><br><span class="line">&quot;NPC2&quot;</span><br><span class="line">&gt; randomkey</span><br><span class="line">&quot;NPC4&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>renamenx key newkey：当newkey不存在时修改key的名称。修改成功返回1，当newkey存在时返回0。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;renamenx NPC1 NPC2</span><br><span class="line">(integer) 0</span><br><span class="line">&gt;renamenx NPC1 NPC</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>type key：返回key所存储的value的类型。none(key不存在)、string、list、hash、set、zset。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; type NPC</span><br><span class="line">string</span><br><span class="line">&gt; type NPC5</span><br><span class="line">none</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="String类型应用场景"><a href="#String类型应用场景" class="headerlink" title="String类型应用场景"></a>String类型应用场景</h3><ul>
+<li>String通常用于保存单个字符串或JSON字符串数据</li>
+<li>String类型是二进制安全的，因此可以把常被调取的图片文件的内容作为字符串来存储</li>
+<li>利用incr、incrby、decr、decrby命令作常规计数，例如记录点击数、粉丝数等。</li>
+<li>Hash类型应用场景</li>
+</ul>
+<p>Hash类型常用于存储一个对象，比如存储用户的个人信息，存储用户的购物车信息等等。</p>
+<ul>
+<li>为什么不用String存储一个对象？<br>当我们用String类型的key-value结构存储一个对象，比如说存储用户的id、姓名、年龄、住址等信息时，主要有2种存储结构：<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 第一种</span><br><span class="line">key：id  value：序列化的其他信息</span><br></pre></td></tr></table></figure>
+第一种方式将用户ID作为key，其他信息封装成一个对象并序列化作为value的方式存储。这种方式有几点缺陷：<ul>
+<li>存取信息时增加了序列化/反序列化的开销。</li>
+<li>若需要修改用户的一个信息时，要取出一整个对象。</li>
+<li>修改操作必须保持原子性，需要对并发情况进行保护。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 第二种</span><br><span class="line">key：user:1:name  value：姓名值</span><br><span class="line">key：user:1:age  value：年龄值</span><br><span class="line">key：user:1:address value：地址值</span><br><span class="line">key：user:2:name  value：姓名值</span><br><span class="line">······</span><br></pre></td></tr></table></figure>
+<p>第二种方式将对应用户id:属性名作为key，属性值作为value的方式进行存储。这种方式虽然解决了第一种方式中序列化/反序列化的问题和并发问题，但是以这种方式存储，用户id信息会重复存储，且一个用户的信息就使用了好几个key-value对，当用户数量较大时，占用大量内存空间，造成内存浪费。Hash是最接近关系数据库结构的数据类型，可以将数据库的一条记录或程序中的一个对象转换成HashMap存放在Redis中。使用Hash类型存储一个对象不仅节省空间，对信息进行操作也有相应的命令，比较安全。</p>
+<ul>
+<li><p>List类型应用场景<br>List类型很适合实现多种数据结构，比如栈、队列等等。使用rpush和rpop命令可实现栈，使用rpush和lpop可实现队列。</p>
+</li>
+<li><p>Set类型应用场景<br>Set类型常用于对两个集合之间的数据求交集、并集、差集。比如说我们可以求出两个用户的共同好友、共同喜欢的歌曲，求当日首次登陆的新用户等等。</p>
+</li>
+<li><p>Zset类型应用场景<br>由于Zset类型相对于Set类型多存储了分数以进行排序，因此Zset类型常用于各种排行榜。比如说班级中考试成绩的排行，热搜榜的排行等等。除此之外，我们还可以利用分数做权重，形成可变优先级的队列，将重要的操作权重增加，这样就可以保证先执行这些操作。</p>
+</li>
+<li><p>Redis的内存维护策略<br>Redis把数据存在内存中以保证较高的存取性能，然而相比于磁盘空间大小，内存的容量是相当有限的。如果Redis一直存入，不对数据进行淘汰，必然会占用大量内存空间，最终将导致内存溢出并影响CPU的执行效率，造成服务器宕机等严重后果。因此，Redis作为优秀的中间缓存件，即使采取了集群部署来动态扩容，也应该即时整理内存，维持较高的系统性能。在Redis中有两种解决方案：一为数据设置超时时间：Redis中提供了几个设置数据过期时间的命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">expire key seconds  # 以秒为单位，是最常用的方式</span><br><span class="line">setex key seconds value  # 在设置key-value对的同时设置过期时间，string类型专用</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>只有string类型有专用命令，其他数据类型都要依靠key基本命令expire等设置过期时间</li>
+<li>如果没有设置过期时间，那么key永久保持有效</li>
+<li>如果设置了过期时间之后想让key再次永久保持有效，使用persist key命令</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<p>二为使用Redis提供的淘汰策略：在生产环境中，我们使用配置参数maxmemory来限制内存的大小，使用配置参数maxmemory-policy来选择淘汰策略。在默认情况下，maxmemory为0，表示内存使用不受限制，而maxmemorey-policy为noeviction。</p>
+<pre><code>* volatile-lru：设定过期时间的数据中，删除最不常用的数据。
+* allkeys-lru：优先删除最近没有被使用的key，应用最为广泛
+* volatile-random：在设定了过期时间的数据中随机删除。
+* allkeys-random：在所有数据中随机删除某个key。
+* volatile-ttl：查询全部设定了过期时间的数据，并进行排序，删除马上将要过期的数据。
+* noeviction：对内存没有限制，只有当内存使用达到阈值时，新申请内存的命令会报错。</code></pre><p>上述是Redis的6种淘汰策略，但是我们该如何选择哪一种策略来提高性能呢？答案是因地制宜，我们必须根据自身系统特征来选择合适的策略。</p>
+<pre><code>* 根据数据访问频率：如果有一部分数据的访问频率较高，其余部分普遍较低，或者我们也不知道数据的访问频率时，可以使用allkeys-lru；如果数据的访问频率都基本差不多时，我们可以选择allkeys-random。
+* 如果我们需要设置过期时间来判断数据过期的先后顺序，让Redis知晓应该先淘汰哪些数据时，可以使用volatile-ttl。
+* 当我们希望一些数据可以被长期保存，用于持久化，而一些数据只用于缓存，使用后能被淘汰掉时，我们可以选用volatile-lru或者volatile-random。
+* 在我们为数据设置过期时间时会消耗额外的内存，如果需要减少这一部分的浪费，那么可以选用allkeys-lru策略，这样就可以更加高效的利用内存了。</code></pre>]]></content>
+      <tags>
+        <tag>Redis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Redis - 进阶篇一</title>
+    <url>/2020/07/24/Redis-%E8%BF%9B%E9%98%B6%E7%AF%87%E4%B8%80/</url>
+    <content><![CDATA[<p><img src="/images/pasted-143.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<h3 id="Redis-HyperLogLog"><a href="#Redis-HyperLogLog" class="headerlink" title="Redis HyperLogLog"></a>Redis HyperLogLog</h3><h4 id="HyperLogLog-是什么"><a href="#HyperLogLog-是什么" class="headerlink" title="HyperLogLog 是什么"></a>HyperLogLog 是什么</h4><p>Redis HyperLogLog 是用来做基数统计的算法，每个 HyperLoglog 键只需要占用 12KB 内存，就可以计算接近 264 个不同的基数。HyperLogLog 的优点是在应对大量数据事可以利用极小且固定的空间完成对独立总数的统计，但缺点是它的统计并不十分准确，存在一定误差。HyperLogLog 只会根据输入的元素来统计基数，而不会存储输入的元素，因此相比于 Set 集合类型，它不会出现元素越多占用内存多大的情况，但是它也不能像 Set 类型一样返回输入的元素。</p>
+<blockquote>
+<p>基数： 数据集中不同元素的个数。例如数据集 {8, 7, 3, 1, 0, 2, 1, 0} 中，基数集为 {8, 7, 3, 1, 0 , 2}，基数为 6。</p>
+</blockquote>
+<h4 id="HyperLogLog-命令"><a href="#HyperLogLog-命令" class="headerlink" title="HyperLogLog 命令"></a>HyperLogLog 命令</h4><ul>
+<li>PFADD key element1 [element2]：向 HyperLogLog 键 key 中添加一个或多个元素。至少有一个元素被添加返回 1，否则返回 0。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; PFADD test1 a b c d</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; PFADD test1 a</span><br><span class="line">(integer) 0</span><br></pre></td></tr></table></figure></li>
+<li>PFCOUNT key1 [key2]：返回给定 HyperLogLog 的基数估算值，多个 HyperLogLog 时返回基数值之和。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; PFCOUNT test1</span><br><span class="line">(integer) 4</span><br><span class="line">&gt; PFADD test2 e f g</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; PFCOUNT test1 test2</span><br><span class="line">(integer) 7</span><br></pre></td></tr></table></figure></li>
+<li>pfmerge destkey sourcekey1[sourcekey2]：将多个 HyperLogLog 合并为一个 HyperLogLog ，合并后的 HyperLogLog 的基数估算值是通过对所有给定 HyperLogLog 进行并集计算得出的。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; PFMERGE test test1 test2</span><br><span class="line">OK</span><br><span class="line">&gt; PFCOUNT test</span><br><span class="line">(integer) 7</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h4><p>由于 HyperLogLog 可以对基数进行统计，因此我们常常用于统计独立访客(Unique Visitor, 简称 UV)。比如今天有多少个人已经进行了签到或访问过，即使一天之内多次访问，对于总数来说还是只增加 1。</p>
+<h3 id="Redis-发布订阅"><a href="#Redis-发布订阅" class="headerlink" title="Redis 发布订阅"></a>Redis 发布订阅</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>由于 Redis 发布订阅机制本身的不足，实际中的消息通信并不常用 Redis 发布订阅完成，因此仅介绍一下。</p>
+<blockquote>
+<p>为什么不用 Redis 发布订阅机制</p>
+<ul>
+<li>数据可靠性原因：Redis 发布订阅要求客户端在线，由 1 个客户端发布消息，n 个客户端接收消息，且消息的发布是无状态的。比如我们使用微信时，消息未发送成功会有红色感叹号提醒，发出去的消息在短时间内仍可以撤回，对方上线后仍可以接收到消息，但 Redis 无法实现这些功能，它无法判断消息是否被接受了还是在传输过程中丢失了。</li>
+<li>稳定性原因：对于旧版的 Redis 来说，如果一个客户端订阅了某个或者某些频道，频道推送了很多消息但是它读取消息的速度不够快，那么不断积压的消息就会使得 Redis 输出缓冲区的体积越来越大，这可能会导致 redis 的速度变慢，甚至直接崩溃。也可能会导致 Redis 服务被操作系统强制杀死，甚至导致操作系统本身不可用。新版的 redis 不会出现这种问题，因为它会自动断开不符合 client-output-buffer-limit pubsub 配置选项要求的订阅客户端。</li>
+<li>资源消耗高：在 pub/sub 中发送者不需要独占一个 Redis 的链接，而订阅者则需要单独占用一个 Redis 的链接，而发布订阅一般对应多个订阅者，此时则有着过高的资源消耗。</li>
+</ul>
+</blockquote>
+<p>Redis 发布订阅(pub/sub)是一种消息通信模式：发送者(pub)发送消息，订阅者(sub)接收消息。Redis 客户端可以订阅任意数量的频道。下图展示了频道 channel 以及订阅了这个频道的三个客户端 client1、client2、client3 之间的关系：<br><img src="/images/pasted-104.png" alt="upload successful"></p>
+<p>当有新消息通过 publish 命令发送给频道 channel 时，这个消息就会被发送给订阅它的三个客户端：<br><img src="/images/pasted-105.png" alt="upload successful"></p>
+<h4 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h4><ul>
+<li>PSUBSCRIBE pattern [pattern …]：订阅一个或多个符合给定模式的频道。</li>
+<li>PUBLISH channel message：将信息发送到指定频道。</li>
+<li>PUNSUBSCRIBE [pattern [pattern …]]：退订所有给定模式的频道。</li>
+<li>SUBSCRIBE channel [channel …]：订阅一个或多个频道。</li>
+<li>UNSUBSCRIBE channel [channel …]：退订一个或多个频道。</li>
+</ul>
+<h4 id="简单实例"><a href="#简单实例" class="headerlink" title="简单实例"></a>简单实例</h4><p>简单演示一下 Redis 发布订阅，首先我们打开一个客户端订阅频道 channel1：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; SUBSCRIBE channel1</span><br><span class="line">Reading messages... (press Ctrl-C to quit)</span><br><span class="line">1) &quot;subscribe&quot;</span><br><span class="line">2) &quot;channel1&quot;</span><br><span class="line">3) (integer) 1</span><br></pre></td></tr></table></figure>
+
+<p>然后，我们再打开一个客户端，并向频道 channel1 发布一条消息：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; PUBLISH channel1 &quot;test message&quot;</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+
+<p>此时，订阅了频道 channel1 的客户端会接受到消息，会多出以下几行：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">1) &quot;message&quot;</span><br><span class="line">2) &quot;channel1&quot;</span><br><span class="line">3) &quot;test message&quot;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-106.png" alt="upload successful"></p>
+<h3 id="Redis-事务"><a href="#Redis-事务" class="headerlink" title="Redis 事务"></a>Redis 事务</h3><h4 id="事务简介"><a href="#事务简介" class="headerlink" title="事务简介"></a>事务简介</h4><p>Redis 事务可以一次执行多个命令，并且带有以下三个重要的保证：</p>
+<ul>
+<li>批量操作在发送 EXEC 命令之前都被放入队列缓存。</li>
+<li>收到 EXEC 命令之后开始执行事务，事务中任意命令执行失败，其余命令依旧执行。</li>
+<li>在事务执行过程中，其他客户端发出的命令请求不会插入到事务执行队列中。<br>由上述三个保证我们可以看出虽然 Redis 保证单个命令的执行是原子性的，但并没有在事务上增加任何保持原子性的机制，所以 Redis 事务的执行并不是原子性的。这不像 MySQL 数据库中的事务，在 MySQL 事务中，若有一条命令执行失败，则会发生事务回滚。Redis 中事务中的某一条命令执行失败既不会造成已完成命令的回滚，也不会影响未完成命令的执行。</li>
+</ul>
+<h4 id="事务命令"><a href="#事务命令" class="headerlink" title="事务命令"></a>事务命令</h4><ul>
+<li>MULTI：标记一个事务块的开始。</li>
+<li>EXEC：执行事务块内的所有命令。</li>
+<li>DISCARD：取消事务，放弃执行事务块内的所有命令。</li>
+<li>WATCH key [key …]：监视一个或多个 key，如果在事务执行之前被监视的 key 被其他命令所改动，则取消执行事务。</li>
+<li>UNWATCH：取消对 WATCH 命令中所有 key 的监视。</li>
+</ul>
+<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><p>一个事务从开始到执行会经历以下三个阶段：<br><img src="/images/pasted-107.png" alt="upload successful"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 监视 key，事务成功执行</span><br><span class="line">&gt; WATCH name1 score1</span><br><span class="line">OK</span><br><span class="line">&gt; MULTI  # 开始事务</span><br><span class="line">OK</span><br><span class="line">&gt; SET name1 &quot;Jack&quot;</span><br><span class="line">QUEUED</span><br><span class="line">&gt; SET score1 80</span><br><span class="line">QUEUED</span><br><span class="line">&gt; EXEC  # 执行事务</span><br><span class="line">1) OK</span><br><span class="line">2) OK</span><br></pre></td></tr></table></figure>
+
+<p>下图演示了监视 key 但事务被打断的情况：<br><img src="/images/pasted-108.png" alt="upload successful"></p>
+<h3 id="Redis-脚本"><a href="#Redis-脚本" class="headerlink" title="Redis 脚本"></a>Redis 脚本</h3><p>Redis 脚本使用 Lua 解释器来执行脚本。由于作者对 Lua 没什么了解，这里就只能网罗些有用的信息，简单介绍。</p>
+<h4 id="脚本命令"><a href="#脚本命令" class="headerlink" title="脚本命令"></a>脚本命令</h4><ul>
+<li>EVAL script numkeys key [key …] arg [arg …]：执行 Lua 脚本。numkeys 指定 key 和 arg 的个数。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; EVAL &quot;return &#123;KEYS[1],KEYS[2],ARGV[1],ARGV[2]&#125;&quot; 2 key1    key2 arg1 agr2</span><br><span class="line">1) &quot;key1&quot;</span><br><span class="line">2) &quot;key2&quot;</span><br><span class="line">3) &quot;arg1&quot;</span><br><span class="line">4) &quot;arg2&quot;</span><br></pre></td></tr></table></figure></li>
+<li>SCRIPT LOAD script：将脚本 script 添加到脚本缓存中，但不立即执行,返回 SHA1 校验和。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; SCRIPT LOAD &quot;return &#39;hello world&#39;&quot;</span><br><span class="line">&quot;5332031c6b470dc5a0dd9b4bf2030dea6d65de91&quot;</span><br></pre></td></tr></table></figure></li>
+<li>EVALSHA sha1 numkeys key [key …] arg [arg …]：根据给定的 sha1 校验码，执行缓存在服务器中的脚本。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; SCRIPT LOAD &quot;return &#123;KEYS[1],KEYS[2],ARGV[1],ARGV[2]&#125;&quot;</span><br><span class="line">&quot;a42059b356c875f0717db19a51f6aaca9ae659ea&quot;</span><br><span class="line">&gt; EVALSHA &quot;a42059b356c875f0717db19a51f6aaca9ae659ea&quot; 2 key1 key2 arg1 arg2</span><br><span class="line">1) &quot;key1&quot;</span><br><span class="line">2) &quot;key2&quot;</span><br><span class="line">3) &quot;arg1&quot;</span><br><span class="line">4) &quot;arg2&quot;</span><br></pre></td></tr></table></figure></li>
+<li>SCRIPT EXISTS script [script …]：通过 SHA1 校验和判断指定脚本是否被保存在缓存中。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; SCRIPT LOAD &quot;return &#39;hello world&#39;&quot;</span><br><span class="line">&quot;5332031c6b470dc5a0dd9b4bf2030dea6d65de91&quot;</span><br><span class="line">&gt; SCRIPT LOAD 5332031c6b470dc5a0dd9b4bf2030dea6d65de91</span><br><span class="line">1) (integer) 1</span><br></pre></td></tr></table></figure></li>
+<li>SCRIPT FLUSH：清空缓存中的所有脚本。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; SCRIPT FLUSH</span><br><span class="line">OK</span><br><span class="line">&gt; SCRIPT LOAD 5332031c6b470dc5a0dd9b4bf2030dea6d65de91  # &quot;return &#39;hello world&#39;&quot;的SHA1校验和</span><br><span class="line">1) (integer) 0</span><br></pre></td></tr></table></figure></li>
+<li>SCRIPT KILL：杀死目前正在运行的脚本。</li>
+</ul>
+<h4 id="使用优势"><a href="#使用优势" class="headerlink" title="使用优势"></a>使用优势</h4><p>开发者可以使用 Lua 语言编写脚本传到 Redis 中执行。在 Lua 脚本中可以调用大部分 Redis 命令。使用 Redis 脚本有以下几个优势：</p>
+<ul>
+<li>减少网络开销：通过脚本可以一次发送多个请求，减少网络延迟。</li>
+<li>原子性：Redis 将脚本作为一个整体执行，过程中不会被其他命令插入，也无需使用事务换言之，事务可以做的，脚本都可以做。</li>
+<li>复用性：客户端发送的脚本永久存储在 Redis 中，其他客户端在实现相同功能时可以直接复用而不必重复编写代码。</li>
+<li>可嵌入性：可嵌入 JAVA，C# 等多种编程语言，支持不同操作系统跨平台交互。</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>Redis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Redis - 进阶篇三（主从复制）</title>
+    <url>/2020/07/24/Redis-%E8%BF%9B%E9%98%B6%E7%AF%87%E4%B8%89%EF%BC%88%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%EF%BC%89/</url>
+    <content><![CDATA[<p><img src="/images/pasted-140.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<h3 id="主从复制概述"><a href="#主从复制概述" class="headerlink" title="主从复制概述"></a>主从复制概述</h3><p>前面几篇内容我们都是在一台 Redis 服务器上进行操作，包括数据的读、写以及备份操作。本篇要介绍的主从复制，是指将一台 Redis 服务器的数据，复制到其他 Redis 服务器，我们将前者称为主节点 master，将后者称为从节点 slave。在这个过程中，数据的复制是单向的，即只能从主节点到从节点。在默认情况下，我们开启的每台 Redis 服务器都是独立的主节点，在主从复制中，一个主节点可以有多个从节点，但一个从节点只能有一个主节点。如下图所示：<br><img src="/images/pasted-113.png" alt="upload successful"></p>
+<p>主从复制的作用主要包括：</p>
+<ul>
+<li>数据冗余：主从复制实现了数据的热备份，是持久化之外的一种数据冗余方式。</li>
+<li>故障恢复：当主节点出现问题时，可以由从节点提供服务，实现快速的故障恢复；实际上是一种服务的冗余。</li>
+<li>负载均衡：在主从复制的基础上，配合读写分离，写数据时应用连接主节点，读数据时应用连接从节点，分担服务器负载；尤其是在写少读多的场景下，通过多个从节点分担读负载，可以大大提高 Redis 服务器的并发量。</li>
+<li>高可用基础：主从复制是哨兵模式和集群能够实施的基础。</li>
+</ul>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p>主从复制的实现过程大致可以分为3个阶段：建立连接、数据同步、命令传播。</p>
+<h4 id="建立连接阶段"><a href="#建立连接阶段" class="headerlink" title="建立连接阶段"></a>建立连接阶段</h4><p>在实现主从复制的第一步当然是主从节点之间建立连接，这一阶段也可以称为准备阶段，主要包含了以下几个步骤：</p>
+<ul>
+<li><p>保存主节点信息</p>
+<p>  从节点服务器内部包含了 masterhost 和 masterport 字段，分别存储了主节点的 IP 和 port 信息。slaveof 是异步命令，从节点完成主节点 IP 和 port 的保存后，向发送 slaveof 命令的客户端直接返回 OK，实际的复制操作在这之后才开始进行。</p>
+</li>
+<li><p>建立 socket 连接</p>
+<p>  从节点每秒调用 1 次复制定时函数 replicationCron()，如果发现了有主节点可以连接，便会根据主节点的 IP 和 port，创建 socket 连接。连接成功后从节点会为该 socket 建立一个专门处理复制工作的文件事件处理器，负责后续的复制工作，如接收 RDB 文件、接收命令传播等；主节点在接收到从节点的 socket 连接后（即 accept 之后），为该 socket 创建相应的客户端状态，并将从节点看做是连接到主节点的一个客户端，后面的步骤会以从节点向主节点发送命令请求的形式来进行。</p>
+</li>
+<li><p>发送 ping 命令</p>
+<p>  从节点成为主节点的客户端之后，发送 ping 命令进行首次请求，目的是检查 socket 连接是否可用，以及主节点当前是否能够处理请求。从节点发送 ping 命令后，可能出现 3 种情况：</p>
+<ul>
+<li>返回 pong：说明 socket 连接正常，且主节点当前可以处理请求，复制过程继续。</li>
+<li>超时：一定时间后从节点仍未收到主节点的回复，说明 socket 连接不可用，则从节点断开 socket 连接，并重连。</li>
+<li>返回 pong 以外的结果：如果主节点返回其他结果，如正在处理超时运行的脚本，说明主节点当前无法处理命令，则从节点断开 socket 连接，并重连。</li>
+</ul>
+</li>
+<li><p>身份验证</p>
+<p>  如果从节点中配置文件中设置了 masterauth 选项，则从节点需要向主节点进行身份验证；没有设置该选项，则不需要验证。从节点进行身份验证是通过向主节点发送 auth 命令进行的，auth 命令的参数即为配置文件中的 masterauth 的值。如果主节点设置密码的状态与从节点 masterauth 的状态一致（一致是指都存在，且密码相同，或者都不存在），则身份验证通过，复制过程继续；如果不一致，则从节点断开 socket 连接，并重连。</p>
+</li>
+<li><p>发送从节点端口信息</p>
+<p>  身份验证之后，从节点会向主节点发送其监听的端口号，主节点将该信息保存到该从节点对应的客户端的 slave_listening_port 字段中。该端口信息除了在主节点中执行 info replication 命令时显示以外，没有其他作用。</p>
+</li>
+</ul>
+<h4 id="数据同步阶段"><a href="#数据同步阶段" class="headerlink" title="数据同步阶段"></a>数据同步阶段</h4><p>在主从节点之间建立连接之后，就可以开始进行数据的同步，这一阶段也可以理解是从节点中数据的初始化。Redis 的数据同步有两个重要的命令：sync 和 psync，sync 命令是 Redis2.8 以前请求同步数据的命令，同步方式是全量复制；psync 命令是 Redis2.8 算是对 sync 优化后的命令，同步方式可以是全量复制或增量复制。这里提到两个数据同步的关键：全量复制和增量复制，先做个简单介绍：</p>
+<ul>
+<li>全量复制：用于初次复制或其他无法进行增量复制的情况，将主节点中的所有数据都发送给从节点。</li>
+<li>增量复制：用户网络中断等情况的复制，只将中断期间主节点执行的写命令发送给从节点，相比于全量复制更加高效。<blockquote>
+<p>如果网络中断的时间过长，会导致主节点没有能够完整地保存中断期间执行的写命令，则无法进行增量复制，仍使用全量复制。</p>
+</blockquote>
+</li>
+</ul>
+<h5 id="psync命令"><a href="#psync命令" class="headerlink" title="psync命令"></a>psync命令</h5><p>在讲解 psync 命令之前，我们先讲几个需要知道的概念：</p>
+<ul>
+<li><p>复制偏移量 ( offset )</p>
+<p>  主节点和从节点会各自维护一个复制偏移量 ( offset )，代表的是主节点向从节点传递的字节数。主节点每次向从节点传播 N 个字节数据时，主节点的 offset 增加 N；同理，当从节点每次收到主节点传来的 N 个字节数据时，从节点的 offset 增加 N。offset 的值我们可以通过 info replication 命令返回的信息中看到。通过比较主节点和从节点的 offset 可以判断数据库状态是否一致，如果两者的 offset 相同，则一致，否则不一致；也可以根据两者的 offset 找出从节点缺少的数据。</p>
+</li>
+<li><p>复制积压缓存区</p>
+<p>  复制积压缓存区是由主节点维护的一个固定长度的先进先出 ( FIFO) 队列，默认大小是 1MB。当主节点开始有从节点时，主节点创建复制积压缓存区，其作用是备份主节点最近发送给从节点的数据。在命令传播阶段，主节点除了将写命令发送给从节点，还会发送一份给复制积压缓冲区，作为写命令的备份；除了存储写命令，复制积压缓冲区中还存储了其中的每个字节对应的复制偏移量 ( offset )。由于复制积压缓冲区定长且是先进先出，所以它保存的是主节点最近执行的写命令；时间较早的写命令会被挤出缓冲区。由于该缓冲区长度固定且有限，因此可以备份的写命令也有限，当主从节点 offset 的差距过大超过缓冲区长度时，将无法执行增量复制，只能执行全量复制。因此从节点将 offset 发送给主节点后，主节点根据 offset 和缓冲区大小决定能否执行增量复制：</p>
+<ul>
+<li>如果 offset 偏移量之后的数据仍然在复制积压缓冲区里，则执行增量复制</li>
+<li>如果 offset 偏移量之后的数据已不在复制积压缓冲区中（数据已被挤出），则执行全量复制</li>
+</ul>
+</li>
+<li><p>服务器运行ID ( runid )</p>
+<p>  不论是主节点还是从节点，在启动时都会自动生成一个随机 ID ( runid )，由 40 个随机的十六进制字符组成且每次启动都不一样。如果使用 IP 和 port 的方式识别一个节点，那么当主节点重启修改了 RDB/AOF 数据，从节点再基于偏移量进行复制将是不安全的，因此 runid 的主要作用是唯一识别一个 Redis 节点。通过 info server 命令可以查看节点的 runid。主从节点初次复制时，主节点将自己的 runid 发送给从节点，从节点将这个 runid 保存起来；当断线重连时，从节点会将这个 runid 发送给主节点；主节点根据发送来的 runid 和当前自己的 runid 是否相同判断能否进行增量复制：</p>
+<ul>
+<li>如果相同，说明主从节点之前同步过，主节点会继续尝试使用增量复制 ( 到底能不能增量复制还要看 offset 和复制积压缓冲区的情况 )</li>
+<li>如果不同，说明从节点在断线前同步的 Redis 节点并不是当前的主节点，只能进行全量复制</li>
+</ul>
+</li>
+</ul>
+<p>psync 命令的格式：psync &lt; runid &gt; &lt; offset &gt;</p>
+<p>psync 的执行流程：</p>
+<p><img src="/images/pasted-114.png" alt="upload successful"></p>
+<p>psync执行流程<br>首先从节点根据是否执行过 slaveof 命令决定如何调用 psync 命令：</p>
+<ul>
+<li>之前从未执行过 slaveof 或最近执行了 slaveof no one，则从节点发送 psync ? -1 命令，向主节点请求全量复制</li>
+<li>之前执行了 slaveof，则发送 psync &lt; runid &gt; &lt; offset &gt; 命令，其中 runid 为上次复制的主节点的 runid，offset 为上次复制截止时从节点保存的复制偏移量</li>
+<li>主节点根据收到的 psync 命令以及当前服务器的状态，决定执行全量复制还是增量复制：</li>
+<li>如果主节点版本低于 Redis2.8，则返回 -ERR 回复，此时从节点重新发送 sync 命令执行全量复制</li>
+<li>如果主节点版本够新，且 runid 与从节点发送的 runid 相同，且从节点发送的 offset 之后的数据在复制积压缓冲区中都存在，则回复 +CONTINUE，表示将执行增量复制，从节点等待主节点发送其缺少的数据即可</li>
+<li>如果主节点版本够新，但是 runid 与从节点发送的 runid 不同，或从节点发送的 offset 之后的数据已不在复制积压缓冲区中(在队列中被挤出了)，则回复 +FULLRESYNC &lt; runid &gt; &lt; offset &gt;，表示要进行全量复制，其中 runid 表示主节点当前的 runid，offset 表示主节点当前的 offset，从节点保存这两个值，以备使用</li>
+</ul>
+<h5 id="全量复制"><a href="#全量复制" class="headerlink" title="全量复制"></a>全量复制</h5><p>全量复制是主从节点第一次建立主从复制关系时必须经历的阶段，复制流程如下：<br><img src="/images/pasted-115.png" alt="upload successful"></p>
+<ul>
+<li>从节点判断需要进行全量复制，向主节点传递命令 psync ? -1 (由于不知道主节点的 runid 和 offset，所以传 -1)</li>
+<li>主节点收到全量复制的请求，传递 FULLRESYNC &lt; runid &gt; &lt; offset &gt; 返回主节点的 runid 和 offset</li>
+<li>从节点保存主节点的 runid 和 offset 信息</li>
+<li>主节点执行 bgsave，在后台生成 RDB 文件，并使用一个缓冲区（称为复制缓冲区）记录从现在开始执行的所有写命令</li>
+<li>主节点的 bgsave 执行完成后，将 RDB 文件发送给从节点</li>
+<li>主节点执行 send buffer 操作，向从节点同步生成快照过程中的缓存命令</li>
+<li>从节点清空旧数据并加载 RDB 文件</li>
+<li>如果从节点开启了 AOF，则会触发 bgrewriteaof 的执行，从而保证AOF文件更新至主节点的最新状态</li>
+</ul>
+<p>通过全量复制的过程可以看出，整个过程是十分消耗资源和时间的：</p>
+<ul>
+<li>主节点通过 bgsave 命令执行 fork 操作创建子进程进行 RDB 持久化，该过程是非常消耗 CPU、内存和磁盘 I/O 资源</li>
+<li>主节点通过网络向从节点传递 RDB 文件，耗费主服务器大量的网络资源包括带宽和流量，并对主服务器响应命令请求的时间产生影响</li>
+<li>从节点清空旧数据并加载新的 RDB 文件的过程是阻塞的而无法响应其他命令请求，如果执行 bgrewriteaof 操作也会带来额外的消耗</li>
+</ul>
+<h5 id="增量复制"><a href="#增量复制" class="headerlink" title="增量复制"></a>增量复制</h5><p>当从节点正在复制主节点时出现网络异常或其他异常，从节点会请求主节点补发缺失的命令数据，主节点只需要将复制积压缓冲区的数据发送到从节点即可。相比于全量复制，增量复制的成本代价小很多，其流程如下：<br><img src="/images/pasted-116.png" alt="upload successful"></p>
+<ul>
+<li>网络发生抖动，主节点和从节点断开连接</li>
+<li>主节点会将写命令备份到复制积压缓冲区中</li>
+<li>从节点再次连接上主节点</li>
+<li>从节点通过命令 psync &lt; runid &gt; &lt; offset &gt; 向主节点告知之前连接的 runid 和自己的偏移量</li>
+<li>主节点进行校验后向从节点返回命令 CONTINUE 表示可以进行增量复制</li>
+<li>主节点将缓冲区的数据发送到从节点</li>
+</ul>
+<h4 id="命令传播阶段"><a href="#命令传播阶段" class="headerlink" title="命令传播阶段"></a>命令传播阶段</h4><p>数据同步阶段完成后，主从节点进入命令传播阶段；在这个阶段主节点将自己执行的写命令发送给从节点，从节点接收命令并执行，从而保证主从节点数据的一致性。在命令传播阶段，除了发送写命令，主从节点还维持着心跳机制：PING 和 REPLCONF ACK。心跳机制对于主从复制的超时判断、数据安全等有作用。<br><img src="/images/pasted-117.png" alt="upload successful"></p>
+<p>每隔指定的时间，主节点会向从节点发送 PING 命令，作用主要是让从节点进行超时判断。PING 命令的发送频率由 repl-ping-slave-period 参数控制，单位是秒，默认值是 10s。从节点会向主节点发送 REPLCONF ACK 命令，频率是每秒 1 次，命令的格式为：REPLCONF ACK &lt; offset &gt;，其中 offset 是从节点中保存的复制偏移量。REPLCONF ACK命令的作用包括：</p>
+<ul>
+<li>实时监测主从节点网络状态：该命令会被主节点用于复制超时的判断。此外，在主节点中使用 info replication 命令可以看到其从节点的状态中的 lag 值，代表的是主节点上次收到该 REPLCONF ACK 命令的时间间隔，在正常情况下，该值应该是 0 或 1。</li>
+<li>检测命令丢失：从节点发送了自身保存的 offset，主节点会与自己的 offset 进行对比，如果从节点数据缺失（如网络丢包），主节点会推送缺失的数据（这里也会利用复制积压缓冲区）。 </li>
+<li>辅助保证从节点的数量和延迟：主节点中使用 min-slaves-to-write 和 min-slaves-max-lag 参数，来保证主节点在不安全的情况下不会执行写命令；所谓不安全，是指从节点数量太少或延迟过高。 </li>
+</ul>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p>下面简单演示一下如何实现 Redis 主从复制，这里我是在一台机器上模拟多个 Redis 服务器，与实际生产环境相比，基本配置大致相同，关键都在于 IP 地址和端口号变化。</p>
+<h4 id="配置主从关系"><a href="#配置主从关系" class="headerlink" title="配置主从关系"></a>配置主从关系</h4><p>首先将 redis 文件夹复制两份作为两个从节点，复制在同一文件下即可，命名自定，这里我分别重命名为 redis_slave1 和 redis_slave2。<br><img src="/images/pasted-118.png" alt="upload successful"></p>
+<p>主从复制的开启是从从节点发起的，不需要我们对主节点做任何事情，因此我们对 slave 文件的配置文件进行修改，这里我们需要修改的配置文件有两个：redis.windows.conf 和 redis.windows-service.conf。<br><img src="/images/pasted-119.png" alt="upload successful"></p>
+<p>从节点开启主从配置，有 3 种方式：</p>
+<ul>
+<li>配置文件：在配置文件加入 slave &lt; masterip &gt; &lt; masterport &gt;</li>
+<li>启动命令：redis-server启动命令后加入 –slave &lt; masterip &gt; &lt; masterport &gt;</li>
+<li>客户端命令：Redis 服务器启动后，直接通过客户端执行命令：slave &lt; masterip &gt; &lt; masterport &gt;<br>这里我们修改 redis_slave1 的配置文件来开启主从复制，对于 redis_slave2，则用客户端命令的方式，启动命令方式和客户端命令方式差不多，感兴趣的可以自己试一试。下面以 redis_slave1 的配置文件为例：<br><img src="/images/pasted-120.png" alt="upload successful"></li>
+</ul>
+<p>配置端口<br><img src="/images/pasted-121.png" alt="upload successful"></p>
+<p>从上面两张图中，我们将 slave1 的端口号改为 6380，并从属于 6379端口即主节点。对于 slave2，我们仅仅将端口号改为 6381。</p>
+<blockquote>
+<p>不管修改 slave1 还是 slave2 的配置文件，redis.windows.conf 和 redis.windows-service.conf 这两个配置文件都要进行修改。</p>
+</blockquote>
+<h4 id="建立主从关系"><a href="#建立主从关系" class="headerlink" title="建立主从关系"></a>建立主从关系</h4><p>修改好配置文件后，我们分别打开三个 Redis 服务端和客户端。我们先打开主节点的服务端再打开 slave1 和 slave2 的服务端。当我们打开 salve1 时，可以观察到服务端发生变化。<br><img src="/images/pasted-122.png" alt="upload successful"></p>
+<p><img src="/images/pasted-123.png" alt="upload successful"></p>
+<p>从以上两图中的红框部分，可以发现打开 slave1 之后就开启了主从复制，并且 slave1 对主节点进行了同步数据。接下来我们看看打开 slave2 之后有没有什么变化。<br><img src="/images/pasted-124.png" alt="upload successful"></p>
+<p>仅仅是正常打开服务端，并没有对主节点造成什么影响。除了看服务端的变化，我们也可以使用 info replication 命令在客户端查看不同之处。<br><img src="/images/pasted-125.png" alt="upload successful"></p>
+<p><img src="/images/pasted-126.png" alt="upload successful"></p>
+<p><img src="/images/pasted-127.png" alt="upload successful"></p>
+<p>从以上三张图中，我们也可以看出端口 6379 和 6380 建立了主从复制关系，且显示了一些信息。而端口 6381 的角色为 master，是一个独立的主节点。接着我们使用客户端命令的方式让端口 6381 从属于端口 6379，并观察两个端口的服务端发生的变化。<br><img src="/images/pasted-128.png" alt="upload successful"></p>
+<p><img src="/images/pasted-129.png" alt="upload successful"></p>
+<p><img src="/images/pasted-130.png" alt="upload successful"></p>
+<p><img src="/images/pasted-131.png" alt="upload successful"></p>
+<p>当我们在 slave2 的客户端使用 slaveof 127.0.0.1 6379 命令建立主从关系后可以在主从服务器端看到成功开启主从复制的信息。在主从客户端查看节点角色也可以发现，slave2 的角色变成了 slave，主节点的从节点数量变成 2，且多了 slave2 的简要信息。至此，我们就建立了一个一主二从的主从复制关系。</p>
+<h4 id="测试主从关系"><a href="#测试主从关系" class="headerlink" title="测试主从关系"></a>测试主从关系</h4><p>已经建立了一主二从的主从复制关系，接下来我们做一些简单的测试，以便对主从复制有更好的理解。</p>
+<h5 id="增量复制-1"><a href="#增量复制-1" class="headerlink" title="增量复制"></a>增量复制</h5><p><img src="/images/pasted-132.png" alt="upload successful"><br>由上图可见，从节点是可以获取到的。 </p>
+<h5 id="全量复制-1"><a href="#全量复制-1" class="headerlink" title="全量复制"></a>全量复制</h5><p>当从节点暂时断开主从关系，重新连接后是否能够获取断开期间主节点写入的数据？我们先在主节点中清空数据，再使用 slaveof no one 命令断开 master 和 slave2 之间的主从关系，随后 master 写入 k1，k2 数据，当 slave2 重新与 master 建立主从关系后查看是否有刚刚写入的数据。<br><img src="/images/pasted-133.png" alt="upload successful"><br>从上图中，我们可以看到重新建立主从关系之后，从节点也会将数据复制过来。 </p>
+<h5 id="主从读写分离"><a href="#主从读写分离" class="headerlink" title="主从读写分离"></a>主从读写分离</h5><p>主节点可以执行写操作，从节点可以执行写操作吗，主节点也可以进行读操作吗？<br><img src="/images/pasted-134.png" alt="upload successful"></p>
+<p>主节点可以执行读写操作，但当我们想在 salve1 中执行 set 命令时却出现了报错，说明从节点只能进行读操作，主从节点之间做到了读写分离。从节点是否能够实现写操作呢？事实上是可以的，在配置文件中通过 slave-read-only 控制了从节点的写权限，进行更改后就可以进行写操作，但是从节点添加的数据主节点是获取不到的。不过并不建议更改，否则就偏离了主从复制的初衷（PS：手痒的可以试试）。<br><img src="/images/pasted-135.png" alt="upload successful"></p>
+<h5 id="主节点宕机"><a href="#主节点宕机" class="headerlink" title="主节点宕机"></a>主节点宕机</h5><p>当主节点退出服务端和客户端后，两个从节点的角色会发生变化吗？<br><img src="/images/pasted-136.png" alt="upload successful"></p>
+<p>当我们用 shutdown 命令让主节点宕机后，再用 info replication 命令查看 slave1 和 slave2，可以看到两个从节点的角色都仍是 slave。 </p>
+<h5 id="主节点宕机后恢复"><a href="#主节点宕机后恢复" class="headerlink" title="主节点宕机后恢复"></a>主节点宕机后恢复</h5><p>当主节点从宕机恢复后，主节点的角色是否仍是 master？<br><img src="/images/pasted-137.png" alt="upload successful"></p>
+<p><img src="/images/pasted-138.png" alt="upload successful"></p>
+<p>从以上两图可以看出当我们重新打开主节点的服务端和客户端，两个从节点立刻发起了主从复制请求并成功建立主从关系，主节点的角色也仍旧是 master。</p>
+<blockquote>
+<p>使用配置文件方式配置的主从关系是持久性的，即当你配置的主从服务端开启时会自动建立起主从关系，而启动命令方式和客户端命令方式是短暂性建立主从复制。</p>
+</blockquote>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本篇主要讲述了 Redis 主从复制的实现原理和简单的具体实现例子。主从复制在一定程度上解决了主节点的单点故障问题，当主节点故障时，可以从从节点上保障数据的读取以及找回数据的可能性；但是由于所有的写操作都是在主节点上进行，然后同步到从节点上，这必然会出现一定的延时问题，且当系统任务繁重或从节点数量过多时，问题会更显著。</p>
+]]></content>
+      <tags>
+        <tag>Redis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Redis - 进阶篇二（持久化）</title>
+    <url>/2020/07/24/Redis-%E8%BF%9B%E9%98%B6%E7%AF%87%E4%BA%8C%E6%8C%81%E4%B9%85%E5%8C%96/</url>
+    <content><![CDATA[<p><img src="/images/pasted-139.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>持久化即将数据保存到可永久保存的存储设备中。我们知道 Redis 为了保证效率而把数据都缓存在内存中，但当我们重启系统或关闭系统后，缓存在内存中的数据都会消失，所以为了让有些数据能保留下，Redis 持久化存储就应运而生。Redis 提供了两种方式进行持久化，一种是RDB 持久化，另一种是 AOF(append only file) 持久化，下面我们逐一介绍。</p>
+<h3 id="RDB-持久化"><a href="#RDB-持久化" class="headerlink" title="RDB 持久化"></a>RDB 持久化</h3><p>RDB 是 Redis 默认的持久化机制，它的工作原理是把当前内存中的数据生成快照 (snapshot) 的方式写入磁盘中的二进制文件中，默认的文件名为 dump.rdb。恢复时将快照文件直接读到内存中。RDB 有两种触发方式，分别是自动触发和手动触发。</p>
+<h4 id="自动触发"><a href="#自动触发" class="headerlink" title="自动触发"></a>自动触发</h4><p>自动触发使用 save 相关配置触发，比如 “save m n”，表示在 m 秒内数据库存在 n 次修改时，自动触发BGSAVE (BGSAVE 命令在手动触发时会介绍)。Redis 默认配置如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">save 900 1      # 在 900 秒内如果至少有 1 个 key 的值变化，则触发</span><br><span class="line">save 300 10     # 在 300 秒内如果至少有 10 个 key 的值变化，则触发</span><br><span class="line">save 60 10000   # 在 60 秒内如果至少有 10000 个 key 的值变化，则触发</span><br></pre></td></tr></table></figure>
+<p>当实际操作满足配置的 save 形式时就会进行 RDB 持久化，将当前的数据快照保存。</p>
+<h4 id="手动触发"><a href="#手动触发" class="headerlink" title="手动触发"></a>手动触发</h4><p>手动触发进行 RDB 持久化涉及到两个 Redis 服务器命令：</p>
+<ul>
+<li>SAVE：执行一个同步保存操作，将当前 Redis 实例的所有数据快照以 RDB 文件的形式保存到磁盘中。</li>
+<li>BGSAVE：用于在后台异步保存当前数据库的数据到磁盘。</li>
+</ul>
+<p>SAVE 命令由于是同步操作，因此会阻塞当前 Redis 服务器知道 RDB 持久化过程完成为止，对于内存比较大的实例会造成长时间阻塞，不建议在线上环境使用。BGSAVE 命令会执行 fork 操作创建一个子进程，由子进程完成 RDB 持久化过程，完成后自动结束，阻塞只发生在 fork 过程，一般时间很短。基本上 Redis 内部的 RDB 操作都是采用 BGSAVE 命令。</p>
+<h4 id="RDB-优缺点"><a href="#RDB-优缺点" class="headerlink" title="RDB 优缺点"></a>RDB 优缺点</h4><p>RDB 的优点：</p>
+<ul>
+<li>RDB 文件是一个紧凑压缩的二进制文件，它保存了 Redis 在某个时间点的数据，比较适合进行备份和灾难恢复。</li>
+<li>生成 RDB 文件的过程是由父进程 fork 操作创建的一个子进程完成，父进程仍然可以接受其他命令请求，不用进行任何磁盘 IO 操作。</li>
+<li>由于 RDB 文件是二进制文件，因此在恢复数据集时速度更快。</li>
+</ul>
+<p>RDB 的缺点：</p>
+<ul>
+<li>RDB 无法做到实时持久化/秒级持久化。因为 BGSAVE 命令需要执行 fork 操作创建子进程，如果频繁操作必然会占用大量内存，执行成本过高，反而使性能降低。</li>
+<li>RDB 文件使用特定二进制格式保存，Redis 版本演进过程中有多个格式的 RDB 版本，容易出现版本不兼容问题。</li>
+<li>RDB 是隔一段时间进行备份，如果 Redis 在备份时出现意外宕机，那么就会失去最后一次快照的数据。</li>
+</ul>
+<h3 id="AOF-持久化"><a href="#AOF-持久化" class="headerlink" title="AOF 持久化"></a>AOF 持久化</h3><p>差别于通过保存数据库中的键值对的 RDB 持久化方式，AOF 持久化是通过保存 Redis 服务器所执行的写命令来记录数据库状态，重启时再重新执行 AOF 文件中的命令以完成数据恢复。AOF 的主要作用是解决了数据持久化的实时性，目前已经是 Redis 持久化的主流方式。</p>
+<h4 id="使用-AOF"><a href="#使用-AOF" class="headerlink" title="使用 AOF"></a>使用 AOF</h4><p>Redis 中 AOF 是默认关闭的，使用前要将配置参数 appendonly 改为 yes（5.3 中会涉及一些配置参数，配置文件是安装目录下的 redis.windows.conf，参数在 APPEND ONLY FILE 一栏）。AOF 文件的保存文件名通过参数 appendfilename 参数配置，默认是 appendonly.aof。AOF 持久化策略的选择由 appendfsync 参数进行选择，有下面几种：</p>
+<ul>
+<li>no：不执行 fsync，由操作系统保证数据同步到磁盘，速度快但不安全。</li>
+<li>always：每次写入都执行 fsync，虽然保证数据同步到磁盘，但是效率很低。</li>
+<li>everysec：默认配置，每秒执行一次 fsync，可能会丢失这 1 秒的数据，但兼顾了安全性和效率，最常用的选择。</li>
+</ul>
+<h4 id="AOF工作流程"><a href="#AOF工作流程" class="headerlink" title="AOF工作流程"></a>AOF工作流程</h4><p>AOF 的工作流程操作：命令写入 (append)、文件同步 (sync)、文件重写 (rewrite)、重启加载 (load)。首先，所有的写入命令都会被追加到 AOF 缓冲区中，然后 AOF 缓冲区根据对应的持久化策略对磁盘进行文件同步操作。当 AOF 文件的大小超过所设定的重写阈值时对 AOF 文件进行重写。当需要重写时，父进程会进行 fork 操作创建一个子进程，子进程带有父进程的数据副本，由子进程完成重写过程，在此期间父进程仍然可以处理其他命令。当我们重启 Redis 服务器时，可以加载 AOF 文件进行数据恢复，流程如下：<br><img src="/images/pasted-111.png" alt="upload successful"></p>
+<p>从上图我们也可以得知，在同时开启了 RDB 和 AOF 的情况下，Redis 会优先 AOF 文件的加载。遇到异常时，可以使用修复命令 redis-check-aof–fix 进行修复。在上述流程中，我们有几点需要注意与知晓的：</p>
+<ul>
+<li>为什么需要 AOF 缓冲：由于 Redis 本身是单线程工作的，如果每次都直接把写入命令追加到 AOF 文件中，那么此时的性能取决于磁盘的 IO 性能，会降低性能。先写入 AOF 缓冲区中，我们还可以选择缓冲区同步到磁盘的策略，进一步兼顾安全性和性能。</li>
+<li>为什么需要 AOF 重写：由于 AOF 持久化是不断将写命令记录到 AOF 文件中，随着时间的推移，文件必然会越来越大，这样会增加恢复时的压力。除此之外，例如一个 key 表示粉丝数，增加粉丝的过程我们会使用大量自增命令，而实际上在恢复时我们只需要知道在这段时间内总共增加了多少即可。这个例子也正指明了重写机制的工作原理：AOF 文件重写并非是对原文件进行整理，而是直接读取服务器中现有的键值对，然后用一条命令代替记录中改键值对的多条命令操作，生成一个新的文件替换原文件。</li>
+<li>AOF 重写触发机制：AOF 重写也分自动触发和手动触发。<ul>
+<li>自动触发涉及两个配置参数：一个是 auto-aof-rewrite-percent，默认值是 100；另一个是 auto-aof-rewrite-min-size，默认值是 64MB。按照默认配置，Redis 会记录上次重写时 AOF 文件大小，并当目前 AOF 文件是上一次重写后大小的一倍且文件大于 64MB 时自动触发。<br>auto-aof-rewrite-percent：当目前 AOF 文件大小超过上一次重写的 AOF 文件大小的百分之几时进行重写。auto-aof-rewrite-min-size：设置允许重写的最小 AOF 文件大小，避免了文件很小却满足百分比要求的重写情况。</li>
+<li>手动触发直接调用 BGREWRITEAOF 命令。</li>
+</ul>
+</li>
+</ul>
+<h4 id="AOF-优缺点"><a href="#AOF-优缺点" class="headerlink" title="AOF 优缺点"></a>AOF 优缺点</h4><p>AOF 的优点：</p>
+<ul>
+<li>提供了多种同步频率，即使使用默认的同步频率每秒同步一次，Redis 最多也就失去 1 秒的数据。</li>
+<li>AOF 文件使用 Redis 命令追加的形式来构造，即使只能向 AOF 文件写入命令的片段，也很容易使用redis-check-aof 工具修正。</li>
+<li>AOF 文件的格式可读性较强，可以为使用者提供更灵活的处理方式。</li>
+</ul>
+<p>AOF 的缺点：</p>
+<ul>
+<li>在拥有相同数据的情况下，AOF 文件通常会比 RDB 文件体积更大。</li>
+<li>当 Redis 负载较高的情况下，RDB 会比 AOD 具有更好的性能保证。</li>
+<li>RDB 使用快照的形式来持久化整个 Redis 数据，而 AOF 只是将每次执行的命令追加到 AOF 文件中，因此从理论上说，RDB 比 AOF 方式更健壮。官方文档也指出，AOF 的确也存在一些 BUG，这些 BUG 在RDB 没有存在。</li>
+</ul>
+<h3 id="如何选择"><a href="#如何选择" class="headerlink" title="如何选择"></a>如何选择</h3><p>介绍了 Redis 持久化的两种方式，那么我们在实际中应该如何选择呢？对于数据库而言，数据是相当重要的，RDB 相比于 AOF 而言出现异常丢失数据可能会更严重，除此之外，选择 RDB 是更好的，定时生成快照是常用的数据库备份方式，并且 RDB 文件是二进制文件，在恢复数据集时速度更快，使用 RDB 方式也可以规避 AOF 方式中的一些隐藏 bug。但是在一般情况下，我们应该同时开启两种持久化方式，而不是单独使用某一种持久化机制。由于通常情况下 AOF 方式保存的数据更具实时性且更完整，因此相比 RDB 文件，Redis 重启时会优先使用 AOF 文件来恢复数据。</p>
+]]></content>
+      <tags>
+        <tag>Redis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git - 基础篇</title>
+    <url>/2020/07/16/Git-%E5%9F%BA%E7%A1%80%E7%AF%87/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这是程序锅对之前学习和使用 Git 做的一份整理，后头继续使用和学习 Git 的话，还会更新这份内容，所以喜欢的话可以关注一波【多选参数】哦，会第一时间在【多选参数】发布的。因此，这份就算是 v1.0 版本的吧。另外，附上了本篇内容的提纲，后头还会有几篇关于 Git 的，每篇都有这样的一份提纲。    </p>
+<p><img src="/images/pasted-40.png" alt="upload successful"></p>
+<a id="more"></a>
+<h2 id="Git-的三个区域"><a href="#Git-的三个区域" class="headerlink" title="Git 的三个区域"></a>Git 的三个区域</h2><p>在正式 git 之前，我们先来了解一下 git 的 3 个区域，分别是工作目录、暂存区、版本历史。这个知识点是尤为重要的，在理解了这三个区域之后，git 的操作才会显得很容易。</p>
+<ul>
+<li>工作目录是直接跟文件相关的，比如被 git 管理起来的文件被修改了的话，在使用 git status 命令查看的时候会显示出来。显示的内容就是相比之前的版本 A  变更了的哪些文件；</li>
+<li>当使用 git add 命令之后，文件修改的东西就被提交到暂存区了，而工作目录中版本是变化之后了的，比如版本 B。那么使用 git status 之后，暂存区显示的内容是相对版本 A 的变化的文件信息，也相当于是版本 B 的情况；</li>
+<li>当使用 git commit 之后，这个更改就被提交到了版本历史中，那么版本历史就从版本 A 变到了版本 B；</li>
+</ul>
+<p><img src="/images/pasted-41.png" alt="upload successful"></p>
+<h2 id="Git-基础使用"><a href="#Git-基础使用" class="headerlink" title="Git 基础使用"></a>Git 基础使用</h2><ol>
+<li>Git 配置相关<br>在使用 Git 管理文件系统的时候，需要进行一些配置，比如用户信息的配置。 Git 管理文件系统主要分为三个层次，如下所示（PS：只输入下面这些命令是不行的）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># config的三个作用域</span><br><span class="line"># 缺省等同于local</span><br><span class="line">$ git config --local		# local只对某个仓库有效</span><br><span class="line">$ git config --global 	# global对登录用户所有仓库有效，在用户根目录下，比如 root 用户就在 &#x2F;root 目录下有个关于 git 的配置文件</span><br><span class="line">$ git config --system 	# system对系统所有登录的用户有效，基本不用</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>优先级 local &gt; global &gt; system，也就是说当对一个仓库同时设置了 global 和 local 那么采用local配置的信息。</p>
+</blockquote>
+<ul>
+<li>查看配置信息<br>有些时候我们也会查看 Git 配置信息等，使用如下命令可以查看相应层次的配置信息</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 显示 config 的配置 加--list</span><br><span class="line">$ git config --list --local	# 这个只能在git仓库中使用</span><br><span class="line">$ git config --list --global</span><br><span class="line">$ git config --list --system</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置信息—以用户信息为例<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git config --global user.name &#39;your_name &#39;                                             </span><br><span class="line">$ git config --global user.email &#39;your_email@domain.com&#39;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>Git 相对于其他版本控制系统需要这些信息，是因为在版本控制中，做出的修改是跟这些用户信息捆绑在一起的。绑定的 email 是为了，当评审人员对代码提出了相应的修改，那么 Git 管理系统会对修改代码的提交者绑定的 email 发送邮件。所以email 需要是一个有效的 email，能收的到邮件的 email。</p>
+<ul>
+<li>清除配置信息<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git config --unset --local user.name</span><br><span class="line">$ git config --unset --global user.name</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol start="2">
+<li>建立 Git 仓库</li>
+</ol>
+<ul>
+<li><p>把已有的项目代码纳入 Git 管理</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ cd 项目代码所在的文件夹</span><br><span class="line">$ git init</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>新建的项目直接用Git管理</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git init your_project # 会在当前路径下创建和项目名称同名的文件夹</span><br><span class="line">$ cd your_project</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol start="3">
+<li>仓库管理常用命令</li>
+</ol>
+<ul>
+<li><p>git add 主要是把新文件或者文件变动的情况添加到暂存区</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git add readme.md	# 将 readme.md 文件添加到暂存区</span><br><span class="line">$ git add .	# 将当前工作目录的所有文件添加到暂存区</span><br><span class="line">$ git add -u # 把修改之后的文件（这些文件已经被管理起来了）一次性提交到暂存区</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>暂存区的文件也是相当于被 git 管理了的。</p>
+</blockquote>
+</li>
+<li><p>git status 可以查看工作目录和暂存区的状态</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git status</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips:假如 bash 有颜色显示的话，会看到红色是代表工作目录，绿色代表暂存区。</p>
+</blockquote>
+</li>
+<li><p>git commit 命令进行提交，提交的历史会被记录下来</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git commit -m &#39;Add readme.md&#39;	# -m 指定 commit 的信息</span><br><span class="line">$ git commit	# 这时候会跳出一个文本输入界面，让你输入更多的 commit 信息</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git mv  将 git 管理的文件进行重命名</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git mv readme readme.md	# 使用git的方式对文件进行重命名</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git rm 从 git 管理的文件删除某个已管理的文件，同时把修改的情况添加到暂存区</p>
+</li>
+<li><p>git log 命令查看提交历史，也就是版本演进历史</p>
+</li>
+</ul>
+<p><img src="/images/pasted-42.png" alt="upload successful"></p>
+<p>上面已经稍微使用了一下 git log 命令，这边更加详细的来阐述这个命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git log	# 只查看当前分支(Head所指的分支)的log情况</span><br><span class="line">git log --oneline	# 简洁的显示版本更新信息</span><br><span class="line">git log -n2		# n2 代表查看最近两次commit历史</span><br><span class="line">git log -2 		# 2 代表查看最近两次commit历史</span><br><span class="line">git log -n2 --oneline	# 简洁的显示最近两次的版本更新信息</span><br><span class="line">git log branch_name	# 后面跟上分支名表示查看该分支的log日志</span><br><span class="line">git log -all	# 列出所有分支的log</span><br><span class="line">git log --all --graph	# 以图形化的方式查看</span><br><span class="line">git log --oneline --all	# 以简洁的方式查看所有分支的log</span><br><span class="line">git log --oneline --all	-n4# 以简洁的方式查看所有分支的log</span><br><span class="line">git help log	# 以web的方式查看log的帮助文档，等同于</span><br><span class="line">git help --web log # 和上面那条效果一样</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>分支相关<br>分支就相当于一个独立的开发空间，比如前端和后端开发，前端开发可以建立一个分支，后端开发也可以建立一个分支，但是彼此在不同工作空间里面工作的时候是互不影响的，当需要集成的时候又可以把他们集成到一个公共的分支上面去。下面是有关分支的操作：</li>
+</ol>
+<ul>
+<li>HEAD-&gt;temp2 表示当前的 HEAD 指向的是 temp2 分支，那么其实真正指向的是该分支最后一次 commit</li>
+</ul>
+<p><img src="/images/pasted-43.png" alt="upload successful"></p>
+<ul>
+<li>git branch 查看分支情况、创建分支、删除分支<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git branch -v # 查看本地分支的详细情况</span><br><span class="line">git branch -a # 查看所有分支，包括远端分支，但没有过于详细的信息</span><br><span class="line">git branch -av # 查看所有分支情况</span><br><span class="line">git branch branchname hashvalue # 创建一个新的分支，基于 hashvalue 的这个 commit 创建一个新的分支，hashvalue 可以省略，那么默认是基于当前分支的最后一个 commit 创建。</span><br><span class="line">git branch -d branch_name</span><br><span class="line">git branch -D branch_name 	# 这个分支已经有了一些 commit</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>如下图所示，要想删除 temp 分支就得用 -D</p>
+<p><img src="/images/pasted-44.png" alt="upload successful"></p>
+<ul>
+<li>git checkout 切换分支或者创建分支<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git checkout branch_name	# 切换分支</span><br><span class="line">git checkout master</span><br><span class="line">git checkout -b branchname gitid # 创建一个新的分支并切换过去，gitid可以是hashvalue，也可以是某个分支的名字（分支的名字其实就指向了某个 commit）</span><br><span class="line">git checkout -b temp 9ef147d</span><br><span class="line">git checkout -b temp2 master</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>切换分支，必须在.git的同级目录下执行</p>
+</blockquote>
+</li>
+</ul>
+<ol start="5">
+<li>比较 — git diff</li>
+</ol>
+<ul>
+<li><p>不同 commit、分支 之间进行比较</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git diff hash_value1 hash_value2 # hash_value1 对应的 comimit 和 hash_value2 对应的 commit 进行比较</span><br><span class="line">git diff hash_value1 hash_value2 -- file_name1 file_name2	# 在上述基础之上，只比较 file_name1、file_name2 这两个文件</span><br><span class="line">git diff branch_name1 branch_name2	# 对两个分支进行比较</span><br><span class="line">git diff branch_name1 branch_name2	-- file_name1 file_name2</span><br><span class="line">git diff HEAD HEAD^		# HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD^1	# 同上</span><br><span class="line">git diff HEAD HEAD^^	# HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD~		# HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD~1	# 同上</span><br><span class="line">git diff HEAD HEAD~~	# HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD~2	# 同上</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>1.可以直接使用 HEAD，因为 HEAD 实际上指向的是某个 commit 的。同理，比较两个分支的差异其实就是比较两个分支最近 commit 的差异，因为分支名其实就是一个指针，指向的还是分支最近的 commit。<br>2.^ 后面只能跟数字1，一个 ^ 就表示往父亲 commit 这边追溯一个，以此类推<br>3.~ 后面跟任何数字都可，同样一个 ~ 就表示往父亲 commit 这边追溯一个，以此类推</p>
+</blockquote>
+</li>
+<li><p>暂存区和 HEAD 做比较</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git diff --cached</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>比如一开始的话，HEAD 、暂存区和工作目录都是一样的，都是状态A，并且 readme*.md 文件都已经被跟踪起来了。下面我们修改 readme3.md 文件，之后把它 add 到暂存区。然后使用上述命令进行比较，因为 HEAD 中的是历史，还没有被更新，是状态 A，而暂存区是状态 B，所以可以显示出差异。</p>
+<p><img src="/images/pasted-45.png" alt="upload successful"></p>
+<ul>
+<li>工作目录和暂存区做比较<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git diff						# 对所有文件进行比较</span><br><span class="line">git diff -- file_name1 file_name2 # 对指定文件进行比较</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>比如一开始的话，HEAD 、暂存区和工作目录都是一样的，都是状态A，并且 readme*.md 文件都已经被跟踪起来了。下面我们修改 readme3.md 文件，但是不 add 到暂存区，然后使用上述命令进行比较，由于readme3.md 是在工作区中已经被更改了，工作区是版本 B，而暂存区还没更新是版本 A，所以进行比较会有如下结果。</p>
+<p><img src="/images/pasted-46.png" alt="upload successful"></p>
+]]></content>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git常用操作</title>
+    <url>/2020/07/14/Git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<p><img src="/images/pasted-34.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<p> 常用命令<br>1.1. git 配置</p>
+<h1 id="显示-config-的配置-加–list"><a href="#显示-config-的配置-加–list" class="headerlink" title="显示 config 的配置 加–list"></a>显示 config 的配置 加–list</h1><h1 id="优先级：local-gt-global-gt-system"><a href="#优先级：local-gt-global-gt-system" class="headerlink" title="优先级：local &gt; global &gt; system"></a>优先级：local &gt; global &gt; system</h1><p>git config –list –local # local 的范围是某个仓库<br>git config –list –global # global 的范围是登录的用户<br>git config –list –system # system 的范围是系统所有登录的用户</p>
+<h1 id="配置用户-name-和-email"><a href="#配置用户-name-和-email" class="headerlink" title="配置用户 name 和 email"></a>配置用户 name 和 email</h1><p>git config –global user.name ‘your_name ‘<br>git config –global user.email ‘your_email@domain.com’</p>
+<h1 id="清除配置信息"><a href="#清除配置信息" class="headerlink" title="清除配置信息"></a>清除配置信息</h1><p>git config –unset –global user.name<br>1.2. 仓库初始化</p>
+<h1 id="将执行该命令时所在的目录初始化为一个-git-仓库（如：进入某目录后执行该命令会将该目录初始化为一个-git-仓库）"><a href="#将执行该命令时所在的目录初始化为一个-git-仓库（如：进入某目录后执行该命令会将该目录初始化为一个-git-仓库）" class="headerlink" title="将执行该命令时所在的目录初始化为一个 git 仓库（如：进入某目录后执行该命令会将该目录初始化为一个 git 仓库）"></a>将执行该命令时所在的目录初始化为一个 git 仓库（如：进入某目录后执行该命令会将该目录初始化为一个 git 仓库）</h1><p>git init</p>
+<h1 id="会在当前路径下创建和项目名称同名的文件夹，并将其初始化为-git-仓库"><a href="#会在当前路径下创建和项目名称同名的文件夹，并将其初始化为-git-仓库" class="headerlink" title="会在当前路径下创建和项目名称同名的文件夹，并将其初始化为 git 仓库"></a>会在当前路径下创建和项目名称同名的文件夹，并将其初始化为 git 仓库</h1><p>git init your_project<br>1.3. git add<br>git add readme.md # 将 readme.md 文件添加到暂存区<br>git add . # 将当前工作目录的所有文件添加到暂存区<br>git add -u # 把修改之后的文件（这些文件已经被管理起来了）一次性提交到暂存区<br>1.4. git status<br>git status # 查看工作目录和暂存区的状态<br>1.5. git commit<br>git commit -m ‘Add readme.md’ # -m 指定 commit 的信息<br>git commit # 这时候会跳出一个文本输入界面，让你输入更多的 commit 信息<br>1.6. git mv<br>git mv readme readme.md # 将 git 管理的文件进行重命名<br>1.7. git rm<br>git rm filename # 从 git 管理的文件删除某个已管理的文件，同时把修改的情况添加到暂存区<br>1.8. git log<br>git log # 只查看当前分支(Head所指的分支)的log情况<br>git log –oneline # 简洁的显示版本更新信息<br>git log -n2  # n2 代表查看最近两次commit历史<br>git log -2   # 2 代表查看最近两次commit历史<br>git log -n2 –oneline # 简洁的显示最近两次的版本更新信息<br>git log branch_name # 后面跟上分支名表示查看该分支的log日志<br>git log -all # 列出所有分支的log<br>git log –all –graph # 以图形化的方式查看<br>git log –oneline –all # 以简洁的方式查看所有分支的log<br>git log –oneline –all -n4# 以简洁的方式查看所有分支的log<br>git help log # 以web的方式查看log的帮助文档，等同于<br>git help –web log # 和上面那条效果一样<br>2. 分支相关<br>git branch -v # 查看本地分支的详细情况<br>git branch -a # 查看所有分支，包括远端分支，但没有过于详细的信息<br>git branch -av # 查看所有分支情况<br>git branch branch_name hash_value # 创建一个新的分支，基于 hash_value 的这个 commit 创建一个新的分支，hash_value 可以省略，那么默认是基于当前分支的最后一个 commit 创建。<br>git branch -d branch_name<br>git branch -D branch_name  # 这个分支已经有了一些 commit<br>git checkout branch_name # 切换分支<br>git checkout master<br>git checkout -b branch_name git_id # 创建一个新的分支并切换过去，git_id可以是hash_value，也可以是某个分支的名字（分支的名字其实就指向了某个 commit）<br>git checkout -b temp 9ef147d<br>git checkout -b temp2 master<br>git checkout hash_value  # 分离头指针<br>3. 比较<br>git diff hash_value1 hash_value2 # hash_value1 对应的 comimit 和 hash_value2 对应的 commit 进行比较<br>git diff hash_value1 hash_value2 – file_name1 file_name2 # 在上述基础之上，只比较 file_name1、file_name2 这两个文件<br>git diff branch_name1 branch_name2 # 对两个分支进行比较，也可以跟 – 只看某些文件<br>git diff HEAD HEAD^  # HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较<br>git diff HEAD HEAD^^ # HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较<br>git diff HEAD HEAD~  # HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较<br>git diff HEAD HEAD<del>1 # 同上<br>git diff HEAD HEAD</del>2 # HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较<br>git diff –cached  # 暂存区和 HEAD 做比较，也可以跟 – 只看某些文件<br>git diff      # 工作目录和暂存区中所有文件进行比较，也可以跟 – 只看某些文件<br>4. 版本历史更改<br>git commit –amend # 最近一次 commit 的 message 修改<br>git rebase -i hash_value # 交互文件中选择 reword，老旧 commit 的 message 修改。hash_value，是需要的 commit 的父亲 commit 的 hash_value<br>git rabase -i hash_value # 交互文件中选择 squash，多个连续 commit 合并成一个，hash_value 同上<br>git rebase -i hash_value # 交互文件中选择 squash，把间隔的 commit 移到一块，即可合并成一个，hash_value<br>git rebase origin/master # 把当前分支基于 origin/master 做 rebase 操作，也就相当于把当前分支的东西加到 origin/master 中<br>5. 回滚操作<br>git reset HEAD        # 暂存区恢复成和 HEAD 一样<br>git reset HEAD – file_name1 file_name2 # 暂存区部分文件变得跟 HEAD 一样<br>git checkout – file_name # 工作目录指定文件恢复为和暂存区一样<br>git checkout – *|. ## 工作目录全部文件恢复为和暂存区一样<br>git reset –hard hash_value # 把 HEAD、暂存区、工作目录都回滚到 hash_value 所代表的 commit 中。<br>git reset –hard  # 把暂存区里面的修改去掉，也就是让暂存区、工作目录默认恢复到 HEAD 的位置<br>6. 工作目录、暂存区状态保存<br>git stash # 把相应的修改内容给存下来，之后 git status 查看的话又变为什么都没改变的了<br>git stash list # 查看存下来的内容<br>git stash apply # 存下来的内容又恢复了，但是存下来的内容还在 stash 中<br>git stash pop   # 存下来的内容恢复了，但是存下来的内容也没了<br>7. 合并<br>git merge branch_name1 branch_name2<br>git merge hash_value1 hash_value2<br>git merge –squash # 以 squash 方式进行 merge<br>8. Git 对象操作<br>git cat-file -t|p|s hash_value # 显示版本库对象的内容，类型及大小信息<br>git cat-file -t hash_value  # 查看版本库对象的类型<br>git cat-file -p hash_value  # 查看版本库对象的内容<br>git cat-file -s hash_value  # 查看版本库对象的大小<br>9. Git 远端操作<br>git remote add &lt;远端名&gt; &lt;远端仓库地址&gt; # 这边远端名的意思是远端仓库的别名，push、pull 都将用到远端名<br>git remote -v  # 查看远端仓库连接情况<br>git remote set-url &lt;远端名&gt; 你新的远程仓库地址 # 修改远端仓库地址<br>git remote rm &lt;远端名&gt;      # 删除远端仓库<br>git clone &lt;远端仓库地址&gt; # 把远端仓库 clone 下来<br>git clone –bare  &lt;远端仓库地址&gt; # bare 是指不带工作目录，也就相当于只 clone .git 目录<br>git push &lt;远端名&gt; &lt;本地分支名&gt;<br>git push -u &lt;远端名&gt; &lt;本地分支名&gt; # -u 表示将本地分支的内容推到远端分支，并且将本地分支和远端分支关联起来<br>git push -u origin master # 表示把本地 master 分支的内容推到远端分支 origin/master，并且将本地分支 master 和远端分支 origin/master 关联起来<br>git push # 这条命令也可以使用，默认是将当前本地所在分支推到相关联的远端分支<br>git fetch &lt;远端名&gt; &lt;本地分支名&gt;<br>git fetch origin master # 将远端分支 origin/master fetch 到本地<br>git pull &lt;远端名&gt; &lt;本地分支名&gt; # 将远端分支 fetch 到本地，并且将远端分支和本地所处分支进行合并<br>git pull –rebase # 以 rebase 方式进行合并，也就是将本地分支 rebase 到远端分支</p>
+]]></content>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git - 进级篇</title>
+    <url>/2020/07/17/Git-%E8%BF%9B%E7%BA%A7%E7%AF%87/</url>
+    <content><![CDATA[<p><img src="/images/pasted-53.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<p><img src="/images/pasted-54.png" alt="upload successful"></p>
+<h3 id="Git-进阶使用"><a href="#Git-进阶使用" class="headerlink" title="Git 进阶使用"></a>Git 进阶使用</h3><h4 id="版本历史更改"><a href="#版本历史更改" class="headerlink" title="版本历史更改"></a>版本历史更改</h4><ol>
+<li>最近一次 commit 的 message 修改</li>
+</ol>
+<p>使用如下命令就可以对最近一次 commit 的 message 进行变更了</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>老旧 commit 的 message 修改 — rebase + reword<br>输入如下命令</li>
+</ol>
+<p>git rebase -i hash_value # hash_value，是需要的 commit 的父亲 commit 的 hash_value<br>之后会发生一系列交互，比如你想某个 commit 对应的message，那么将该 commit 之前的 pick 改为 reword 或者 r（看下面的注释信息），然后保存退出。之后就跳到了修改 message 的文档了，在这里输入改变之后的 message 保存退出即可。</p>
+<p><img src="/images/pasted-55.png" alt="upload successful"><br>注意：这种方式修改之后会导致该 commit 及后面 commit 的 hash_value 都被改变掉，所以不适合团队集成开发中使用。</p>
+<ol start="3">
+<li>把连续的多个 commit 合并成一个 — rebase + squash<br>输入如下命令，</li>
+</ol>
+<p>git rebase -i hash_value # hash_value 是要合并的 commit 的父亲 commit<br>输入之后会发生一系列的交互，如下所示，</p>
+<p><img src="/images/pasted-56.png" alt="upload successful"><br>假如我想要把上面两个 commit 合并成一个，需要使用 squash ，版本历史中较早的 commit 在上面，较晚的 commit 在下面，进行合并的话，是把较早的保留，较晚的合并到较早中去，所以要将上述两个 commit 进行合并的话，修改为如下所示，并保存退出</p>
+<p><img src="/images/pasted-57.png" alt="upload successful"><br>之后会进入另一个交互，在下面填写更改之后的 message 信息，保存退出之后即可。</p>
+<p><img src="/images/pasted-58.png" alt="upload successful"><br>4. 把间隔的几个 commit 合并成一个 — rebase + squash<br>与上述类似，就是把间隔的 commit 移到一块即可。同样首先是输入如下命令，hash_value 是间隔多个 commit 中的最开始那个 commit 的父亲 commit 的 hash_value</p>
+<p>git rebase -i hash_value<br>之后会进入交互界面，</p>
+<p><img src="/images/pasted-59.png" alt="upload successful"><br>比如想要合并 760df21 和 2234131 这两个 commit的话，那么修改为如下内容，保存退出即可</p>
+<p><img src="/images/pasted-60.png" alt="upload successful"><br>之后会进入修改 message 的页面，修改之后保存退出即可</p>
+<p><img src="/images/pasted-61.png" alt="upload successful"><br>5. rebase 其他操作<br>上述都使用了 git rebase 的命令，rebase 的意思是说改变基底，把版本历史中的某些 commit 给修改了。</p>
+<p>git rebase origin/master # 把当前分支基于 origin/master 做 rebase 操作，也就相当于把当前分支的东西加到 origin/master 中<br>git rerere      # 记录冲突解决的方式，然后可以在 rebase 的时候反复应用，可以和 rebase 结合用<br>6. 碎碎念<br>上述对 commit 的修改和合并，会导致该 commit 及后面 commit 的 hash_value 都被改变掉，所以不适合团队集成开发中使用。</p>
+<p>假如 commit 修改和合并这一步操作完成之后不是直接进入修改 message 的页面，请根据提示进行进一步操作，比如git rebase –continue。</p>
+<p>假如合并的包含了根 commit，那么 hash_value 则是根 commit 的 hash_value，之后在交互文档中把根 commit 填入即可，只需要填入要操作的名称和 hash_value 即可。</p>
+<p>在合并 commit 中，假如一个 commit 没有被 pick 的话，比如注释了或者删除，那么在完成一系列操作中之后，这个 commit 将会被丢弃。如下图所示，275a765 这个 commit 被注释掉了的话，那么在完成之后，这个 commit 将会被丢弃。</p>
+<p><img src="/images/pasted-62.png" alt="upload successful"></p>
+<h4 id="回滚操作-—-git-reset"><a href="#回滚操作-—-git-reset" class="headerlink" title="回滚操作 — git reset"></a>回滚操作 — git reset</h4><ol>
+<li>暂存区恢复成和 HEAD 一样<br>git reset HEAD<br>git reset HEAD – file_name1 file_name2 # 暂存区部分文件变得跟 HEAD 一样<br>比如一开始的话，HEAD 、暂存区和工作目录都是一样的，都是状态A，并且 readme*.md 文件都已经被跟踪起来了。下面我们修改 readme3.md 文件，之后把它 add 到暂存区。那么这样子工作目录和暂存区都是状态 B，而 HEAD 是状态 A。那么使用上述命令之后，会将暂存区恢复成状态 A。</li>
+</ol>
+<p><img src="/images/pasted-63.png" alt="upload successful"><br>2. 工作目录恢复为和暂存区一样<br>git checkout – file_name # 工作目录中指定文件恢复为和暂存区一样<br>git checkout – *|. ## 工作目录全部文件恢复为和暂存区一样</p>
+<p><img src="/images/pasted-64.png" alt="upload successful"><br>3. 回滚到某个 commit<br>git reset –hard hash_value # 把 HEAD、暂存区、工作目录都回滚到 hash_value 所代表的 commit 中。<br>git reset –hard  # 把暂存区里面的修改去掉，也就是让暂存区、工作目录默认恢复到 HEAD 的位置</p>
+<p><img src="/images/pasted-65.png" alt="upload successful"></p>
+<p><img src="/images/pasted-66.png" alt="upload successful"><br>4. 碎碎念<br>工作目录内容的修改使用 git checkout，</p>
+<p>暂存区内容的修改使用 git reset</p>
+<p>版本历史的修改使用 git rabase</p>
+<h4 id="工作目录、暂存区的更改状态保存下来"><a href="#工作目录、暂存区的更改状态保存下来" class="headerlink" title="工作目录、暂存区的更改状态保存下来"></a>工作目录、暂存区的更改状态保存下来</h4><p>这个应用在开发中临时加塞了紧急任务的情况，可以把处理了一半，还在工作目录、暂存区的更改状态保存下来。</p>
+<p>git stash # 把相应的修改内容给存下来，之后 git status 查看的话又变为什么都没改变的了<br>git stash list # 查看存下来的内容<br>git stash apply # 存下来的内容又恢复了，但是存下来的内容还在 stash 中<br>git stash pop   # 存下来的内容恢复了，但是存下来的内容也没了</p>
+<p><img src="/images/pasted-67.png" alt="upload successful"></p>
+<h4 id="git-merge"><a href="#git-merge" class="headerlink" title="git merge"></a>git merge</h4><p>将两个分支或者两个 commit 进行 merge，merge 之后也会产生一个 commit</p>
+<p>git merge branch_name1 branch_name2<br>git merge hash_value1 hash_value2<br>git merge –squash # 以 squash 方式进行 merge<br>在 merge 的过程中有时候会产生冲突，比如两个分支修改或者两个 commit 修改的是同文件的同一区域，那么就会发生冲突，那么会在相应文件冲突的地方有提示，大致如下所示。</p>
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD<br>windows<br>=======<br>root</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>origin/master<br>通过协商和决定之后，确定文件最终内容，同时把上述内容删除。之后 git add 、git commit 即可。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>不同人修改了不同文件不会产生冲突。比如说两个人维护一个仓库，一个人修改 A 文件，另一个修改 B 文件，那么 merge 的话不会产生冲突，直接将内容合并在一起。</p>
+<p>不同人修改了同文件不同区域不会产生冲突。merge 的话直接将内容合并在一起。</p>
+<p>同一文件改成不同的文件名会产生冲突。同上，一个人把文件名改成了 rename1，另一个人把文件名改成了 rename2，那么 merge 会发生冲突，需要进行协商确定最终的文件名。</p>
+<p>不同人修改了同文件的同一区域会产生冲突。merge 的话因为不能确定保留谁的内容所以会产生冲突。</p>
+<h4 id="分离头指针"><a href="#分离头指针" class="headerlink" title="分离头指针"></a>分离头指针</h4><p>分离头指针的例子如下所示，上面提到切换到某个分支的用法是</p>
+<p>$ git checkout branch_name<br>那么假如把 branch_name 变成了 hash_value，那么这个就相当于“分离头指针”（PS：个人的理解是相当于创建了一个匿名 branch，这个匿名的 branch 是从 hash_value 的地方分出来的）</p>
+<p>$ git checkout hash_value<br>之后的 commit 都是基于这个分离头指针的位置开始的，这些 commit 都没有基于某个 branch，相当于都是“游离”状态的。那么当切回到某个分支之后，这些 commit 都会被当成垃圾一样清理掉。如果这些 commit 很重要，那么请把这些 commit 跟某个 branch 绑在一起。</p>
+<p>另外分类头指针也是可以用的，比如我们先用分离头指针进行一波修改和测试，如果测试不错，那么就把这些修改的 commit 添加成 branch。</p>
+<h4 id="gitignore-—-指定不需要-git-管理的文件"><a href="#gitignore-—-指定不需要-git-管理的文件" class="headerlink" title=".gitignore — 指定不需要 git 管理的文件"></a>.gitignore — 指定不需要 git 管理的文件</h4><p>git 更多是管理代码的版本控制，而代码构建出来的东西可以不用管理，因为这些是可以复现的。那么 .gitignore 这个文件就是告诉 git 哪些文件不需要被纳入版本控制系统的，也就是相当于会被忽视。</p>
+<p>doc  # doc 文件和 doc 目录都不会被管理<br>doc/  # 只指定 doc 目录不会被管理，但是 doc 文件没被说明，假如 doc 在的话，还是会被管理起来的<br>上面内容的有效范围是在整个项目中，即包括子目录等</p>
+<p><img src="/images/pasted-68.png" alt="upload successful"></p>
+<p><img src="/images/pasted-69.png" alt="upload successful"><br>.gitignore 可以借助 github 创建仓库时生成，常用的 .gitignore 如下所示，自己写的时候也值得参考一波：<a href="https://github.com/github/gitignore" target="_blank" rel="noopener">https://github.com/github/gitignore</a> ；</p>
+<p>另外想要 git 不管理某些文件，只能在 .gitignore 文件中指定；</p>
+<h4 id="团队合作注意事项"><a href="#团队合作注意事项" class="headerlink" title="团队合作注意事项"></a>团队合作注意事项</h4><p>如果你的 git 仓库是跟其他人一起维护的，那么请注意一下几点：</p>
+<p>git push -f 不能使用</p>
+<p>公共的分支严禁拉倒本地做 rebase 操作的，因为一旦做了 rebase 操作之后，历史的 commit 就变了，但是其他人那边还是老旧的 commit，他们是基于老旧的 commit 做事情的，而你是几于新的 commit 做事情了，那么就相当于是两条分支了。所以记住了，不能向集成分支执行变更历史操作，建议的方式是在现在 commit 的基础之上再做调整。</p>
+<p><img src="/images/pasted-70.png" alt="upload successful"><br>A 在 temp 分支上做 rabase 操作，那么 temp 分支就会和 master 分开。如下图所示，</p>
+<p><img src="/images/pasted-71.png" alt="upload successful"><br>然而在另一个人，还是基于如下情况做的 commit 等，那么这样，就出现问题了</p>
+<p><img src="/images/pasted-72.png" alt="upload successful"></p>
+<h3 id="git-中的对象及其操作"><a href="#git-中的对象及其操作" class="headerlink" title="git 中的对象及其操作"></a>git 中的对象及其操作</h3><p>git 中的对象有三种：commit、tree、blob。下面对这三种对象进行阐述。</p>
+<h4 id="commit"><a href="#commit" class="headerlink" title="commit"></a>commit</h4><p>每次执行git commit都会创建一个commit对象，一个 commit 对象只包含一个 tree 对象，这个 tree 对象是 .git 所在父目录的对象， 那么这样子的话，一次 commit 就相当于把当前目录的情况给记录下来了。</p>
+<h4 id="tree"><a href="#tree" class="headerlink" title="tree"></a>tree</h4><p>目录的对象，那么由于目录中可以包含目录，也可以包含文件，所以 tree 对象可以包含 tree 对象，也可以包含 blob 对象。</p>
+<h4 id="blob"><a href="#blob" class="headerlink" title="blob"></a>blob</h4><p>blob 是一个文件的具体对象，比如png图像，css文件，这些文件都会对应一个blob对象，可以说是 git 对象中最基本的。另外，blob 跟文件名一点关系都么有，只要文件内容相同，不管文件名叫什么，blob 只有一份。</p>
+<p>新建的Git 仓库中，有且仅有一个 commit，仅仅包含了 /doc/readme，请问内含多少个 tree，多个 blob？</p>
+<p>含两个 tree，一个 blob。首先是 git 仓库所在目录是一个 tree (也就是 /doc/readme 的父目录)，doc 是一个tree，而 readme 文件是唯一 blob。</p>
+<h4 id="对象的相关操作"><a href="#对象的相关操作" class="headerlink" title="对象的相关操作"></a>对象的相关操作</h4><p>git cat-file -t|p|s hash_value # 显示版本库对象的内容，类型及大小信息<br>git cat-file -t hash_value  # 查看版本库对象的类型<br>git cat-file -p hash_value  # 查看版本库对象的内容<br>git cat-file -s hash_value  # 查看版本库对象的大小</p>
+<h3 id="git-目录探索"><a href="#git-目录探索" class="headerlink" title=".git 目录探索"></a>.git 目录探索</h3><h4 id="HEAD-文件"><a href="#HEAD-文件" class="headerlink" title="HEAD 文件"></a>HEAD 文件</h4><p>HEAD文件的内容显示了 HEAD 当前所指的分支信息，通过下面的内容可以佐证上面 HEAD 说到的一点：HEAD 指向的是某个分支，但通过查看分支文件内容可以发现里面其实是 commit 的 hash_value，也就是说 HEAD 实际指向的是某个commit。</p>
+<p><img src="/images/pasted-73.png" alt="upload successful"><br>git_head_temp</p>
+<p>使用 git checkout 命令之后，查看HEAD 文件的内容</p>
+<p><img src="/images/pasted-74.png" alt="upload successful"><br>git_head_chang_to_master</p>
+<h4 id="config-文件"><a href="#config-文件" class="headerlink" title="config 文件"></a>config 文件</h4><p>存放本地仓库（local）相关的配置信息，假如之前设置了 local 下的 user.name ，那么会在这个文件中存储相关的内容等信息。修改 config 文件中 user.name 配置项的内容，使用命令查看到的也是修改之后的。</p>
+<h4 id="refs-目录"><a href="#refs-目录" class="headerlink" title="refs 目录"></a>refs 目录</h4><ol>
+<li>heads 子目录<br>目录中包含的是各分支信息，每一个文件的内容都是 hash value，这个是值是该分支最后一次 commit 的 hash_value 值</li>
+</ol>
+<p>…/.git/refs/heads# ls<br>master  temp  temp2<br>…/.git/refs/heads# cat master<br>9ef147d58eb7e09987cf5ce92254b1600ac92cd9<br>2. tags 子目录<br>里面显示的是标签的信息，Git 仓库可以有很多标签，项目开发到一定程度，是一个关键的成果了，比如开发到 v1.0，那可以打上一个标签了。</p>
+<h4 id="objects-目录"><a href="#objects-目录" class="headerlink" title="objects 目录"></a>objects 目录</h4><p>存放对象的目录。git 中的对象都是由 40 位字符组成，前两位字符用来当 object 目录中子目录名，后 38 位做文件名。</p>
+]]></content>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>SQL分页</title>
     <url>/2020/07/14/SQL%E5%88%86%E9%A1%B5/</url>
     <content><![CDATA[<h2 id="请不要将OFFSET和LIMIT用于分页"><a href="#请不要将OFFSET和LIMIT用于分页" class="headerlink" title="请不要将OFFSET和LIMIT用于分页"></a>请不要将OFFSET和LIMIT用于分页</h2><p><img src="/images/pasted-27.png" alt="upload successful"></p>
@@ -912,80 +1637,6 @@
 ]]></content>
       <tags>
         <tag>数据库</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>单点登录</title>
-    <url>/2020/07/16/%E5%AE%9E%E7%8E%B0%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95/</url>
-    <content><![CDATA[<h3 id="单点登录简介"><a href="#单点登录简介" class="headerlink" title="单点登录简介"></a>单点登录简介</h3><p>假设一个场景：公司内部有财务、OA、订单服务等各类相互独立的应用系统，员工张三对这些系统有操作权限，如果张三想要登录某个系统进行业务操作，那么他需要输入相应的账号与密码。想象一下，当公司内部有 100 个应用系统，张三是不是要输入 100 次用户名和密码进行登录，然后分别才能进行业务操作呢？显然这是很不好的体验，因此我们需要引入一个这样的机制：张三只要输入一次用户名和密码登录，成功登录后，他就可以访问财务系统、OA 系统、订单服务等系统。这就是单点登录。</p>
-<p><img src="/images/pasted-47.png" alt="upload successful"></p>
-<a id="more"></a>
-
-<p>单点登录的英文全称是 Single Sign On，简称是 SSO。它的意思是说用户只需要登录一次，就可以在个人权限范围内，访问所有相互信任应用的功能模块，不管整个应用群的内部有多么复杂，对用户而言，都是一个统一的整体。用户访问 Web 系统的整个应用群与访问单个系统一样，登录和注销分别只要一次就够了。举个简单的例子，你登录了百度网页之后，点击跳转到百度贴吧，这时可以发现你已经自动登录了百度贴吧。</p>
-<h3 id="我们的技术实现"><a href="#我们的技术实现" class="headerlink" title="我们的技术实现"></a>我们的技术实现</h3><p><img src="/images/pasted-48.png" alt="upload successful"></p>
-<p>SSO 的技术实现要想做好并不容易，我们认为需求优先级应该先是单点登录和单点注销功能，然后是应用接入的门槛，最后是数据安全性，安全性对于 SSO 也非常重要。SSO 的核心是认证中心，但要实现用户一次登录，到处访问的效果，技术实现需要建立在用户系统、认证中心、权限系统、企业门户的基础上，各职责如下：</p>
-<ul>
-<li>用户系统：负责用户名、密码等帐户信息管理，包括增加、修改、启用、停用用户帐号，同时为认证中心提供对用户名和密码的校验。</li>
-<li>认证中心：负责凭证 token 的生成、加密、颁发、验证、销毁、登入 Login、登出 Logout。用户只有拥有凭证并验证通过才能访问企业门户。</li>
-<li>权限系统：负责角色管理、资源设置、授权设置、鉴定权限，具体实现可参考 RBAC。权限系统可为企业门户提供用户权限范围内的导航。</li>
-<li>企业门户：作为应用系统的集成门户 (Portal)，集成了多个应用系统的功能，为用户提供链接导航、用户信息和登出功能等。</li>
-</ul>
-<ol>
-<li>服务端功能实现</li>
-</ol>
-<ul>
-<li>登录认证：接收登录帐号信息，让用户系统验证用户的登录信息。</li>
-<li>凭证生成：创建授权凭证 token，生成的凭证一般包含用户帐号信息、过期时间等信息，它是一串加密的字符串，加密算法如 AES｛凭证明文 +MD5 加信息｝，可采用 JWT 标准。</li>
-<li>凭证颁发：与 SSO 客户端通信，发送凭证给 SSO 客户端。</li>
-<li>凭证验证：接收并校验来自 SSO 客户端的凭证有效性，凭证验证包括算法验证和数据验证。</li>
-<li>凭证销毁与登出：接收来自 SSO 客户端的登出请求，记录并销毁凭证，跳转至登录页面。</li>
-</ul>
-<ol start="2">
-<li>客户端功能实现</li>
-</ol>
-<ul>
-<li>请求拦截：拦截应用未登录请求，跳转至登录页面。</li>
-<li>获取凭证：接收并存储由 SSO 服务端发来的凭证，凭证存储的方式有 Cookie、Session、网址传参、Header 等。</li>
-<li>提交凭证验证：与 SSO 服务端通信，发出校验凭证有效性的请求。</li>
-<li>获取用户权限：获取该凭证的用户权限，并返回受保护资源给用户。</li>
-<li>凭证销毁与登出：销毁本地会话，然后跳转至登出页面。</li>
-</ul>
-<ol start="3">
-<li>用户单点登录流程<br><img src="/images/pasted-49.png" alt="upload successful"></li>
-</ol>
-<ul>
-<li>登录：将用户输入的用户名和密码发送至认证中心，然后认证中心调用用户系统来验证登录信息。</li>
-<li>生成并颁发凭证：通过登录信息的验证后，认证中心创建授权凭证 token，然后把这个授权凭证 token 返回给 SSO 客户端。SSO 客户端拿到这个 token，进行存储。在后续请求中，在 HTTP 请求数据中都得加上这个 token。</li>
-<li>凭证验证：SSO 客户端发送凭证 token 给认证中心，认证中心校验这个 token 的有效性。凭证验证有算法验证和数据验证，算法验证可在 SSO 客户端完成。</li>
-</ul>
-<ol start="4">
-<li>用户访问流程和单点注销</li>
-</ol>
-<p><img src="/images/pasted-50.png" alt="upload successful"></p>
-<p>以上是用户的访问流程，如果用户没有有效的凭证，认证中心将强制用户进入登录流程。对于单点注销，用户如果注销了应用群内的其中一个应用，那么全局 token 也会被销毁，应用群内的所有应用将不能再被访问。</p>
-<ol start="5">
-<li>具体接入与集成</li>
-</ol>
-<p><img src="/images/pasted-51.png" alt="upload successful"></p>
-<p>我们的应用接入与集成具体如下：</p>
-<ul>
-<li>用户系统：接入国内机票平台的用户系统，负责登录认证。</li>
-<li>权限系统：接入国内机票平台的权限系统。</li>
-<li>认证中心：负责生成并颁发凭证、销毁凭证，改造国内机票平台的登入、登出。</li>
-<li>凭证验证：在国内机票、国际机票应用系统中调用 SSO 客户端组件实现凭证的验证。</li>
-<li>企业门户：由国内机票平台、国际机票平台承担。</li>
-</ul>
-<h3 id="JWT-标准"><a href="#JWT-标准" class="headerlink" title="JWT 标准"></a>JWT 标准</h3><p><img src="/images/pasted-52.png" alt="upload successful"></p>
-<p>JSON Web Token (JWT) 是目前应用最为广泛的 token 格式，是为了在网络应用环境间传递声明而执行的一种基于 JSON 的开放标准（RFC 7519)。该 token 设计紧凑且安全，特别适用于分布式站点的单点登录、API 网关等场景。JWT 的声明一般被用来在身份提供者和服务提供者间传递被认证的用户身份信息，以便于从资源服务器获取资源，也可以增加一些额外的其它业务逻辑所必须的声明信息。该 token 也可直接被用于认证，也可被加密。JWT 信息体由 3 部分构成：头 Header+ 载荷 Payload+ 签名 Signature，具体优点如下：</p>
-<ul>
-<li>JWT 支持多种语言，C#、Java、JavaScript、Node.js、PHP 等很多语言都可以使用。</li>
-<li>JWT 可以自身存储一些和业务逻辑有关的所必要的非敏感信息，因为有了 Payload 部分。</li>
-<li>利于传输，因为 JWT 的构成非常简单，字节占用很小。</li>
-<li>不需要在服务端保存会话信息，不仅省去服务端资源开销，而且使得应用易于扩展。</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>单点登录</tag>
       </tags>
   </entry>
   <entry>
@@ -1129,15 +1780,6 @@
       </tags>
   </entry>
   <entry>
-    <title>库</title>
-    <url>/2020/07/04/%E6%8E%A8%E8%8D%90%E5%BA%93/</url>
-    <content><![CDATA[<h1 id="前端"><a href="#前端" class="headerlink" title="前端"></a>前端</h1><p><a href="https://github.com/sweetalert2/sweetalert2" target="_blank" rel="noopener">sweetalert2</a> 一个自适应，且自定义性强的弹出框（零依赖）</p>
-<h1 id="CSS-amp-amp-动画"><a href="#CSS-amp-amp-动画" class="headerlink" title="CSS &amp;&amp; 动画"></a>CSS &amp;&amp; 动画</h1><h1 id="Vue"><a href="#Vue" class="headerlink" title="Vue"></a>Vue</h1><h1 id="实践库"><a href="#实践库" class="headerlink" title="实践库"></a>实践库</h1><h1 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h1>]]></content>
-      <tags>
-        <tag>推荐库</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>项目开发中我用的顺手工具</title>
     <url>/2020/07/09/%E6%88%91%E7%94%A8%E7%9A%84%E9%A1%BA%E6%89%8B%E7%9A%84%E5%B7%A5%E5%85%B7/</url>
     <content><![CDATA[<p>之前经常有朋友问我一些常用的工具，比如我的架构图是用什么工具做的？我的数据库是用什么工具设计的？今天给大家介绍下我用的顺手的工具！</p>
@@ -1185,6 +1827,156 @@
       <categories>
         <category>随笔</category>
       </categories>
+  </entry>
+  <entry>
+    <title>单点登录</title>
+    <url>/2020/07/16/%E5%AE%9E%E7%8E%B0%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95/</url>
+    <content><![CDATA[<h3 id="单点登录简介"><a href="#单点登录简介" class="headerlink" title="单点登录简介"></a>单点登录简介</h3><p>假设一个场景：公司内部有财务、OA、订单服务等各类相互独立的应用系统，员工张三对这些系统有操作权限，如果张三想要登录某个系统进行业务操作，那么他需要输入相应的账号与密码。想象一下，当公司内部有 100 个应用系统，张三是不是要输入 100 次用户名和密码进行登录，然后分别才能进行业务操作呢？显然这是很不好的体验，因此我们需要引入一个这样的机制：张三只要输入一次用户名和密码登录，成功登录后，他就可以访问财务系统、OA 系统、订单服务等系统。这就是单点登录。</p>
+<p><img src="/images/pasted-47.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<p>单点登录的英文全称是 Single Sign On，简称是 SSO。它的意思是说用户只需要登录一次，就可以在个人权限范围内，访问所有相互信任应用的功能模块，不管整个应用群的内部有多么复杂，对用户而言，都是一个统一的整体。用户访问 Web 系统的整个应用群与访问单个系统一样，登录和注销分别只要一次就够了。举个简单的例子，你登录了百度网页之后，点击跳转到百度贴吧，这时可以发现你已经自动登录了百度贴吧。</p>
+<h3 id="我们的技术实现"><a href="#我们的技术实现" class="headerlink" title="我们的技术实现"></a>我们的技术实现</h3><p><img src="/images/pasted-48.png" alt="upload successful"></p>
+<p>SSO 的技术实现要想做好并不容易，我们认为需求优先级应该先是单点登录和单点注销功能，然后是应用接入的门槛，最后是数据安全性，安全性对于 SSO 也非常重要。SSO 的核心是认证中心，但要实现用户一次登录，到处访问的效果，技术实现需要建立在用户系统、认证中心、权限系统、企业门户的基础上，各职责如下：</p>
+<ul>
+<li>用户系统：负责用户名、密码等帐户信息管理，包括增加、修改、启用、停用用户帐号，同时为认证中心提供对用户名和密码的校验。</li>
+<li>认证中心：负责凭证 token 的生成、加密、颁发、验证、销毁、登入 Login、登出 Logout。用户只有拥有凭证并验证通过才能访问企业门户。</li>
+<li>权限系统：负责角色管理、资源设置、授权设置、鉴定权限，具体实现可参考 RBAC。权限系统可为企业门户提供用户权限范围内的导航。</li>
+<li>企业门户：作为应用系统的集成门户 (Portal)，集成了多个应用系统的功能，为用户提供链接导航、用户信息和登出功能等。</li>
+</ul>
+<ol>
+<li>服务端功能实现</li>
+</ol>
+<ul>
+<li>登录认证：接收登录帐号信息，让用户系统验证用户的登录信息。</li>
+<li>凭证生成：创建授权凭证 token，生成的凭证一般包含用户帐号信息、过期时间等信息，它是一串加密的字符串，加密算法如 AES｛凭证明文 +MD5 加信息｝，可采用 JWT 标准。</li>
+<li>凭证颁发：与 SSO 客户端通信，发送凭证给 SSO 客户端。</li>
+<li>凭证验证：接收并校验来自 SSO 客户端的凭证有效性，凭证验证包括算法验证和数据验证。</li>
+<li>凭证销毁与登出：接收来自 SSO 客户端的登出请求，记录并销毁凭证，跳转至登录页面。</li>
+</ul>
+<ol start="2">
+<li>客户端功能实现</li>
+</ol>
+<ul>
+<li>请求拦截：拦截应用未登录请求，跳转至登录页面。</li>
+<li>获取凭证：接收并存储由 SSO 服务端发来的凭证，凭证存储的方式有 Cookie、Session、网址传参、Header 等。</li>
+<li>提交凭证验证：与 SSO 服务端通信，发出校验凭证有效性的请求。</li>
+<li>获取用户权限：获取该凭证的用户权限，并返回受保护资源给用户。</li>
+<li>凭证销毁与登出：销毁本地会话，然后跳转至登出页面。</li>
+</ul>
+<ol start="3">
+<li>用户单点登录流程<br><img src="/images/pasted-49.png" alt="upload successful"></li>
+</ol>
+<ul>
+<li>登录：将用户输入的用户名和密码发送至认证中心，然后认证中心调用用户系统来验证登录信息。</li>
+<li>生成并颁发凭证：通过登录信息的验证后，认证中心创建授权凭证 token，然后把这个授权凭证 token 返回给 SSO 客户端。SSO 客户端拿到这个 token，进行存储。在后续请求中，在 HTTP 请求数据中都得加上这个 token。</li>
+<li>凭证验证：SSO 客户端发送凭证 token 给认证中心，认证中心校验这个 token 的有效性。凭证验证有算法验证和数据验证，算法验证可在 SSO 客户端完成。</li>
+</ul>
+<ol start="4">
+<li>用户访问流程和单点注销</li>
+</ol>
+<p><img src="/images/pasted-50.png" alt="upload successful"></p>
+<p>以上是用户的访问流程，如果用户没有有效的凭证，认证中心将强制用户进入登录流程。对于单点注销，用户如果注销了应用群内的其中一个应用，那么全局 token 也会被销毁，应用群内的所有应用将不能再被访问。</p>
+<ol start="5">
+<li>具体接入与集成</li>
+</ol>
+<p><img src="/images/pasted-51.png" alt="upload successful"></p>
+<p>我们的应用接入与集成具体如下：</p>
+<ul>
+<li>用户系统：接入国内机票平台的用户系统，负责登录认证。</li>
+<li>权限系统：接入国内机票平台的权限系统。</li>
+<li>认证中心：负责生成并颁发凭证、销毁凭证，改造国内机票平台的登入、登出。</li>
+<li>凭证验证：在国内机票、国际机票应用系统中调用 SSO 客户端组件实现凭证的验证。</li>
+<li>企业门户：由国内机票平台、国际机票平台承担。</li>
+</ul>
+<h3 id="JWT-标准"><a href="#JWT-标准" class="headerlink" title="JWT 标准"></a>JWT 标准</h3><p><img src="/images/pasted-52.png" alt="upload successful"></p>
+<p>JSON Web Token (JWT) 是目前应用最为广泛的 token 格式，是为了在网络应用环境间传递声明而执行的一种基于 JSON 的开放标准（RFC 7519)。该 token 设计紧凑且安全，特别适用于分布式站点的单点登录、API 网关等场景。JWT 的声明一般被用来在身份提供者和服务提供者间传递被认证的用户身份信息，以便于从资源服务器获取资源，也可以增加一些额外的其它业务逻辑所必须的声明信息。该 token 也可直接被用于认证，也可被加密。JWT 信息体由 3 部分构成：头 Header+ 载荷 Payload+ 签名 Signature，具体优点如下：</p>
+<ul>
+<li>JWT 支持多种语言，C#、Java、JavaScript、Node.js、PHP 等很多语言都可以使用。</li>
+<li>JWT 可以自身存储一些和业务逻辑有关的所必要的非敏感信息，因为有了 Payload 部分。</li>
+<li>利于传输，因为 JWT 的构成非常简单，字节占用很小。</li>
+<li>不需要在服务端保存会话信息，不仅省去服务端资源开销，而且使得应用易于扩展。</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>单点登录</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Web应用架构扩展</title>
+    <url>/2020/07/29/Web%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84%E6%89%A9%E5%B1%95/</url>
+    <content><![CDATA[<p><img src="/images/pasted-152.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<p>从单个服务器到能够为数百万用户提供服务的Web应用程序。</p>
+<p>扩展。这意味着它必须能够：</p>
+<ul>
+<li>同时服务于更多顾客</li>
+<li>始终无停机</li>
+<li>为全球用户服务</li>
+<li>缩放如何工作</li>
+</ul>
+<p>几年前，将首先讨论“垂直”与“水平”缩放（也称为“放大”与“缩小”）。简而言之，垂直缩放意味着在功能更强大的计算机上运行同一事物，而水平缩放意味着并行运行许多进程。</p>
+<p>如今，几乎没有人在垂直扩展。原因很简单：</p>
+<ul>
+<li>计算机越强大，它们的价格就成倍增长</li>
+<li>一台计算机只能如此之快，这对一台计算机可以垂直扩展的范围施加了严格的限制</li>
+<li>多核CPU意味着即使一台计算机都可以有效地并行化-那么为什么不从一开始就并行化呢？</li>
+</ul>
+<p>好吧，它是水平缩放！但是需要哪些步骤？</p>
+<h3 id="单个服务器-数据库"><a href="#单个服务器-数据库" class="headerlink" title="单个服务器+数据库"></a>单个服务器+数据库</h3><p><img src="/images/pasted-153.png" alt="upload successful"></p>
+<p>这可能是您的后端最初的外观。运行您的业务逻辑的单个应用程序服务器和一个用于长期存储数据的数据库。事情既简单又好，但是满足更高需求的唯一方法是在功能更强大的计算机上运行它-不好。</p>
+<h3 id="添加反向代理"><a href="#添加反向代理" class="headerlink" title="添加反向代理"></a>添加反向代理</h3><p><img src="/images/pasted-154.png" alt="upload successful"></p>
+<p>为大规模准备架构的第一步是添加“反向代理”。可以将其视为酒店的前台。当然，您可以只允许客人直接进入他们的房间-但是，实际上，您想要的是一个中介机构，该机构检查是否允许客人进入，是否整理了所有文件并正准备进入实际存在的房间。而且如果房间关闭，您希望有人用友好的声音告诉客人，而不是让他们陷入困境。这正是反向代理的作用。通常，代理只是一个接收和转发请求的过程。通常，这些请求将从我们的服务器发送到Internet。但是，这次，请求来自Internet，需要路由到我们的服务器，因此我们将其称为“反向代理”。</p>
+<p>这样的代理可以完成许多任务：</p>
+<ul>
+<li>运行状况检查可确保我们的实际服务器仍在运行</li>
+<li>路由将请求转发到正确的端点</li>
+<li>身份验证可确保用户实际上具有访问服务器的权限</li>
+<li>防火墙确保用户只能访问他们被允许使用的网络部分…以及更多</li>
+</ul>
+<h3 id="引入负载均衡器"><a href="#引入负载均衡器" class="headerlink" title="引入负载均衡器"></a>引入负载均衡器</h3><p><img src="/images/pasted-155.png" alt="upload successful"></p>
+<p>大多数“逆向代理”还另辟trick径：它们还可以充当负载平衡器。负载均衡器是一个简单的概念：假设有一百个用户准备在给定的分钟内在您的在线商店中付款。不幸的是，您的付款服务器只能同时处理50次付款。解决方案？您只需一次运行两个支付服务器。</p>
+<p>负载平衡器的工作现在是在这两个服务器之间分配传入的付款请求。用户一左移，用户二右移，用户三左移，依此类推。</p>
+<p>如果五百个用户想要一次付款，您该怎么办？确实，您可以扩展到十个支付服务器，然后将其留给负载均衡器在它们之间分配传入的请求。</p>
+<h3 id="扩展数据库"><a href="#扩展数据库" class="headerlink" title="扩展数据库"></a>扩展数据库</h3><p><img src="/images/pasted-156.png" alt="upload successful"></p>
+<p>使用负载平衡器可以使我们在许多服务器之间分配负载。但是您能发现问题吗？尽管我们可以利用数十台，数百台甚至数千台服务器来处理我们的请求，但它们都存储和检索来自同一数据库的数据。</p>
+<p>那么，我们不能仅以相同的方式扩展数据库吗？不幸的是没有。这里的问题是一致性。我们系统的所有部分都需要就其使用的数据达成一致。数据不一致会导致各种各样的毛病-多次执行订单，从持有100美元的帐户中扣除两次90美元的付款，依此类推…那么我们如何在确保一致性的同时扩展数据库？</p>
+<p>我们可以做的第一件事是将其分为多个部分。一个部分专门负责接收和存储数据，其他所有部分则负责检索存储的数据。该解决方案有时称为主/从设置或带有只读副本的写入。假设服务器从数据库中读取数据的方式比写入数据库的方式更多。该解决方案的优点在于，可以保证一致性，因为数据仅写入单个实例，并且从一个实例（从写入到读取）从那里流向。缺点是我们仍然只有一个数据库实例要写入。这对于中小型Web项目是可以的，但是如果您运行大型Web项目，它就不会这么做。</p>
+<h3 id="微服务"><a href="#微服务" class="headerlink" title="微服务"></a>微服务</h3><p><img src="/images/pasted-157.png" alt="upload successful"></p>
+<p>到目前为止，我们只处理一台服务器，该服务器可以完成所有工作：处理付款，订单，库存，为网站提供服务，管理用户帐户等。</p>
+<p>这并不一定是一件坏事-单个服务器意味着较低的复杂性，因此对于我们的开发人员而言，头痛更少。但是随着规模的扩大，事情开始变得复杂和低效：</p>
+<p>我们服务器的不同部分被不同程度地利用-对于每个用户登录，可能要处理几百次浏览量和要提供的资产，但是所有操作都是由同一台服务器完成的<br>我们的开发团队会随着我们的应用程序的发展而增长-但是，随着越来越多的开发人员在同一台服务器上工作，他们更有可能踩到彼此的脚趾。<br>仅拥有一台服务器意味着每当我们要上线新版本时，都必须完成所有工作并进行处理。每当一个团队迅速想要发布更新时，这就会导致危险的相互依赖性，而另一团队仅完成了一半的工作。<br>应对这些挑战的解决方案是一种架构范式，它已席卷开发人员世界：微服务。这个想法很简单-将您的服务器分解为功能单元，并将它们部署为单独的，相互连接的微型服务器。这有很多好处：</p>
+<p>每个服务可以单独缩放，使我们能够更好地适应需求<br>开发团队可以独立工作，每个团队都负责各自微服务的生命周期（创建，部署，更新等）。<br>每个微服务都可以使用自己的资源，例如自己的数据库，从而进一步减少了4.）中描述的问题。</p>
+<h3 id="缓存和内容交付网络"><a href="#缓存和内容交付网络" class="headerlink" title="缓存和内容交付网络"></a>缓存和内容交付网络</h3><p><img src="/images/pasted-158.png" alt="upload successful"></p>
+<p>有什么比提高工作效率更好？根本不用工作！我们的网络应用程序很大一部分是由静态资产组成的，这些资产永远不变，例如图像，JavaScript和CSS文件，某些产品的预渲染目标网页等。与其在每个请求上重新计算或保留这些资产，我们都可以使用“缓存”-一种小型存储，只记住最后的结果并将其分发给所有感兴趣的人，而无需打扰底层服务器。</p>
+<p>缓存的大兄弟被称为“内容交付网络”或CDN-遍布世界各地的大量缓存。这样一来，我们就可以从用户附近的商店向用户提供内容，而不必每次都在全球范围内发送数据。</p>
+<h3 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h3><p><img src="/images/pasted-159.png" alt="upload successful"></p>
+<p>您去过游乐园吗？您只是走到售票柜台买票吗？可能不是-您最终可能在队列中等待。政府机构，邮局和游乐园入口都是“次容量并行性”概念的绝佳示例-是的，它们是并行的：多个售票亭同时出售门票-但似乎永远不足以立即为每个人提供服务，结果，队列开始形成。</p>
+<p>大型Web应用程序使用相同的概念。每分钟将数十万张图像上传到Instagram，Facebook和Co，每个图像都需要进行处理，调整大小，分析和标记-这是一个耗时的过程。因此，与其让用户等到他们的上传完成所有这些步骤，不如让他们等待。接收图像的服务器仅做三件事：</p>
+<p>它存储未处理的原始图像<br>确认上传给用户<br>它将虚拟便签添加到一大堆中，指定需要执行的操作<br>从这里开始，此笔记由任意数量的其他服务器拾取，每个服务器都完成其任务之一，将其选中，然后将笔记放回堆中-直到完成待办事项列表。管理这堆笔记的系统称为“消息队列”。使用这样的队列有许多优点：</p>
+<p>它使任务和处理器分离。有时需要处理大量图像，有时仅需要处理少量图像。有时有很多处理器可用，有时只有几个。通过简单地将任务添加到积压中而不是直接处理它们，可以确保我们的系统保持响应能力，并且不会丢失任何任务。<br>它使我们能够按需扩展。启动更多的处理器需要时间-因此，当许多用户尝试上传图像时，已经为时已晚。通过将我们的任务添加到队列中，我们可以推迟提供更多功能来处理它们的需要<br>好吧，如果我们按照上面的所有步骤进行操作，我们的系统现在就可以提供可观的流量了。但是，如果我们想做大的事情-真的做大了，怎么办？好了，还有一些选择：</p>
+<p>###分片<br><img src="/images/pasted-160.png" alt="upload successful"></p>
+<p>分片是什么？好吧，深吸一口气。你准备好了吗？它去了：</p>
+<p>“共享是一种通过将应用程序的堆栈分成多个单元来并行化应用程序的技术，每个单元负责一个特定的键或名称空间”</p>
+<p>phe 那到底是什么意思呢？实际上很简单：需要为20亿用户提供Facebook个人资料吗？将您的架构分解为例如26个Mini-Facebook，每个Facebook用不同的字母为用户服务。亚伦·亚伯拉罕（Aaron Abrahams）？堆栈A. Zacharias Zuckerberg将为您服务？Z栈是…</p>
+<p>分片不必基于字母，而可以基于任何数量的因素，例如位置，使用频率（电力用户被路由到好的硬件）等等。您可以根据需要以这种方式分片服务器，数据库或堆栈的几乎任何方面。</p>
+<h3 id="负载均衡器"><a href="#负载均衡器" class="headerlink" title="负载均衡器"></a>负载均衡器</h3><p><img src="/images/pasted-161.png" alt="upload successful"></p>
+<p>单个负载平衡器只能带您到现在为止-即使您开始购买一些功能强大（且价格昂贵）的硬件负载平衡器，它们可以处理多少个请求也受到严格限制。</p>
+<p>幸运的是，在全球范围内，分散且难以置信的稳定层甚至可以在流量未达到我们的负载均衡器之前就可以用于负载均衡。最好的是什么？完全免费。该层是“域名系统”-简称DNS。将域名（例如“ arcentry.com”）映射到IP（例如“ 143.204.47.77”）的全球注册表。该注册表允许我们为每个域名指定多个IP，每个IP导致一个不同的负载均衡器。</p>
+]]></content>
+      <tags>
+        <tag>架构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>库</title>
+    <url>/2020/07/04/%E6%8E%A8%E8%8D%90%E5%BA%93/</url>
+    <content><![CDATA[<h1 id="前端"><a href="#前端" class="headerlink" title="前端"></a>前端</h1><p><a href="https://github.com/sweetalert2/sweetalert2" target="_blank" rel="noopener">sweetalert2</a> 一个自适应，且自定义性强的弹出框（零依赖）</p>
+<h1 id="CSS-amp-amp-动画"><a href="#CSS-amp-amp-动画" class="headerlink" title="CSS &amp;&amp; 动画"></a>CSS &amp;&amp; 动画</h1><h1 id="Vue"><a href="#Vue" class="headerlink" title="Vue"></a>Vue</h1><h1 id="实践库"><a href="#实践库" class="headerlink" title="实践库"></a>实践库</h1><h1 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h1>]]></content>
+      <tags>
+        <tag>推荐库</tag>
+      </tags>
   </entry>
   <entry>
     <title>数据结构与算法 - 开篇</title>
@@ -1426,8 +2218,8 @@ if( !flag){
       </tags>
   </entry>
   <entry>
-    <title>数据结构与算法 - 排序</title>
-    <url>/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8E%92%E5%BA%8F/</url>
+    <title>数据结构与算法 - 选择排序</title>
+    <url>/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F/</url>
     <content><![CDATA[<p>1.引子<br>1.1.为什么要学习数据结构与算法？<br>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！</p>
 <p>有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？</p>
 <p>于是问题来了：为什么还要学习数据结构与算法呢？</p>
@@ -1437,84 +2229,41 @@ if( !flag){
 <p>学习方法推荐：</p>
 <p>#学习方法<br>1.从基础开始，系统化学习<br>2.多动手，每一种数据结构与算法，都自己用代码实现出来<br>3.思路更重要：理解实现思想，不要背代码<br>4.与日常开发结合，对应应用场景<br>学习内容推荐：</p>
 <p>数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法</p>
-<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>在前面两篇，我们详细看了常用算法的第一个主题：递归。接下来我们来看常用算法的第二个主题：排序。排序内容有点多，常见的排序算法就有：冒泡排序、插入排序、选择排序、归并排序、快速排序、桶排序、计数排序、基数排序。</p>
-<p>这些排序算法中，不知道有没有你熟悉的，或者不熟悉的。让我们开启排序算法之旅吧。首先第一篇中，我们先来对排序算法做一个总体上的认识。</p>
-<p>#考考你：<br>1.你知道常用的排序算法有哪些吗？<br>2.你知道如何衡量排序算法的优劣吗？<br>3.你知道排序算法的基础概念：有序度、逆序度、满有序度吗？<br>3.案例<br>3.1.排序算法分类<br>在考考你中，我们说排序算法有：冒泡排序、插入排序、选择排序、归并排序、快速排序、桶排序、计数排序、基数排序。这样看起来有点散乱，能不能给它们归一下类呢？答案是可以的。</p>
-<p>对于排序算法，我们可以从时间复杂度上进行归类：</p>
-<p>3.2.从三个角度分析排序算法<br>在实际软件开发中，有众多的排序算法，如何选择和取舍呢？真的会有选择困难症啊！有没有一些好的、可行的方法，去综合衡量排序算法的优劣呢？</p>
-<p>答案是：有</p>
-<p>我们可以从三个角度去综合分析排序算法：时间复杂度、空间复杂度、算法稳定性</p>
-<p>复制代码<br>#时间复杂度<br>  1.分析最好情况、最坏情况、平均情况时间复杂度<br>  2.复杂度分析中，关于系数、常数、低阶平常可以省略<br>  3.但是，需要特别注意：在排序算法中，我们需要考虑进来</p>
-<p>#空间复杂度<br>  1.空间复杂度分析，主要看是否是：原地排序算法<br>  2.原地排序算法，是指：空间复杂度是O(1)<br>  3.注意：在实际软件开发中，这一条很重要</p>
-<p>#算法稳定性<br>  1.算法稳定性，是指如果待排序序列中，有值相同的元素<br>  2.如果经过排序后，原来值相同的元素，顺序保持不变<br>  3.那么我们说，该排序算法是稳定的排序算法<br>  4.否则，该排序算法是不稳定排序算法</p>
-<p>  5.比如，有一个待排序序列：3,6,5,2,6,8<br>  6.待排序序列中，有两个值为6的元素<br>  7.假设用数组a来存储，对应的下标是：a[1]=6,a[4]=6<br>  8.排序后：a[3]=6,a[4]=6<br>  9.这里的a[3]是排序前的a[1]<br>  10.这里的a[4]还是排序前的a[4]<br>  11.这就是稳定排序算法的要求，如下图：<br>复制代码<br>理解排序算法稳定性：</p>
-<p>3.3.排序基础概念：有序度、逆序度、满有序度<br>在排序算法中，我们需要关注三个基础概念：有序度、逆序度、满有序度。</p>
-<p>整个排序过程，我们可以理解为：增加有序度，减少逆序度，最终达到满有序度的过程。</p>
-<p>那么，它们具体的含义是什么呢？</p>
-<p>复制代码<br>#有序度：<br>  待排序序列中，如果下标索引：i&lt;j，且a[i]&lt;a[j],则称为有序度<br>#逆序度<br>  待排序序列中，如果下标索引：i&lt;j，且a[i]&gt;a[j],则称为逆序度<br>#满有序度<br>  1.待排序序列中，如果有序度达到：n(n-1)/2，则称为满有序度<br>  2.即此时待排序序列，其实是有序的<br>复制代码<br>以上关于有序度、逆序度的概念，相信很多朋友都能理解。这里我们解释一下关于满有序度的公式：n(n-1)/2。</p>
-<p>要理解满有序度的概念，你可能需要回顾一下数学中的：排列、组合知识点，应该是在高二的时候学的，可以这样去理解它们：</p>
-<p>复制代码<br>#排列：<br>  1.有n个元素，如果每两个元素，组成一个排列<br>  2.则总共有排列数：n(n-1)<br>  3.比如，有3个元素：a b c<br>  4.每两个元素组成排列数是：3*(3-1)=6<br>  5.组成的排列有：(a,b) (a,c) (b,a) (b,c) (c,a) (c,b)</p>
-<p>#组合：<br>  1.有n个元素，如果每两个元素，组成一个组合<br>  2.则总共有组合数：n(n-1)/2<br>  3.比如，有3个元素：a b c<br>  4.每两个元素组成的组合数是：3(3-1)/2=3<br>  5.组成的组合有：(a,b) (a,c) (b,c)</p>
-<p>#综合结论：<br>   1.假设待排序序列有n个元素<br>   2.如果有序度，等于每2个元素的组合数：n(n-1)/2<br>   3.那么该待排序序列，其实是有序的<br>   4.这就是满有序度的概念<br>复制代码</p>
-]]></content>
-      <tags>
-        <tag>数据结构与算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据结构与算法 - 插入排序</title>
-    <url>/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/</url>
-    <content><![CDATA[<p>1.引子<br>1.1.为什么要学习数据结构与算法？<br>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！</p>
-<p>有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？</p>
-<p>于是问题来了：为什么还要学习数据结构与算法呢？</p>
-<p>复制代码<br>#理由一：<br>    面试的时候，千万不要被数据结构与算法拖了后腿<br>#理由二：<br>    你真的愿意做一辈子CRUD Boy吗<br>#理由三：<br>    不想写出开源框架，中间件的工程师，不是好厨子<br>复制代码<br>1.2.如何系统化学习数据结构与算法？<br>我想好了，还是需要学习数据结构与算法。但是我有两个困惑：</p>
-<p>1.如何着手学习呢？</p>
-<p>2.有哪些内容要学习呢？</p>
-<p>学习方法推荐：</p>
-<p>#学习方法<br>1.从基础开始，系统化学习<br>2.多动手，每一种数据结构与算法，都自己用代码实现出来<br>3.思路更重要：理解实现思想，不要背代码<br>4.与日常开发结合，对应应用场景<br>学习内容推荐：</p>
-<p>数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法</p>
-<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>上一篇：数据结构与算法系列十一（冒泡排序）中，我们详细分析了冒泡排序的核心思想，以及代码实现。如果你不记得了，可以回去再看看。学习数据结构与算法，最重要的就是理解每一种算法背后的思想，多看，有助于锻炼我们的逻辑思维分析能力。</p>
-<p>我们这一篇的主角是：插入排序。它是时间复杂度O(n^2)家族的第二个排序算法。</p>
-<p>#考考你：<br>1.你知道插入排序的核心思想吗？<br>2.你能用java实现插入排序吗？<br>3.案例<br>3.1.插入排序思想<br>假设有一个待排序序列：[4, 5, 6, 3, 2, 1]。我们需要按照升序进行排序，排序后的序列是这 样的：[1, 2, 3, 4, 5, 6]。</p>
-<p>如何通过插入排序实现呢？</p>
-<p>插入排序核心思想：</p>
-<p>将待排序序列，分成两个区间：有序区间、无序区间。循环遍历无序区间，依次将无序区间的元素，插入到有序区间的合适位置，所谓合适位置：就是要保证插入元素后，有序区间始终有序。</p>
+<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>上一篇：数据结构与算法系列十二（插入排序）中，我们详细分析了插入排序的核心思想，和代码实现。插入排序的核心思想很巧妙：它是将待排序序列，分为有序区间，和无序区间，循环遍历无序区间，每一次将无序区间中的第一个元素，插入到有序区间的合适位置，每一次插入都要始终保证有序区间有序。</p>
+<p>你需要对插入排序的核心思想再仔细琢磨一下，因为我们今天的主角：选择排序，它的核心思想与插入排序类似。</p>
+<p>#考考你：<br>1.你知道选择排序的核心思想吗？<br>2.你能用java代码实现选择排序吗？<br>3.你知道实际开发中，为什么插入排序，比选择排序更好吗？<br>3.案例<br>3.1.选择排序核心思想<br>假设有一个待排序序列：[4, 5, 6, 3, 2, 1]。我们需要按照升序进行排序，排序后的序列是这 样的：[1, 2, 3, 4, 5, 6]。</p>
+<p>如何通过选择排序实现呢？</p>
+<p>选择排序核心思想：</p>
+<p>将待排序序列，分成两个区间：有序区间、无序区间。一开始假定有序区间元素个数：0，无序区间元素个数：n。循环遍历无序区间，每一次从无序区间中，选择最小的一个元素，插入到有序区间的末尾。</p>
 <p>这里的关键词有：</p>
-<p>1.待排序序列，分成：有序区间、无序区间<br>2.将无序区间数据，插入到有序区间的合适位置<br>3.有序区间始终保证有序，如下图：</p>
-<p>3.2.插入排序代码实现<br>3.2.1.排序代码<br>复制代码<br>/**</p>
+<p>1.待排序序列，分成：有序区间、无序区间<br>2.最开始，假定有序区间元素个数：0，无序区间元素个数：n<br>3.每次循环遍历无序区间，选择最小元素，插入到有序区间末尾，如下图：</p>
+<p>3.2.选择排序代码实现<br>3.2.1.排序代码<br>复制代码<br>/**</p>
 <ul>
-<li><p>插入排序</p>
+<li><p>选择排序</p>
 </li>
 <li><p>@param array：待排序数组</p>
 </li>
 <li><p>@param n：待排序数组大小</p>
 </li>
-<li><p>/<br>public static void sort(Integer [] array,int n) {<br> // 如果排序数组规模小于等于1，直接返回<br> if (n &lt;= 1) {</p>
-<pre><code>return;</code></pre><p> }</p>
-<p> // 将数据分为两个区域：<br> // 有序数据区域：array[0]<br> // 无序数据区域：array[1]…array[n-1]<br> // 循环遍历无序区域的数据，插入到有序数据区域<br> for(int i = 1; i &lt; n; i++){</p>
-<pre><code>// 临时存储待插入目标元素
-int tmp = array[i];
-// 有序区域最后一个元素下标
-int j = i - 1;
-// 从后往前查找插入位置,并移动数据
-for(; j &gt;= 0;j--){
-  if(array[j] &gt; tmp){
-     // 向后移动数据
-     array[j+1] = array[j];
-   }else{
-       break;
+<li><p>/<br>public static void sort(Integer [] array,int n) {<br>  // 如果排序数组规模小于等于1，直接返回<br>  if (n &lt;= 1) {</p>
+<pre><code>return;</code></pre><p>  }</p>
+<p>  // 将待排序数组，分为：有序区间、无序区间<br>  // 一开始，假设整个序列都无序，那么有序区间的元素个数是：0<br>  // 无序区间的元素个数是：n<br>  // 每次从无序区间中，选择最小元素<br>  // 插入有序区间末尾：n个元素，n次选择<br>  for(int i = 0; i &lt; n; i++){</p>
+<pre><code> // 从无序区间第一个位置开始查找：最小元素位置
+ int min = i;
+ for(int j = i+1; j &lt; n; j++){
+   // 比较大小，设定新的最小元素位置标记
+   if(array[min] &gt; array[j]){
+        min = j;
     }
  }
 
- // 插入数据
- System.out.println(&quot;第【&quot; + i + &quot;】次插入排序&quot;);
- array[j+1] = tmp;
-}</code></pre><p>}<br>复制代码</p>
+// 找到新的最小元素位置后，进行数据交换</code></pre><p>   System.out.println(“第【”+(i+1)+”】次选择，最小元素是：”+array[min]);<br>   int tmp = array[i];<br>   array[i] = array[min];<br>   array[min] = tmp;</p>
+<p>  }</p>
 </li>
 </ul>
-<p>3.2.2.测试代码<br>复制代码<br>/**</p>
+<p>}<br>复制代码<br>3.2.2.测试代码<br>复制代码<br>/**</p>
 <ul>
-<li><p>插入排序：</p>
+<li><p>选择排序：</p>
 </li>
 <li><p>1.时间复杂度：</p>
 </li>
@@ -1526,15 +2275,20 @@ for(; j &gt;= 0;j--){
 </li>
 <li><p>3.算法稳定性：</p>
 </li>
-<li><p>是稳定排序算法<br>*/<br>public static void main(String[] args) {<br>// 初始化测试数组<br>Integer[] array = {4,5,6,3,2,1};<br>// 排序前<br>System.out.println(“1.排序前数组：” + Arrays.deepToString(array));</p>
-<p>// 排序<br>System.out.println(“2.开始排序——————————-start”);<br>sort(array,array.length);</p>
-<p>// 排序后<br>System.out.println(“3.排序后数组：” + Arrays.deepToString(array));</p>
+<li><p>不是稳定排序算法</p>
+</li>
+<li><p>/<br>public static void main(String[] args) {<br> // 初始化测试数组<br> Integer[] array = {4,5,6,3,2,1};<br> // 排序前<br> System.out.println(“1.排序前数组：” + Arrays.deepToString(array));</p>
+<p> // 排序<br> System.out.println(“2.开始排序——————————-start”);<br> sort(array,array.length);</p>
+<p> // 排序后<br> System.out.println(“3.排序后数组：” + Arrays.deepToString(array));<br>}<br>复制代码<br>测试结果：</p>
 </li>
 </ul>
-<p>}<br>复制代码<br>测试结果：</p>
-<p>复制代码<br>D:\02teach\01soft\jdk8\bin\java<br>com.anan.algorithm.sort.InsertSort<br>1.排序前数组：[6, 5, 4, 3, 2, 1]<br>2.开始排序——————————-start<br>第【1】次插入排序<br>第【2】次插入排序<br>第【3】次插入排序<br>第【4】次插入排序<br>第【5】次插入排序<br>3.排序后数组：[1, 2, 3, 4, 5, 6]</p>
-<p>Process finished with exit code 0<br>复制代码<br>4.讨论分享<br>复制代码<br>#考考你答案：<br>1.你知道插入排序的核心思想吗？<br>  1.1.待排序序列，分成：有序区间、无序区间<br>  1.2.循环遍历无序区间元素，插入到有序区间的合适位置<br>  1.3.插入元素后，始终保证有序区间有序</p>
-<p>2.你能用java实现插入排序吗？<br>  2.1.参考【3.2】节案例实现<br>复制代码</p>
+<p>复制代码<br>D:\02teach\01soft\jdk8\bin\java<br>    com.anan.algorithm.sort.SelectSort<br>1.排序前数组：[4, 5, 6, 3, 2, 1]<br>2.开始排序——————————-start<br>第【1】次选择，最小元素是：1<br>第【2】次选择，最小元素是：2<br>第【3】次选择，最小元素是：3<br>第【4】次选择，最小元素是：4<br>第【5】次选择，最小元素是：5<br>第【6】次选择，最小元素是：6<br>3.排序后数组：[1, 2, 3, 4, 5, 6]</p>
+<p>Process finished with exit code 0<br>复制代码<br>4.讨论分享<br>复制代码<br>#考考你答案：<br>1.你知道选择排序的核心思想吗？<br>  1.1.将待排序序列，分成：有序区间、无序区间<br>  1.2.最开始，有序区间元素个数：0，无序区间元素个数：n<br>  1.3.循环遍历无序区间，每次选择最小元素，插入有序区间末尾</p>
+<p>2.你能用java代码实现选择排序吗？<br>  2.1.参考【3.2】节代码实现</p>
+<p>3.你知道实际开发中，为什么插入排序，比选择排序更好吗？<br>  3.1.我们在排序算法概述中说过，衡量一个排序算法的优劣，<br>  有三个因素：时间复杂度、空间复杂度、是否稳定<br>  3.2.插入排序与选择排序，它们的时间复杂度都是：O(n^2)<br>  3.3.插入排序与选择排序，它们的空间复杂度都是：O(1)<br>  3.3.插入排序，是稳定的排序算法</p>
+<p>  3.4.【注意】：选择排序，不是稳定排序算法<br>  3.5.假设有一个待排序序列：int a[]={4,5,6,4,3,2,1}<br>  3.6.待排序序列中，有重复元素：a[0]=4,a[3]=4<br>  3.7.第一轮选择排序，选择最小元素：a[6]=1<br>  3.8.将a[0]=4,a[6]=1进行交换</p>
+<p>  3.9.【注意】：第一轮选择排序后，重复元素4的顺序发生了改变<br>  3.10.待排序序列变成：a[]={1,5,6,4,3,2,4}<br>  3.11.此时重复元素：a[3]=4,a[6]=4<br>  3.12.a[3]还是原来的a[3],a[6]是原来的a[0]</p>
+<p>  3.13.我们说稳定排序算法，是指待排序序列中重复元素，<br>  排序前的顺序，与排序后的顺序保持不变<br>  3.14.可见选择排序，不符合稳定排序算法的定义<br>  3.15.关于选择排序，不是稳定排序算法的分析，你可以结合我们前面的图来理解<br>复制代码</p>
 ]]></content>
       <tags>
         <tag>数据结构与算法</tag>
@@ -1714,8 +2468,8 @@ j.以此类推...直到处理完成整个表达式</code></pre><p>复制代码<b
       </tags>
   </entry>
   <entry>
-    <title>数据结构与算法 - 选择排序</title>
-    <url>/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F/</url>
+    <title>数据结构与算法 - 排序</title>
+    <url>/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8E%92%E5%BA%8F/</url>
     <content><![CDATA[<p>1.引子<br>1.1.为什么要学习数据结构与算法？<br>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！</p>
 <p>有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？</p>
 <p>于是问题来了：为什么还要学习数据结构与算法呢？</p>
@@ -1725,66 +2479,25 @@ j.以此类推...直到处理完成整个表达式</code></pre><p>复制代码<b
 <p>学习方法推荐：</p>
 <p>#学习方法<br>1.从基础开始，系统化学习<br>2.多动手，每一种数据结构与算法，都自己用代码实现出来<br>3.思路更重要：理解实现思想，不要背代码<br>4.与日常开发结合，对应应用场景<br>学习内容推荐：</p>
 <p>数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法</p>
-<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>上一篇：数据结构与算法系列十二（插入排序）中，我们详细分析了插入排序的核心思想，和代码实现。插入排序的核心思想很巧妙：它是将待排序序列，分为有序区间，和无序区间，循环遍历无序区间，每一次将无序区间中的第一个元素，插入到有序区间的合适位置，每一次插入都要始终保证有序区间有序。</p>
-<p>你需要对插入排序的核心思想再仔细琢磨一下，因为我们今天的主角：选择排序，它的核心思想与插入排序类似。</p>
-<p>#考考你：<br>1.你知道选择排序的核心思想吗？<br>2.你能用java代码实现选择排序吗？<br>3.你知道实际开发中，为什么插入排序，比选择排序更好吗？<br>3.案例<br>3.1.选择排序核心思想<br>假设有一个待排序序列：[4, 5, 6, 3, 2, 1]。我们需要按照升序进行排序，排序后的序列是这 样的：[1, 2, 3, 4, 5, 6]。</p>
-<p>如何通过选择排序实现呢？</p>
-<p>选择排序核心思想：</p>
-<p>将待排序序列，分成两个区间：有序区间、无序区间。一开始假定有序区间元素个数：0，无序区间元素个数：n。循环遍历无序区间，每一次从无序区间中，选择最小的一个元素，插入到有序区间的末尾。</p>
-<p>这里的关键词有：</p>
-<p>1.待排序序列，分成：有序区间、无序区间<br>2.最开始，假定有序区间元素个数：0，无序区间元素个数：n<br>3.每次循环遍历无序区间，选择最小元素，插入到有序区间末尾，如下图：</p>
-<p>3.2.选择排序代码实现<br>3.2.1.排序代码<br>复制代码<br>/**</p>
-<ul>
-<li><p>选择排序</p>
-</li>
-<li><p>@param array：待排序数组</p>
-</li>
-<li><p>@param n：待排序数组大小</p>
-</li>
-<li><p>/<br>public static void sort(Integer [] array,int n) {<br>  // 如果排序数组规模小于等于1，直接返回<br>  if (n &lt;= 1) {</p>
-<pre><code>return;</code></pre><p>  }</p>
-<p>  // 将待排序数组，分为：有序区间、无序区间<br>  // 一开始，假设整个序列都无序，那么有序区间的元素个数是：0<br>  // 无序区间的元素个数是：n<br>  // 每次从无序区间中，选择最小元素<br>  // 插入有序区间末尾：n个元素，n次选择<br>  for(int i = 0; i &lt; n; i++){</p>
-<pre><code> // 从无序区间第一个位置开始查找：最小元素位置
- int min = i;
- for(int j = i+1; j &lt; n; j++){
-   // 比较大小，设定新的最小元素位置标记
-   if(array[min] &gt; array[j]){
-        min = j;
-    }
- }
-
-// 找到新的最小元素位置后，进行数据交换</code></pre><p>   System.out.println(“第【”+(i+1)+”】次选择，最小元素是：”+array[min]);<br>   int tmp = array[i];<br>   array[i] = array[min];<br>   array[min] = tmp;</p>
-<p>  }</p>
-</li>
-</ul>
-<p>}<br>复制代码<br>3.2.2.测试代码<br>复制代码<br>/**</p>
-<ul>
-<li><p>选择排序：</p>
-</li>
-<li><p>1.时间复杂度：</p>
-</li>
-<li><p>O(n^2)</p>
-</li>
-<li><p>2.空间复杂度：</p>
-</li>
-<li><p>O(1)是原地排序算法</p>
-</li>
-<li><p>3.算法稳定性：</p>
-</li>
-<li><p>不是稳定排序算法</p>
-</li>
-<li><p>/<br>public static void main(String[] args) {<br> // 初始化测试数组<br> Integer[] array = {4,5,6,3,2,1};<br> // 排序前<br> System.out.println(“1.排序前数组：” + Arrays.deepToString(array));</p>
-<p> // 排序<br> System.out.println(“2.开始排序——————————-start”);<br> sort(array,array.length);</p>
-<p> // 排序后<br> System.out.println(“3.排序后数组：” + Arrays.deepToString(array));<br>}<br>复制代码<br>测试结果：</p>
-</li>
-</ul>
-<p>复制代码<br>D:\02teach\01soft\jdk8\bin\java<br>    com.anan.algorithm.sort.SelectSort<br>1.排序前数组：[4, 5, 6, 3, 2, 1]<br>2.开始排序——————————-start<br>第【1】次选择，最小元素是：1<br>第【2】次选择，最小元素是：2<br>第【3】次选择，最小元素是：3<br>第【4】次选择，最小元素是：4<br>第【5】次选择，最小元素是：5<br>第【6】次选择，最小元素是：6<br>3.排序后数组：[1, 2, 3, 4, 5, 6]</p>
-<p>Process finished with exit code 0<br>复制代码<br>4.讨论分享<br>复制代码<br>#考考你答案：<br>1.你知道选择排序的核心思想吗？<br>  1.1.将待排序序列，分成：有序区间、无序区间<br>  1.2.最开始，有序区间元素个数：0，无序区间元素个数：n<br>  1.3.循环遍历无序区间，每次选择最小元素，插入有序区间末尾</p>
-<p>2.你能用java代码实现选择排序吗？<br>  2.1.参考【3.2】节代码实现</p>
-<p>3.你知道实际开发中，为什么插入排序，比选择排序更好吗？<br>  3.1.我们在排序算法概述中说过，衡量一个排序算法的优劣，<br>  有三个因素：时间复杂度、空间复杂度、是否稳定<br>  3.2.插入排序与选择排序，它们的时间复杂度都是：O(n^2)<br>  3.3.插入排序与选择排序，它们的空间复杂度都是：O(1)<br>  3.3.插入排序，是稳定的排序算法</p>
-<p>  3.4.【注意】：选择排序，不是稳定排序算法<br>  3.5.假设有一个待排序序列：int a[]={4,5,6,4,3,2,1}<br>  3.6.待排序序列中，有重复元素：a[0]=4,a[3]=4<br>  3.7.第一轮选择排序，选择最小元素：a[6]=1<br>  3.8.将a[0]=4,a[6]=1进行交换</p>
-<p>  3.9.【注意】：第一轮选择排序后，重复元素4的顺序发生了改变<br>  3.10.待排序序列变成：a[]={1,5,6,4,3,2,4}<br>  3.11.此时重复元素：a[3]=4,a[6]=4<br>  3.12.a[3]还是原来的a[3],a[6]是原来的a[0]</p>
-<p>  3.13.我们说稳定排序算法，是指待排序序列中重复元素，<br>  排序前的顺序，与排序后的顺序保持不变<br>  3.14.可见选择排序，不符合稳定排序算法的定义<br>  3.15.关于选择排序，不是稳定排序算法的分析，你可以结合我们前面的图来理解<br>复制代码</p>
+<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>在前面两篇，我们详细看了常用算法的第一个主题：递归。接下来我们来看常用算法的第二个主题：排序。排序内容有点多，常见的排序算法就有：冒泡排序、插入排序、选择排序、归并排序、快速排序、桶排序、计数排序、基数排序。</p>
+<p>这些排序算法中，不知道有没有你熟悉的，或者不熟悉的。让我们开启排序算法之旅吧。首先第一篇中，我们先来对排序算法做一个总体上的认识。</p>
+<p>#考考你：<br>1.你知道常用的排序算法有哪些吗？<br>2.你知道如何衡量排序算法的优劣吗？<br>3.你知道排序算法的基础概念：有序度、逆序度、满有序度吗？<br>3.案例<br>3.1.排序算法分类<br>在考考你中，我们说排序算法有：冒泡排序、插入排序、选择排序、归并排序、快速排序、桶排序、计数排序、基数排序。这样看起来有点散乱，能不能给它们归一下类呢？答案是可以的。</p>
+<p>对于排序算法，我们可以从时间复杂度上进行归类：</p>
+<p>3.2.从三个角度分析排序算法<br>在实际软件开发中，有众多的排序算法，如何选择和取舍呢？真的会有选择困难症啊！有没有一些好的、可行的方法，去综合衡量排序算法的优劣呢？</p>
+<p>答案是：有</p>
+<p>我们可以从三个角度去综合分析排序算法：时间复杂度、空间复杂度、算法稳定性</p>
+<p>复制代码<br>#时间复杂度<br>  1.分析最好情况、最坏情况、平均情况时间复杂度<br>  2.复杂度分析中，关于系数、常数、低阶平常可以省略<br>  3.但是，需要特别注意：在排序算法中，我们需要考虑进来</p>
+<p>#空间复杂度<br>  1.空间复杂度分析，主要看是否是：原地排序算法<br>  2.原地排序算法，是指：空间复杂度是O(1)<br>  3.注意：在实际软件开发中，这一条很重要</p>
+<p>#算法稳定性<br>  1.算法稳定性，是指如果待排序序列中，有值相同的元素<br>  2.如果经过排序后，原来值相同的元素，顺序保持不变<br>  3.那么我们说，该排序算法是稳定的排序算法<br>  4.否则，该排序算法是不稳定排序算法</p>
+<p>  5.比如，有一个待排序序列：3,6,5,2,6,8<br>  6.待排序序列中，有两个值为6的元素<br>  7.假设用数组a来存储，对应的下标是：a[1]=6,a[4]=6<br>  8.排序后：a[3]=6,a[4]=6<br>  9.这里的a[3]是排序前的a[1]<br>  10.这里的a[4]还是排序前的a[4]<br>  11.这就是稳定排序算法的要求，如下图：<br>复制代码<br>理解排序算法稳定性：</p>
+<p>3.3.排序基础概念：有序度、逆序度、满有序度<br>在排序算法中，我们需要关注三个基础概念：有序度、逆序度、满有序度。</p>
+<p>整个排序过程，我们可以理解为：增加有序度，减少逆序度，最终达到满有序度的过程。</p>
+<p>那么，它们具体的含义是什么呢？</p>
+<p>复制代码<br>#有序度：<br>  待排序序列中，如果下标索引：i&lt;j，且a[i]&lt;a[j],则称为有序度<br>#逆序度<br>  待排序序列中，如果下标索引：i&lt;j，且a[i]&gt;a[j],则称为逆序度<br>#满有序度<br>  1.待排序序列中，如果有序度达到：n(n-1)/2，则称为满有序度<br>  2.即此时待排序序列，其实是有序的<br>复制代码<br>以上关于有序度、逆序度的概念，相信很多朋友都能理解。这里我们解释一下关于满有序度的公式：n(n-1)/2。</p>
+<p>要理解满有序度的概念，你可能需要回顾一下数学中的：排列、组合知识点，应该是在高二的时候学的，可以这样去理解它们：</p>
+<p>复制代码<br>#排列：<br>  1.有n个元素，如果每两个元素，组成一个排列<br>  2.则总共有排列数：n(n-1)<br>  3.比如，有3个元素：a b c<br>  4.每两个元素组成排列数是：3*(3-1)=6<br>  5.组成的排列有：(a,b) (a,c) (b,a) (b,c) (c,a) (c,b)</p>
+<p>#组合：<br>  1.有n个元素，如果每两个元素，组成一个组合<br>  2.则总共有组合数：n(n-1)/2<br>  3.比如，有3个元素：a b c<br>  4.每两个元素组成的组合数是：3(3-1)/2=3<br>  5.组成的组合有：(a,b) (a,c) (b,c)</p>
+<p>#综合结论：<br>   1.假设待排序序列有n个元素<br>   2.如果有序度，等于每2个元素的组合数：n(n-1)/2<br>   3.那么该待排序序列，其实是有序的<br>   4.这就是满有序度的概念<br>复制代码</p>
 ]]></content>
       <tags>
         <tag>数据结构与算法</tag>
@@ -1954,84 +2667,143 @@ return movies(n - 1) + 1;</code></pre><p>}<br>复制代码</p>
       </tags>
   </entry>
   <entry>
-    <title>设计思想</title>
-    <url>/2020/07/15/%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3/</url>
-    <content><![CDATA[<blockquote>
-<p>一直在说互联网系统应该是design for failure，今天看到的这篇文介绍的虽是简单几句话，但妥妥的设计思想，还是蛮契合SRE精髓。作为一名designer或者developer，应该要对墨菲定律心存敬畏，以下讲一下我对这16中设计思想的一个大致看法吧。</p>
-</blockquote>
- <a id="more"></a>
+    <title>网页应用架构</title>
+    <url>/2020/07/27/%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84/</url>
+    <content><![CDATA[<h3 id="现代Web应用程序体系结构概述"><a href="#现代Web应用程序体系结构概述" class="headerlink" title="现代Web应用程序体系结构概述"></a>现代Web应用程序体系结构概述</h3><p><img src="/images/pasted-149.png" alt="upload successful"></p>
+<a id="more"></a>
 
-<h3 id="防御性设计（Defensive-Design）"><a href="#防御性设计（Defensive-Design）" class="headerlink" title="防御性设计（Defensive Design）"></a>防御性设计（Defensive Design）</h3><p>所谓的防御性设计实际上就是“防呆”，英文叫Idiot Proofing。说白了就是用户有时候会不自觉的做一些蠢事，我们在设计的时候要尽量考虑到一些不规范的交互行为，如果你的用户是一只猴子，你要写包单保证系统不被玩坏。例如，在Android开发中使用到的Monkey Test就是用于这样的目的。</p>
-<h3 id="边界情况（Edge-Case）"><a href="#边界情况（Edge-Case）" class="headerlink" title="边界情况（Edge Case）"></a>边界情况（Edge Case）</h3><p>这个设计思想在测试领域比较常见，就是我们在设计我们的设计案例的时候有没有充分考虑在边界情况下的系统行为。比较常见的例如，闰年情况、跨日情况等边界。想起刚入行我leader跟我说你的程序在你脑袋有没有跑过一遍所有能想到的情况，没有的话重做。</p>
-<h3 id="防误措施（Mistake-Proofing）"><a href="#防误措施（Mistake-Proofing）" class="headerlink" title="防误措施（Mistake Proofing）"></a>防误措施（Mistake Proofing）</h3><p>怎么保证不会发生错误。例如在人机交互环节，能不能进行输入校验？</p>
-<h3 id="解耦（Decoupling）"><a href="#解耦（Decoupling）" class="headerlink" title="解耦（Decoupling）"></a>解耦（Decoupling）</h3><p>设计的时候，哪怕是最基础的代码也应该符合开闭原则。远的不说，就单单Spring的IOC就是为了把对象创建及维护从原来的由引用类负责这种强耦合模式转成通过spring容器负责。且解耦一般的做法是通过把内部逻辑封装起来，暴露对外统一API接口，调用方不需要了解被调用方的内部逻辑实现，只需要知道提供什么功能即可。这样再引申一下，解耦的作用就在于复用，把所有的高内聚功能独立成一个个模块，然后就可以像乐高积木一样根据调用方的实际需求进行组装。</p>
-<p>宏观的系统设计就更是如此，例如微服务中的Eureka。首先，Eureka客户端通过把自己注册到Eureka服务端（如IP、端口），然后其他服务在调用前通过Eureka获取被调用方的信息，然后再去调用被调用方，然后他们的调用关系就是这样解耦的。</p>
-<p><img src="/images/pasted-35.png" alt="upload successful"></p>
-<p>熔断本质上就是一种防御性设计或者策略。假设一个微服务体系下的系统，其中A服务调用B服务。系统的QPS是千级别，当时如果B服务挂掉的话A的线程绝对在短时间内占满耗尽而导致假死，从而形成大量A请求积压而导致情况恶化，最终形成雪崩。</p>
-<p>在SpringCloud技术体系中，熔断就是Hystrix所体现的另外一种思想。Hystrix可以通过监控一段事件内的异常次数和响应速度来判断当前服务的健康状况，若服务健康状况不佳则进行熔断，熔断之后新的请求将不会调用实际的业务，而是通过快速失败或优雅降级的方式来快速给用户进行响应。</p>
-<h3 id="舱壁模式（Bulkhead）"><a href="#舱壁模式（Bulkhead）" class="headerlink" title="舱壁模式（Bulkhead）"></a>舱壁模式（Bulkhead）</h3><p>在分布式系统的设计中有一种舱壁模式。目前比较火的微服务架构我理解实际上就是隔板模式的一个体现。这种模式把系统中的各个功能模块实体进行进程、资源上的隔离，使得系统不会因为某个功能模块试题（即微服务）的局部失败而导致全局失败。</p>
+<p>上图很好地表示了Storyblocks上的体系结构。如果您不是经验丰富的Web开发人员，则可能会发现它很复杂。在我们深入研究每个组件的细节之前，下面的逐步操作应该使其更容易上手。</p>
+<blockquote>
+<p>一位用户在Google上搜索“森林中浓烈的美丽雾和阳光”。第一个结果刚好来自Storyblocks，这是我们领先的照片和载体网站。用户单击结果，将其浏览器重定向到图像详细信息页面。在后台，用户的浏览器向DNS服务器发送请求，以查找如何联系Storyblock，然后发送请求。<br>该请求到达我们的负载均衡器，该负载均衡器随机选择我们当时正在运行该站点的10台左右的Web服务器之一来处理该请求。Web服务器从我们的缓存服务中查找有关该图像的一些信息，并从数据库中获取有关该图像的剩余数据。我们注意到尚未计算图像的颜色配置文件，因此我们将“颜色配置文件”作业发送到我们的作业队列，作业服务器将对其进行异步处理，并根据结果适当更新数据库。<br>接下来，我们尝试通过使用照片标题作为输入向我们的全文搜索服务发送请求来查找相似的照片。该用户恰好以成员身份登录到Storyblocks，因此我们从帐户服务中查找其帐户信息。最后，我们向数据防火墙触发页面查看事件，以将其记录在我们的云存储系统中，并最终加载到我们的数据仓库中，分析师使用该事件来帮助回答有关业务的问题。<br>现在，服务器将视图呈现为HTML，并将其发送回用户的浏览器，首先通过负载平衡器。该页面包含我们加载到与CDN连接的云存储系统中的Javascript和CSS资产，因此用户的浏览器与CDN联系以检索内容。最后，浏览器将页面可视化呈现给用户查看。</p>
+</blockquote>
+<p>接下来，我将引导您完成每个组件，并为每个组件提供“ 101”介绍，这将为您提供一个很好的思维模式，以便您思考未来的Web体系结构。我将继续阅读其他系列文章，这些文章根据我在Storyblocks所学的知识提供具体的实施建议。</p>
+<h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><p>DNS代表“域名系统”，它是使万维网成为可能的骨干技术。在最基本的级别，DNS提供从域名（例如google.com）到IP地址（例如85.129.83.120）的键/值查找，这是您的计算机将请求路由到适当地址所必需的服务器。与电话号码类似，域名和IP地址之间的区别是“致电John Doe”和“致电201-867-5309”之间的区别。就像您过去需要一本电话簿来查找John的号码一样，您也需要DNS来查找域的IP地址。因此，您可以将DNS视为互联网的电话簿。</p>
+<p>我们可以在这里进行更多详细介绍，但是我们将跳过它，因为它对于我们的101级介绍并不重要。</p>
+<h3 id="负载均衡器"><a href="#负载均衡器" class="headerlink" title="负载均衡器"></a>负载均衡器</h3><p>在深入研究负载平衡之前，我们需要退后一步来讨论水平与垂直应用程序扩展。它们是什么，有什么区别？非常简单地放在此StackOverflow帖子中，水平缩放意味着通过向资源池中添加更多计算机来进行扩展，而“垂直”缩放意味着通过向现有计算机中添加更多的功能（例如CPU，RAM）来进行扩展。</p>
+<p>在Web开发中，您（几乎）总是想要水平缩放，因为为简单起见，东西会中断。服务器随机崩溃。网络退化。整个数据中心有时会脱机。拥有多台服务器可以使您计划中断，以便应用程序继续运行。换句话说，您的应用程序是“容错的”。其次，水平缩放允许您将应用程序后端的不同部分（分别在Web服务器，数据库，服务X等上）运行在不同的服务器上，以最小的方式耦合它们。最后，您可能无法再进行垂直缩放。世界上没有足够大的计算机来执行您所有应用程序的计算。尽管这适用于规模较小的公司，但可以将Google的搜索平台视为一个典型的例子。例如，故事块 在任何给定时间点运行150到400个AWS EC2实例。通过垂直缩放来提供整个计算能力将是一个挑战。</p>
+<p>好，回到负载平衡器。它们是使水平缩放成为可能的魔术酱。它们将传入请求路由到通常是彼此克隆/镜像的许多应用程序服务器之一，并将响应从应用程序服务器发送回客户端。它们中的任何一个都应该以相同的方式处理请求，因此只需在服务器之间分配请求，这样就不会超载。</p>
+<p>而已。从概念上讲，负载均衡器相当简单。在引擎盖下肯定有复杂之处，但无需深入了解我们的101版本。</p>
+<h3 id="Web应用程序服务器"><a href="#Web应用程序服务器" class="headerlink" title="Web应用程序服务器"></a>Web应用程序服务器</h3><p>在较高级别，Web应用程序服务器的描述相对简单。它们执行处理用户请求的核心业务逻辑，并将HTML发送回用户的浏览器。为了完成工作，他们通常与各种后端基础架构进行通信，例如数据库，缓存层，作业队列，搜索服务，其他微服务，数据/日志记录队列等等。如上所述，为了处理用户请求，通常将至少两个（通常是更多）插入负载平衡器。</p>
+<p>您应该知道，应用服务器的实现需要选择一种特定的语言（Node.js，Ruby，PHP，Scala，Java，C＃.NET等）和该语言的Web MVC框架（Express for Node.js，Ruby on Rails） ，Scala播放，Laravel PHP播放等等）。但是，深入探讨这些语言和框架的细节不在本文的讨论范围之内。</p>
+<h3 id="数据库服务器"><a href="#数据库服务器" class="headerlink" title="数据库服务器"></a>数据库服务器</h3><p>每个现代的Web应用程序都利用一个或多个数据库来存储信息。数据库提供了定义数据结构，插入新数据，查找现有数据，更新或删除现有数据，对数据进行计算等方法。在大多数情况下，Web应用程序服务器与作业服务器直接进行通信。此外，每个后端服务可能都有自己的数据库，该数据库与应用程序的其余部分隔离。</p>
+<p>尽管我避免深入探讨每个体系结构组件的特定技术，但对您而言，更不用说数据库的下一级细节了：SQL和NoSQL。</p>
+<p>SQL代表“结构化查询语言”，并且是在1970年代发明的，旨在提供一种标准的查询关系数据集的方法，该方法可供广大读者访问。SQL数据库将数据存储在通过通用ID（通常为整数）链接在一起的表中。让我们来看一个为用户存储历史地址信息的简单示例。您可能有两个表，用户表和用户地址，通过用户的ID链接在一起。参见下图以获取简化版本。这些表被链接，因为user_addresses中的user_id列是users表中id列的“外键”。<br><img src="/images/pasted-150.png" alt="upload successful"></p>
+<p>如果您对SQL不太了解，我强烈建议您逐步学习一个教程，就像您可以在此处的 Khan Academy上找到的那样。它在Web开发中无处不在，因此您至少想要了解基础知识，以便正确地构建应用程序。</p>
+<p>NoSQL代表“ Non-SQL”，它是一组较新的数据库技术，可以处理大型Web应用程序可能产生的大量数据（大多数SQL变体不能很​​好地水平扩展，并且只能垂直缩放到某个点）。如果您对NoSQL一无所知，建议从以下高级介绍开始：</p>
+<ul>
+<li><a href="https://www.w3resource.com/mongodb/nosql.php" target="_blank" rel="noopener">https://www.w3resource.com/mongodb/nosql.php</a></li>
+<li><a href="http://www.kdnuggets.com/2016/07/seven-steps-understanding-nosql-databases.html" target="_blank" rel="noopener">http://www.kdnuggets.com/2016/07/seven-steps-understanding-nosql-databases.html</a></li>
+<li><a href="https://resources.mongodb.com/getting-started-with-mongodb/back-to-basics-1-introduction-to-nosql" target="_blank" rel="noopener">https://resources.mongodb.com/getting-started-with-mongodb/back-to-basics-1-introduction-to-nosql</a></li>
+</ul>
+<p>我还要牢记，总的来说，整个行业都在将SQL用作NoSQL数据库的接口，因此，如果您不了解SQL，那么您真的应该学习SQL。这些天几乎没有办法避免这种情况。</p>
+<h3 id="缓存服务"><a href="#缓存服务" class="headerlink" title="缓存服务"></a>缓存服务</h3><p>缓存服务提供了一个简单的键/值数据存储，使您可以在接近O（1）的时间内保存和查找信息。应用程序通常利用缓存服务来保存昂贵的计算结果，以便可以从缓存中检索结果，而不必在下次需要时重新计算结果。应用程序可能会缓存数据库查询，对外部服务的调用，给定URL的HTML等结果。这是真实应用程序中的一些示例：</p>
+<ul>
+<li>Google会为“狗”或“泰勒·斯威夫特”之类的常见搜索查询缓存搜索结果，而不是每次都重新计算它们</li>
+<li>Facebook会缓存您登录时看到的许多数据，例如帖子数据，朋友等。在此处阅读有关Facebook缓存技术的详细文章。</li>
+<li>Storyblocks缓存来自服务器端React渲染，搜索结果，预输入结果等的HTML输出。<br>两种最广泛使用的缓存服务器技术是Redis和Memcache。我将在另一篇文章中详细介绍。</li>
+</ul>
+<h3 id="作业队列和服务器"><a href="#作业队列和服务器" class="headerlink" title="作业队列和服务器"></a>作业队列和服务器</h3><p>大多数Web应用程序需要在后台异步执行一些与响应用户请求没有直接关联的工作。例如，Google需要对整个互联网进行爬网并编制索引，以便返回搜索结果。并非每次搜索都这样做。取而代之的是，它异步地爬网，并一路更新搜索索引。</p>
+<p>尽管有不同的体系结构可以完成异步工作，但最普遍的是我称之为“作业队列”体系结构。它由两个部分组成：一个需要运行的“作业”队列和一个或多个运行该队列中作业的作业服务器（通常称为“工人”）。</p>
+<p>作业队列存储需要异步运行的作业列表。最简单的是先进先出（FIFO）队列，尽管大多数应用程序最终需要某种优先级排队系统。无论何时应用程序需要按某种常规计划运行或由用户操作确定运行作业，它都只会将适当的作业添加到队列中。</p>
+<p>例如，Storyblocks利用工作队列来支持支持我们的市场所需的许多幕后工作。我们运行作业来对视频和照片进行编码，处理CSV以进行元数据标记，汇总用户统计信息，发送密码重设电子邮件等。我们从简单的FIFO队列开始，但我们已升级到优先级队列，以确保诸如发送密码重置电子邮件之类的时间敏感操作能尽快完成。</p>
+<p>作业服务器处理作业。他们轮询作业队列以确定是否有工作要做，如果有，他们将作业弹出队列并执行。基本语言和框架的选择与Web服务器一样多，因此在本文中我将不做详细介绍。</p>
+<h3 id="全文检索服务"><a href="#全文检索服务" class="headerlink" title="全文检索服务"></a>全文检索服务</h3><p>许多（如果不是大多数）网络应用程序都支持某种搜索功能，其中用户提供文本输入（通常称为“查询”），并且该应用程序返回最“相关”的结果。支持此功能的技术通常称为“ 全文搜索 ”，它利用反向索引快速查找包含查询关键字的文档。<br><img src="/images/pasted-151.png" alt="upload successful"></p>
+<pre><code>该示例显示了如何将三个文档标题转换为反向索引，以帮助快速查找从特定关键字到标题中带有该关键字的文档。注意，诸如“ in”，“ the”，“ with”等的常用词（称为停用词）通常不包括在倒排索引中。</code></pre><p>尽管可以直接从某些数据库中进行全文搜索（例如，MySQL支持全文搜索），但通常运行单独的“搜索服务”来计算和存储倒排索引并提供查询接口。尽管还有其他选择，例如Sphinx或Apache Solr，但当今最受欢迎的全文搜索平台是Elasticsearch。</p>
+<h3 id="服务"><a href="#服务" class="headerlink" title="服务"></a>服务</h3><p>一旦应用达到一定规模，就有可能将某些“服务”分拆为单独的应用程序运行。它们不会暴露于外部世界，但是应用程序和其他服务会与它们交互。例如，Storyblocks具有多项运营和计划服务：</p>
+<ul>
+<li>帐户服务在我们所有站点上存储用户数据，这使我们能够轻松地提供交叉销售机会并创建更统一的用户体验</li>
+<li>内容服务存储我们所有视频，音频和图像内容的元数据。它还提供了用于下载内容和查看下载历史的界面。</li>
+<li>付款服务提供了用于为客户信用卡开帐单的界面。</li>
+<li>HTML→PDF服务提供了一个简单的界面，该界面接受HTML并返回相应的PDF文档。</li>
+</ul>
+<h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><p>如今，公司的生存与否取决于其如何利用数据。如今，几乎每个应用程序一旦达到一定规模，就会利用数据管道来确保可以收集，存储和分析数据。典型的管道具有三个主要阶段：</p>
 <ol>
-<li>资源隔离：</li>
+<li>该应用程序将数据（通常是有关用户交互的事件）发送到数据“ firehose”，该“ firehose”提供了流接口以提取和处理数据。通常，原始数据会被转换或扩充并传递给另一个防火墙。AWS Kinesis和Kafka是用于此目的的两种最常见的技术。</li>
+<li>原始数据以及最终的转换/增强数据将保存到云存储中。AWS Kinesis提供了一个称为“ firehose”的设置，该设置使将原始数据保存到其云存储（S3）的过程非常容易配置。</li>
+<li>转换/增强的数据通常被加载到数据仓库中进行分析。我们使用AWS Redshift，并且在新兴世界中越来越大的一部分也使用AWS Redshift，尽管大型公司通常会使用Oracle或其他专有仓库技术。如果数据集足够大，则可能需要类似Hadoop的NoSQL MapReduce技术进行分析。</li>
 </ol>
-<p>微服务里面的Hystrix则是遵守了该模式，通过为每个单独的服务提供独立的线程池而进行资源隔离。在Hystrix中实际上通过两种方式进行资源隔离：</p>
-<blockquote>
-<p>信号量隔离策略（ ExecutionIsolationStrategy.SEMAPHORE）<br>Semaphores 隔离就是利用了java.util.concurrent.Semaphore 的功能，从信号量获取到许可才允许执行，否则不允许执行，执行完成后要释放之前获取到的许可。同样的每一个服务依赖都有一个自己的信号量，当该信号量的许可被获取完之后，再有线程要进行依赖调用，发现已经没有可用的信号量，这时候就会被拒绝调用。信号量隔离始终都是运行在 Container 线程内的。它的优势就在于造成的开销更低。<br>线程隔离策略（ ExecutionIsolationStrategy.THREAD）<br>所谓的线程隔离，实际上就是每一个依赖调用都有自己的线程池来负责处理，依赖调用都运行在自己线程池中的线程上，当同一个依赖调用使用的线程池中的 Queue  size 达到设置的阙值时就会拒绝进行依赖的调用。<br>具体用法可以通过继承@HystrixCommand实现线程隔离或者交易隔离。</p>
-</blockquote>
-<ol start="2">
-<li>数据隔离</li>
-</ol>
-<p>上面讲的都是线程隔离，当然数据隔离这个一般的做法有库隔离、表隔离、按字段区分这三种租户隔离的方法。</p>
-<h3 id="冗余（Redundancy）"><a href="#冗余（Redundancy）" class="headerlink" title="冗余（Redundancy）"></a>冗余（Redundancy）</h3><p>所谓的冗余指的通过重复配置关键组件或部件，保证在关键组件失效的情况下还有备份组件运作以便保证系统可以继续提供服务。生活中的例子请参与飞机的双引擎设计。</p>
-<p>主从模式就是冗余的体现。在正常情况下，主实例负责提供全部的服务，从实例在主实例整体或部分不可用的情况下，完全替代主实例整体或局部而对外提供服务。</p>
-<h3 id="重试（Retry）"><a href="#重试（Retry）" class="headerlink" title="重试（Retry）"></a>重试（Retry）</h3><p>重试是在分布式系统下处理瞬态故障的一个基本手段，简单有效（当然重试的前提是要求幂等）。但是重试也是可以很危险的，它能够引起把一个局部小时间迅速升级为一个系统重大故障，严重者导致系统假死。</p>
-<p><img src="/images/pasted-36.png" alt="upload successful"></p>
-<p>举个简单例子：如果我们的链路类似上图，这里会发生什么问题？在极端情况下，重试次数达到5<em>5</em>5*5=625次。当链路中的其中一个服务故障率异常的时候，那重试风暴便开启了，因为重试为服务器带来额外的开销和线程的占用，然后其他新来的请求又形成排队，这样的话就形成了类似的DDos恶性事件。根据我们平时的项目经验：</p>
-<blockquote>
-<p>相对较好的是选用3次；<br>且重试的时间一定要设定一定的时间间隔（因为很多时候的瞬态故障更多是网络抖动）<br>尽量只在应用层做重试。</p>
-</blockquote>
-<h3 id="撤销（Undo）"><a href="#撤销（Undo）" class="headerlink" title="撤销（Undo）"></a>撤销（Undo）</h3><p>这个没什么好说，撤销这个功能应该是标配吧。</p>
-<h3 id="冷备（Cold-Standby）"><a href="#冷备（Cold-Standby）" class="headerlink" title="冷备（Cold Standby）"></a>冷备（Cold Standby）</h3><p>冷备实际上也是冗余设计的其中一种体现，只是它会更侧重于“冷”，意思是当系统发生宕机时，这个系统是需要手动启动用于替换下线的主实例，它是跟热备是不一样，热备更多体现在自动切换。</p>
-<h3 id="熔断（Derating）"><a href="#熔断（Derating）" class="headerlink" title="熔断（Derating）"></a>熔断（Derating）</h3><p><img src="/images/pasted-37.png" alt="upload successful"></p>
-<p>熔断本质上就是一种防御性设计或者策略。假设一个微服务体系下的系统，其中A服务调用B服务。系统的QPS是千级别，当时如果B服务挂掉的话A的线程绝对在短时间内占满耗尽而导致假死，从而形成大量A请求积压而导致情况恶化，最终形成雪崩。</p>
-<p>在SpringCloud技术体系中，熔断就是Hystrix所体现的另外一种思想。Hystrix可以通过监控一段事件内的异常次数和响应速度来判断当前服务的健康状况，若服务健康状况不佳则进行熔断，熔断之后新的请求将不会调用实际的业务，而是通过快速失败或优雅降级的方式来快速给用户进行响应。</p>
-<p>具体断路器可以参考以下文章：</p>
-<blockquote>
-<p>Netflix：<a href="https://github.com/Netflix/Hystrix/wiki/How-it-Works#CircuitBreaker" target="_blank" rel="noopener">https://github.com/Netflix/Hystrix/wiki/How-it-Works#CircuitBreaker</a><br>Martin Fowler的Circuit Breaker。</p>
-</blockquote>
-<h3 id="容错（Error-Tolerance）"><a href="#容错（Error-Tolerance）" class="headerlink" title="容错（Error Tolerance）"></a>容错（Error Tolerance）</h3><p>狭义的容错泛指人机交互界面的时候需要对用户输入进行输入校验，保证数据准确性。</p>
-<p>广义的容错应该是两个具有明确边界的事物（如服务间，系统间）交互时候针对可能发生的一切主客观异常情况的防御性手段。常见的容错机制有failsafe、failback、failover、failfast。</p>
-<p>failfast更多指的是快速失败。当系统遭遇一定概率的故障时，可预见这不是偶发性故障，然后就要开启类似断路器开关，让后续打进来的流量直接失败快速返回，避免线程积压导致系统滚雪球式崩溃。</p>
-<p>failover指的是失效转移。请参考我的上一篇redis的文章《玩转Redis高可用-哨兵模式》，里面的主库崩掉后通过选举重新选定新主库的情况就是失效转移。</p>
-<p>failsafe指的是失效安全，具体参考以下第12点。</p>
-<p>failback指的是失效自动恢复，具体是指主实例发生故障而导致系统切换到备实例，在主实例恢复后自动转移回主实例上。这种容错在Hystrix的自恢复能力可以得到体现（详看下图）。</p>
-<p><img src="/images/pasted-38.png" alt="upload successful"></p>
-<p>上图断路器的原理具体看以下三个关键参数，大体逻辑如下：</p>
-<p>// 这个用于设定断路器触发的异常比例阈值，正常情况下断路器处于关闭状态。假设阈值为50%，当在一定时间内（如1分钟），异常调用次数/总调用次数&gt;50%的话，断路器打开，后续所有的请求全部调用getFallback()进行failfast.</p>
-<p>HystrixCommandProperties.Setter().withCircuitBreakerErrorThresholdPercentage(50%)</p>
-<p>// 上面说的一定的采样周期内的流量至少要达到100，Hystrix才会进行采样统计并计算异常比例，再跟上面设定的异常比例阈值进行比较。</p>
-<p>HystrixCommandProperties.Setter().withCircuitBreakerRequestVolumeThreshold(100)</p>
-<p>// 当断路器状态为打开后，在下面预设的6000毫秒时间内所有请求被快速failfast；当时间一过，Hystrix会试探性允许一个请求进来，这个时候断路器处于半开状态；如果调用成功，断路器自动关闭，然后应用恢复正常状态。</p>
-<p>HystrixCommandProperties.Setter().withCircuitBreakerSleepWindowInMilliseconds(6000)</p>
-<h3 id="失效安全（Fail-safe）"><a href="#失效安全（Fail-safe）" class="headerlink" title="失效安全（Fail safe）"></a>失效安全（Fail safe）</h3><p>所谓的失效安全，就是指在特定失效的情况下，一个系统或者服务也不会对业务造成损害。实际上，我们使用token进行安全登录也是一种失效安全的体现，如果token失效了（如时间过期），用户是无法登录的，因为正常登录需要token有一种约束因素，这种因素就是时间。如果时间过了，代表这种约束因素不存在或者不再有效了，登录功能就不能正常工作了，这个是一个极好的设计理念。</p>
-<p>有点抽象？跟你介绍一个生活的例子。电梯之所以可以正常升降，是因为在通电的过程中，正常工作的约束因素（brake）是关闭的；如果某个特殊情况（如没电），这个约束因素不存在或不再有效了，brake是打开的，因此电梯是不会因为没电而下坠的。这个可以理解了吧？</p>
-<h3 id="优雅降级（Graceful-Degradation）"><a href="#优雅降级（Graceful-Degradation）" class="headerlink" title="优雅降级（Graceful Degradation）"></a>优雅降级（Graceful Degradation）</h3><p>服务降级跟熔断还是挺像的，只是降级来得更加温和和优雅一点。熔断是直接断掉防止异常进一步扩大而导致雪崩，但是我们的终极目标是提供尽可能多的服务，这个就是优雅降级的理念。在一些异常情况或者秒杀场景下，为了保证核心服务（如商品下单、支付）的正常可用，会放弃掉一些非核心服务（如历史账单查询），这就是所谓的服务降级。</p>
-<p>在微服务框架中，一般会使用Hystrix的@HystrixCommand或Feign的@FeignClient对服务进行声明，然后为每个服务配置相应的fallback类，最终结合起来进行服务降级。</p>
-<h3 id="监控（Monitoring）"><a href="#监控（Monitoring）" class="headerlink" title="监控（Monitoring）"></a>监控（Monitoring）</h3><p>我们的系统有哪几个纬度的监控，估计最多就是常规的硬件状态监控。当然这里的监控我理解除了技术指标监控，还更应该有业务指标监控，否则我们都在裸泳，等海水退下去后就一览无遗。</p>
-<p>监控实际上是为了更好的主动防御，下图展示一下本人前司的一个运维监控与开发协同的机制（从每个序号顺序往下走）。大家可以看出，一套完善的告警监控系统，能够快速通知开发与运维，开发侧能够完成紧急修复并能够协同运维进行快速部署。在笔者前司经历中，正是有着完善的监控告警系统，大部分故障基本可以在业务发现问题得到有效解决（麻蛋一般在晚上爆问题，那段时间太美好了）。</p>
-<p><img src="/images/pasted-39.png" alt="upload successful"></p>
-<h3 id="耐用性（Durability）"><a href="#耐用性（Durability）" class="headerlink" title="耐用性（Durability）"></a>耐用性（Durability）</h3><p>这里我理解的是系统或数据的耐受性。例如数据，为什么我们一定要持久化到数据库，因为就是要借助数据库硬件各种维度的耐受性。</p>
-<h3 id="回弹性（Resilience）"><a href="#回弹性（Resilience）" class="headerlink" title="回弹性（Resilience）"></a>回弹性（Resilience）</h3><p>这里我看到网上有一个更恰当的翻译，叫“韧性”，就是说我们的设计应该在一些特殊情况下还能通过一系列的手段继续提供尽可能多的服务，你也可以理解为“可靠性”。实际上，我的理解是上面说到的基本上都是回弹性的范畴之内。</p>
-<blockquote>
-<p>服务降级<br>限流<br>重试<br>舱壁模式<br>防御性设计</p>
-</blockquote>
-<p>当然，现在为了提升系统服务的回弹性，部分头部公司也会使用一些故障注入的办法进行混沌工程式训练，如Netflix的ChaosMonkey，阿里的ChaosBlade等。</p>
-<p>参考：</p>
-<p><a href="https://simplicable.com/new/design-for-failure" target="_blank" rel="noopener">https://simplicable.com/new/design-for-failure</a></p>
-<p><a href="https://github.com/Netflix/Hystrix/wiki/How-it-Works#CircuitBreaker" target="_blank" rel="noopener">https://github.com/Netflix/Hystrix/wiki/How-it-Works#CircuitBreaker</a></p>
-<p>Martin Fowler的Circuit Breaker。</p>
+<p>架构图中未描绘的另一步骤：将数据从应用程序和服务的操作数据库加载到数据仓库中。例如，在Storyblocks，我们每晚将VideoBlocks，AudioBlocks，Storyblocks，帐户服务和贡献者门户数据库加载到Redshift中。通过将核心业务数据与我们的用户交互事件数据一起定位，从而为我们的分析师提供了一个整体数据集。</p>
+<h3 id="云存储"><a href="#云存储" class="headerlink" title="云存储"></a>云存储</h3><p>根据AWS的说法， “云存储是一种通过Internet存储，访问和共享数据的简单且可扩展的方式” 。您可以使用它来存储或访问或多或少地存储在本地文件系统上的任何内容，其优点是可以通过HTTP上的RESTful API与之交互。到目前为止，Amazon的S3产品是当今最受欢迎的云存储，我们在Storyblocks广泛依赖于此存储来存储我们的视频，照片和音频资产，我们的CSS和Javascript，我们的用户事件数据等等。</p>
+<h3 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h3><p>CDN代表“内容交付网络”，该技术提供了一种在Web上为静态HTML，CSS，Javascript和图像之类的资产提供服务的方法，其速度比从单个原始服务器提供这些资源的速度要快得多。它的工作原理是将内容分布在世界各地的许多“边缘”服务器上，以便用户最终从“边缘”服务器而不是原始服务器下载资产。例如，在下图中，西班牙的用户从具有纽约原始服务器的站点请求网页，但是该页面的静态资产是从英格兰的CDN“边缘”服务器加载的，从而避免了许多缓慢的跨大西洋HTTP要求。<br><img src="/images/pasted-148.png" alt="upload successful"></p>
+<p>查看本文以获得更全面的介绍。通常，Web应用程序应始终使用CDN来提供CSS，Javascript，图像，视频和任何其他资产。某些应用程序也许还可以利用CDN来提供静态HTML页面。</p>
+]]></content>
+      <categories>
+        <category>架构</category>
+      </categories>
+      <tags>
+        <tag>架构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据结构与算法 - 链表2</title>
+    <url>/2020/07/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A82/</url>
+    <content><![CDATA[<p><img src="/images/pasted-3.png" alt="upload successful"></p>
 ]]></content>
       <tags>
-        <tag>设计</tag>
+        <tag>数据结构与算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据结构与算法 - 链表</title>
+    <url>/2020/07/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A8/</url>
+    <content><![CDATA[<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>链表与数组一样，都是常用的基础数据结构，它通过“指针”将一组零散的内存块串联起来使用。每一个零散的内存块称为：节点。</p>
+<p>为了将所有节点串联起来，每个链表节点除了存储数据，还需要存储链上下一个节点的地址，我们把存储下一个节点地址的指针，称为：后继指针。</p>
+<p>链表有两个特殊的节点：头节点、尾节点</p>
+<p>头节点：第一个节点</p>
+<p>尾节点：后继指针指向null的节点</p>
+<p><img src="/images/pasted-0.png" alt="upload successful"></p>
+<h2 id="差异"><a href="#差异" class="headerlink" title="差异"></a>差异</h2><h3 id="内存空间"><a href="#内存空间" class="headerlink" title="内存空间"></a>内存空间</h3><p>数组的一个特点：需要连续的内存空间。链表与数组刚好相反，链表不需要连续的内存空间，它是通过“指针”将一组零散的内存块串联起来使用</p>
+<p><img src="/images/pasted-1.png" alt="upload successful"></p>
+<h3 id="操作方式"><a href="#操作方式" class="headerlink" title="操作方式"></a>操作方式</h3><ol>
+<li><p>插入、删除</p>
+<p>数组的插入、删除操作，需要向后，向前移动数据，时间复杂度是：O(n)<br> 链表的插入、删除操作，只需要改变节点指针，不需要移动数据，时间复杂度是：O(1)</p>
+</li>
+</ol>
+<p><img src="/images/pasted-2.png" alt="upload successful"></p>
+<ol start="2">
+<li><p>查找</p>
+<p> 数组的内存空间是连续的，支持随机访问操作，根据下标索引访问，时间复杂度是：O(1)<br> 链表的内存空间不连续，不支持随机访问操作，从头节点遍历访问，时间复杂度是：O(n)</p>
+</li>
+</ol>
+<h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li><p>你能用自己的话描述链表吗？</p>
+<ol>
+<li>链表与数组一样，都是常用的基础数据结构</li>
+<li>链表通过“指针”将一组零散的内存块串联起来使用</li>
+<li>每一个零散的内存块称为：节点</li>
+<li>链表的每个节点，除了存储数据以外，还需要存储一个指向下一个节点的指针</li>
+<li>通常我们把指向下一个节点的指针，称为：后继指针</li>
+</ol>
+</li>
+<li><p>你知道链表和数组的区别吗？</p>
+<ol>
+<li>数组需要连续的内存空间，链表不需要</li>
+<li>插入、删除操作<ol>
+<li>数组需要移动数据，时间复杂度是：O(n)</li>
+<li>链表不需要移动数据，时间复杂度是：O(1)</li>
+</ol>
+</li>
+<li>查找操作<ol>
+<li>数组支持随机访问操作，时间复杂度是：O(1)</li>
+<li>链表需要从头节点遍历，不支持随机访问操作，时间复杂度是：O(n)</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>你知道都有哪些常用的链表吗？</p>
+<ol>
+<li>单链表</li>
+<li>双向链表</li>
+<li>循环链表</li>
+</ol>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>数据结构与算法</tag>
       </tags>
   </entry>
   <entry>
@@ -2166,75 +2938,28 @@ n = capacity;</code></pre><p>  }</p>
       </tags>
   </entry>
   <entry>
-    <title>数据结构与算法 - 链表2</title>
-    <url>/2020/07/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A82/</url>
-    <content><![CDATA[<p><img src="/images/pasted-3.png" alt="upload successful"></p>
+    <title>达芬奇的求职信</title>
+    <url>/2020/07/24/%E8%BE%BE%E8%8A%AC%E5%A5%87%E7%9A%84%E6%B1%82%E8%81%8C%E4%BF%A1/</url>
+    <content><![CDATA[<p><img src="/images/pasted-144.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<p>尊敬的，显贵的公爵阁下：</p>
+<p>我是来自佛罗伦萨的作战机械发明者达·芬奇，希望可以成为阁下您的军事工程师，同时求见阁下，以便面陈机密：</p>
+<p>一、我能建造坚固、轻便又耐用的桥梁，可用来野外行军。这种桥梁的装卸非常方便。我也能破坏敌军的桥梁。</p>
+<p>二、我能制造出围攻城池的云梯和其他类似设备。</p>
+<p>三、我能制造一种易于搬运的大炮，可用来投射小石块，犹如下冰雹一般，可以给敌军造成重大损失和混乱。</p>
+<p>四、我能制造出装有大炮的铁甲车，可用来冲破敌军密集的队伍，为我军的进攻开辟道路。</p>
+<p>五、我能设计出各种地道，无论是直的还是弯的，必要时还可以设计出在河流下面挖地道的方法。</p>
+<p>六、倘若您要在海上作战，我能设计出多种适宜进攻的兵船，这些兵船的防护力很好，能够抵御敌军的炮火攻击。……</p>
+<p>九、如果战斗发生在海上，我打算建造能够抵抗最猛烈炮火和烟尘的船只。</p>
+<p>十、和平时期，我相信在建筑上，以及从一地到另一地的引水工程上，我一样可以像其他人那样令您完全满意。……</p>
+<p>此外，我还擅长建造其他民用设施，同时擅长绘画和雕塑。</p>
+<p>如果有人认为上述任何一项我办不到的话，我愿在您的花园，或您指定的其他任何地点进行试验。</p>
+<p>谨此无限谦恭之忱，向阁下问安!</p>
+<p>列奥纳多·迪·皮耶罗·达·芬奇</p>
 ]]></content>
       <tags>
-        <tag>数据结构与算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据结构与算法 - 链表</title>
-    <url>/2020/07/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A8/</url>
-    <content><![CDATA[<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>链表与数组一样，都是常用的基础数据结构，它通过“指针”将一组零散的内存块串联起来使用。每一个零散的内存块称为：节点。</p>
-<p>为了将所有节点串联起来，每个链表节点除了存储数据，还需要存储链上下一个节点的地址，我们把存储下一个节点地址的指针，称为：后继指针。</p>
-<p>链表有两个特殊的节点：头节点、尾节点</p>
-<p>头节点：第一个节点</p>
-<p>尾节点：后继指针指向null的节点</p>
-<p><img src="/images/pasted-0.png" alt="upload successful"></p>
-<h2 id="差异"><a href="#差异" class="headerlink" title="差异"></a>差异</h2><h3 id="内存空间"><a href="#内存空间" class="headerlink" title="内存空间"></a>内存空间</h3><p>数组的一个特点：需要连续的内存空间。链表与数组刚好相反，链表不需要连续的内存空间，它是通过“指针”将一组零散的内存块串联起来使用</p>
-<p><img src="/images/pasted-1.png" alt="upload successful"></p>
-<h3 id="操作方式"><a href="#操作方式" class="headerlink" title="操作方式"></a>操作方式</h3><ol>
-<li><p>插入、删除</p>
-<p>数组的插入、删除操作，需要向后，向前移动数据，时间复杂度是：O(n)<br> 链表的插入、删除操作，只需要改变节点指针，不需要移动数据，时间复杂度是：O(1)</p>
-</li>
-</ol>
-<p><img src="/images/pasted-2.png" alt="upload successful"></p>
-<ol start="2">
-<li><p>查找</p>
-<p> 数组的内存空间是连续的，支持随机访问操作，根据下标索引访问，时间复杂度是：O(1)<br> 链表的内存空间不连续，不支持随机访问操作，从头节点遍历访问，时间复杂度是：O(n)</p>
-</li>
-</ol>
-<h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
-<li><p>你能用自己的话描述链表吗？</p>
-<ol>
-<li>链表与数组一样，都是常用的基础数据结构</li>
-<li>链表通过“指针”将一组零散的内存块串联起来使用</li>
-<li>每一个零散的内存块称为：节点</li>
-<li>链表的每个节点，除了存储数据以外，还需要存储一个指向下一个节点的指针</li>
-<li>通常我们把指向下一个节点的指针，称为：后继指针</li>
-</ol>
-</li>
-<li><p>你知道链表和数组的区别吗？</p>
-<ol>
-<li>数组需要连续的内存空间，链表不需要</li>
-<li>插入、删除操作<ol>
-<li>数组需要移动数据，时间复杂度是：O(n)</li>
-<li>链表不需要移动数据，时间复杂度是：O(1)</li>
-</ol>
-</li>
-<li>查找操作<ol>
-<li>数组支持随机访问操作，时间复杂度是：O(1)</li>
-<li>链表需要从头节点遍历，不支持随机访问操作，时间复杂度是：O(n)</li>
-</ol>
-</li>
-</ol>
-</li>
-<li><p>你知道都有哪些常用的链表吗？</p>
-<ol>
-<li>单链表</li>
-<li>双向链表</li>
-<li>循环链表</li>
-</ol>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>数据结构与算法</tag>
+        <tag>职场</tag>
       </tags>
   </entry>
   <entry>
@@ -2268,5 +2993,165 @@ n = capacity;</code></pre><p>  }</p>
 <li>接听宝AI电话助手，通过拨打运营商转接电话，把拒接的、飞行模式的来电的全都自动帮你应答。可以自定义助理声音。在某些特定场景中这个工具很好用。</li>
 </ol>
 ]]></content>
+  </entry>
+  <entry>
+    <title>设计思想</title>
+    <url>/2020/07/15/%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3/</url>
+    <content><![CDATA[<blockquote>
+<p>一直在说互联网系统应该是design for failure，今天看到的这篇文介绍的虽是简单几句话，但妥妥的设计思想，还是蛮契合SRE精髓。作为一名designer或者developer，应该要对墨菲定律心存敬畏，以下讲一下我对这16中设计思想的一个大致看法吧。</p>
+</blockquote>
+ <a id="more"></a>
+
+<h3 id="防御性设计（Defensive-Design）"><a href="#防御性设计（Defensive-Design）" class="headerlink" title="防御性设计（Defensive Design）"></a>防御性设计（Defensive Design）</h3><p>所谓的防御性设计实际上就是“防呆”，英文叫Idiot Proofing。说白了就是用户有时候会不自觉的做一些蠢事，我们在设计的时候要尽量考虑到一些不规范的交互行为，如果你的用户是一只猴子，你要写包单保证系统不被玩坏。例如，在Android开发中使用到的Monkey Test就是用于这样的目的。</p>
+<h3 id="边界情况（Edge-Case）"><a href="#边界情况（Edge-Case）" class="headerlink" title="边界情况（Edge Case）"></a>边界情况（Edge Case）</h3><p>这个设计思想在测试领域比较常见，就是我们在设计我们的设计案例的时候有没有充分考虑在边界情况下的系统行为。比较常见的例如，闰年情况、跨日情况等边界。想起刚入行我leader跟我说你的程序在你脑袋有没有跑过一遍所有能想到的情况，没有的话重做。</p>
+<h3 id="防误措施（Mistake-Proofing）"><a href="#防误措施（Mistake-Proofing）" class="headerlink" title="防误措施（Mistake Proofing）"></a>防误措施（Mistake Proofing）</h3><p>怎么保证不会发生错误。例如在人机交互环节，能不能进行输入校验？</p>
+<h3 id="解耦（Decoupling）"><a href="#解耦（Decoupling）" class="headerlink" title="解耦（Decoupling）"></a>解耦（Decoupling）</h3><p>设计的时候，哪怕是最基础的代码也应该符合开闭原则。远的不说，就单单Spring的IOC就是为了把对象创建及维护从原来的由引用类负责这种强耦合模式转成通过spring容器负责。且解耦一般的做法是通过把内部逻辑封装起来，暴露对外统一API接口，调用方不需要了解被调用方的内部逻辑实现，只需要知道提供什么功能即可。这样再引申一下，解耦的作用就在于复用，把所有的高内聚功能独立成一个个模块，然后就可以像乐高积木一样根据调用方的实际需求进行组装。</p>
+<p>宏观的系统设计就更是如此，例如微服务中的Eureka。首先，Eureka客户端通过把自己注册到Eureka服务端（如IP、端口），然后其他服务在调用前通过Eureka获取被调用方的信息，然后再去调用被调用方，然后他们的调用关系就是这样解耦的。</p>
+<p><img src="/images/pasted-35.png" alt="upload successful"></p>
+<p>熔断本质上就是一种防御性设计或者策略。假设一个微服务体系下的系统，其中A服务调用B服务。系统的QPS是千级别，当时如果B服务挂掉的话A的线程绝对在短时间内占满耗尽而导致假死，从而形成大量A请求积压而导致情况恶化，最终形成雪崩。</p>
+<p>在SpringCloud技术体系中，熔断就是Hystrix所体现的另外一种思想。Hystrix可以通过监控一段事件内的异常次数和响应速度来判断当前服务的健康状况，若服务健康状况不佳则进行熔断，熔断之后新的请求将不会调用实际的业务，而是通过快速失败或优雅降级的方式来快速给用户进行响应。</p>
+<h3 id="舱壁模式（Bulkhead）"><a href="#舱壁模式（Bulkhead）" class="headerlink" title="舱壁模式（Bulkhead）"></a>舱壁模式（Bulkhead）</h3><p>在分布式系统的设计中有一种舱壁模式。目前比较火的微服务架构我理解实际上就是隔板模式的一个体现。这种模式把系统中的各个功能模块实体进行进程、资源上的隔离，使得系统不会因为某个功能模块试题（即微服务）的局部失败而导致全局失败。</p>
+<ol>
+<li>资源隔离：</li>
+</ol>
+<p>微服务里面的Hystrix则是遵守了该模式，通过为每个单独的服务提供独立的线程池而进行资源隔离。在Hystrix中实际上通过两种方式进行资源隔离：</p>
+<blockquote>
+<p>信号量隔离策略（ ExecutionIsolationStrategy.SEMAPHORE）<br>Semaphores 隔离就是利用了java.util.concurrent.Semaphore 的功能，从信号量获取到许可才允许执行，否则不允许执行，执行完成后要释放之前获取到的许可。同样的每一个服务依赖都有一个自己的信号量，当该信号量的许可被获取完之后，再有线程要进行依赖调用，发现已经没有可用的信号量，这时候就会被拒绝调用。信号量隔离始终都是运行在 Container 线程内的。它的优势就在于造成的开销更低。<br>线程隔离策略（ ExecutionIsolationStrategy.THREAD）<br>所谓的线程隔离，实际上就是每一个依赖调用都有自己的线程池来负责处理，依赖调用都运行在自己线程池中的线程上，当同一个依赖调用使用的线程池中的 Queue  size 达到设置的阙值时就会拒绝进行依赖的调用。<br>具体用法可以通过继承@HystrixCommand实现线程隔离或者交易隔离。</p>
+</blockquote>
+<ol start="2">
+<li>数据隔离</li>
+</ol>
+<p>上面讲的都是线程隔离，当然数据隔离这个一般的做法有库隔离、表隔离、按字段区分这三种租户隔离的方法。</p>
+<h3 id="冗余（Redundancy）"><a href="#冗余（Redundancy）" class="headerlink" title="冗余（Redundancy）"></a>冗余（Redundancy）</h3><p>所谓的冗余指的通过重复配置关键组件或部件，保证在关键组件失效的情况下还有备份组件运作以便保证系统可以继续提供服务。生活中的例子请参与飞机的双引擎设计。</p>
+<p>主从模式就是冗余的体现。在正常情况下，主实例负责提供全部的服务，从实例在主实例整体或部分不可用的情况下，完全替代主实例整体或局部而对外提供服务。</p>
+<h3 id="重试（Retry）"><a href="#重试（Retry）" class="headerlink" title="重试（Retry）"></a>重试（Retry）</h3><p>重试是在分布式系统下处理瞬态故障的一个基本手段，简单有效（当然重试的前提是要求幂等）。但是重试也是可以很危险的，它能够引起把一个局部小时间迅速升级为一个系统重大故障，严重者导致系统假死。</p>
+<p><img src="/images/pasted-36.png" alt="upload successful"></p>
+<p>举个简单例子：如果我们的链路类似上图，这里会发生什么问题？在极端情况下，重试次数达到5<em>5</em>5*5=625次。当链路中的其中一个服务故障率异常的时候，那重试风暴便开启了，因为重试为服务器带来额外的开销和线程的占用，然后其他新来的请求又形成排队，这样的话就形成了类似的DDos恶性事件。根据我们平时的项目经验：</p>
+<blockquote>
+<p>相对较好的是选用3次；<br>且重试的时间一定要设定一定的时间间隔（因为很多时候的瞬态故障更多是网络抖动）<br>尽量只在应用层做重试。</p>
+</blockquote>
+<h3 id="撤销（Undo）"><a href="#撤销（Undo）" class="headerlink" title="撤销（Undo）"></a>撤销（Undo）</h3><p>这个没什么好说，撤销这个功能应该是标配吧。</p>
+<h3 id="冷备（Cold-Standby）"><a href="#冷备（Cold-Standby）" class="headerlink" title="冷备（Cold Standby）"></a>冷备（Cold Standby）</h3><p>冷备实际上也是冗余设计的其中一种体现，只是它会更侧重于“冷”，意思是当系统发生宕机时，这个系统是需要手动启动用于替换下线的主实例，它是跟热备是不一样，热备更多体现在自动切换。</p>
+<h3 id="熔断（Derating）"><a href="#熔断（Derating）" class="headerlink" title="熔断（Derating）"></a>熔断（Derating）</h3><p><img src="/images/pasted-37.png" alt="upload successful"></p>
+<p>熔断本质上就是一种防御性设计或者策略。假设一个微服务体系下的系统，其中A服务调用B服务。系统的QPS是千级别，当时如果B服务挂掉的话A的线程绝对在短时间内占满耗尽而导致假死，从而形成大量A请求积压而导致情况恶化，最终形成雪崩。</p>
+<p>在SpringCloud技术体系中，熔断就是Hystrix所体现的另外一种思想。Hystrix可以通过监控一段事件内的异常次数和响应速度来判断当前服务的健康状况，若服务健康状况不佳则进行熔断，熔断之后新的请求将不会调用实际的业务，而是通过快速失败或优雅降级的方式来快速给用户进行响应。</p>
+<p>具体断路器可以参考以下文章：</p>
+<blockquote>
+<p>Netflix：<a href="https://github.com/Netflix/Hystrix/wiki/How-it-Works#CircuitBreaker" target="_blank" rel="noopener">https://github.com/Netflix/Hystrix/wiki/How-it-Works#CircuitBreaker</a><br>Martin Fowler的Circuit Breaker。</p>
+</blockquote>
+<h3 id="容错（Error-Tolerance）"><a href="#容错（Error-Tolerance）" class="headerlink" title="容错（Error Tolerance）"></a>容错（Error Tolerance）</h3><p>狭义的容错泛指人机交互界面的时候需要对用户输入进行输入校验，保证数据准确性。</p>
+<p>广义的容错应该是两个具有明确边界的事物（如服务间，系统间）交互时候针对可能发生的一切主客观异常情况的防御性手段。常见的容错机制有failsafe、failback、failover、failfast。</p>
+<p>failfast更多指的是快速失败。当系统遭遇一定概率的故障时，可预见这不是偶发性故障，然后就要开启类似断路器开关，让后续打进来的流量直接失败快速返回，避免线程积压导致系统滚雪球式崩溃。</p>
+<p>failover指的是失效转移。请参考我的上一篇redis的文章《玩转Redis高可用-哨兵模式》，里面的主库崩掉后通过选举重新选定新主库的情况就是失效转移。</p>
+<p>failsafe指的是失效安全，具体参考以下第12点。</p>
+<p>failback指的是失效自动恢复，具体是指主实例发生故障而导致系统切换到备实例，在主实例恢复后自动转移回主实例上。这种容错在Hystrix的自恢复能力可以得到体现（详看下图）。</p>
+<p><img src="/images/pasted-38.png" alt="upload successful"></p>
+<p>上图断路器的原理具体看以下三个关键参数，大体逻辑如下：</p>
+<p>// 这个用于设定断路器触发的异常比例阈值，正常情况下断路器处于关闭状态。假设阈值为50%，当在一定时间内（如1分钟），异常调用次数/总调用次数&gt;50%的话，断路器打开，后续所有的请求全部调用getFallback()进行failfast.</p>
+<p>HystrixCommandProperties.Setter().withCircuitBreakerErrorThresholdPercentage(50%)</p>
+<p>// 上面说的一定的采样周期内的流量至少要达到100，Hystrix才会进行采样统计并计算异常比例，再跟上面设定的异常比例阈值进行比较。</p>
+<p>HystrixCommandProperties.Setter().withCircuitBreakerRequestVolumeThreshold(100)</p>
+<p>// 当断路器状态为打开后，在下面预设的6000毫秒时间内所有请求被快速failfast；当时间一过，Hystrix会试探性允许一个请求进来，这个时候断路器处于半开状态；如果调用成功，断路器自动关闭，然后应用恢复正常状态。</p>
+<p>HystrixCommandProperties.Setter().withCircuitBreakerSleepWindowInMilliseconds(6000)</p>
+<h3 id="失效安全（Fail-safe）"><a href="#失效安全（Fail-safe）" class="headerlink" title="失效安全（Fail safe）"></a>失效安全（Fail safe）</h3><p>所谓的失效安全，就是指在特定失效的情况下，一个系统或者服务也不会对业务造成损害。实际上，我们使用token进行安全登录也是一种失效安全的体现，如果token失效了（如时间过期），用户是无法登录的，因为正常登录需要token有一种约束因素，这种因素就是时间。如果时间过了，代表这种约束因素不存在或者不再有效了，登录功能就不能正常工作了，这个是一个极好的设计理念。</p>
+<p>有点抽象？跟你介绍一个生活的例子。电梯之所以可以正常升降，是因为在通电的过程中，正常工作的约束因素（brake）是关闭的；如果某个特殊情况（如没电），这个约束因素不存在或不再有效了，brake是打开的，因此电梯是不会因为没电而下坠的。这个可以理解了吧？</p>
+<h3 id="优雅降级（Graceful-Degradation）"><a href="#优雅降级（Graceful-Degradation）" class="headerlink" title="优雅降级（Graceful Degradation）"></a>优雅降级（Graceful Degradation）</h3><p>服务降级跟熔断还是挺像的，只是降级来得更加温和和优雅一点。熔断是直接断掉防止异常进一步扩大而导致雪崩，但是我们的终极目标是提供尽可能多的服务，这个就是优雅降级的理念。在一些异常情况或者秒杀场景下，为了保证核心服务（如商品下单、支付）的正常可用，会放弃掉一些非核心服务（如历史账单查询），这就是所谓的服务降级。</p>
+<p>在微服务框架中，一般会使用Hystrix的@HystrixCommand或Feign的@FeignClient对服务进行声明，然后为每个服务配置相应的fallback类，最终结合起来进行服务降级。</p>
+<h3 id="监控（Monitoring）"><a href="#监控（Monitoring）" class="headerlink" title="监控（Monitoring）"></a>监控（Monitoring）</h3><p>我们的系统有哪几个纬度的监控，估计最多就是常规的硬件状态监控。当然这里的监控我理解除了技术指标监控，还更应该有业务指标监控，否则我们都在裸泳，等海水退下去后就一览无遗。</p>
+<p>监控实际上是为了更好的主动防御，下图展示一下本人前司的一个运维监控与开发协同的机制（从每个序号顺序往下走）。大家可以看出，一套完善的告警监控系统，能够快速通知开发与运维，开发侧能够完成紧急修复并能够协同运维进行快速部署。在笔者前司经历中，正是有着完善的监控告警系统，大部分故障基本可以在业务发现问题得到有效解决（麻蛋一般在晚上爆问题，那段时间太美好了）。</p>
+<p><img src="/images/pasted-39.png" alt="upload successful"></p>
+<h3 id="耐用性（Durability）"><a href="#耐用性（Durability）" class="headerlink" title="耐用性（Durability）"></a>耐用性（Durability）</h3><p>这里我理解的是系统或数据的耐受性。例如数据，为什么我们一定要持久化到数据库，因为就是要借助数据库硬件各种维度的耐受性。</p>
+<h3 id="回弹性（Resilience）"><a href="#回弹性（Resilience）" class="headerlink" title="回弹性（Resilience）"></a>回弹性（Resilience）</h3><p>这里我看到网上有一个更恰当的翻译，叫“韧性”，就是说我们的设计应该在一些特殊情况下还能通过一系列的手段继续提供尽可能多的服务，你也可以理解为“可靠性”。实际上，我的理解是上面说到的基本上都是回弹性的范畴之内。</p>
+<blockquote>
+<p>服务降级<br>限流<br>重试<br>舱壁模式<br>防御性设计</p>
+</blockquote>
+<p>当然，现在为了提升系统服务的回弹性，部分头部公司也会使用一些故障注入的办法进行混沌工程式训练，如Netflix的ChaosMonkey，阿里的ChaosBlade等。</p>
+<p>参考：</p>
+<p><a href="https://simplicable.com/new/design-for-failure" target="_blank" rel="noopener">https://simplicable.com/new/design-for-failure</a></p>
+<p><a href="https://github.com/Netflix/Hystrix/wiki/How-it-Works#CircuitBreaker" target="_blank" rel="noopener">https://github.com/Netflix/Hystrix/wiki/How-it-Works#CircuitBreaker</a></p>
+<p>Martin Fowler的Circuit Breaker。</p>
+]]></content>
+      <tags>
+        <tag>设计</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据结构与算法 - 插入排序</title>
+    <url>/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/</url>
+    <content><![CDATA[<p>1.引子<br>1.1.为什么要学习数据结构与算法？<br>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！</p>
+<p>有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？</p>
+<p>于是问题来了：为什么还要学习数据结构与算法呢？</p>
+<p>复制代码<br>#理由一：<br>    面试的时候，千万不要被数据结构与算法拖了后腿<br>#理由二：<br>    你真的愿意做一辈子CRUD Boy吗<br>#理由三：<br>    不想写出开源框架，中间件的工程师，不是好厨子<br>复制代码<br>1.2.如何系统化学习数据结构与算法？<br>我想好了，还是需要学习数据结构与算法。但是我有两个困惑：</p>
+<p>1.如何着手学习呢？</p>
+<p>2.有哪些内容要学习呢？</p>
+<p>学习方法推荐：</p>
+<p>#学习方法<br>1.从基础开始，系统化学习<br>2.多动手，每一种数据结构与算法，都自己用代码实现出来<br>3.思路更重要：理解实现思想，不要背代码<br>4.与日常开发结合，对应应用场景<br>学习内容推荐：</p>
+<p>数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法</p>
+<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>上一篇：数据结构与算法系列十一（冒泡排序）中，我们详细分析了冒泡排序的核心思想，以及代码实现。如果你不记得了，可以回去再看看。学习数据结构与算法，最重要的就是理解每一种算法背后的思想，多看，有助于锻炼我们的逻辑思维分析能力。</p>
+<p>我们这一篇的主角是：插入排序。它是时间复杂度O(n^2)家族的第二个排序算法。</p>
+<p>#考考你：<br>1.你知道插入排序的核心思想吗？<br>2.你能用java实现插入排序吗？<br>3.案例<br>3.1.插入排序思想<br>假设有一个待排序序列：[4, 5, 6, 3, 2, 1]。我们需要按照升序进行排序，排序后的序列是这 样的：[1, 2, 3, 4, 5, 6]。</p>
+<p>如何通过插入排序实现呢？</p>
+<p>插入排序核心思想：</p>
+<p>将待排序序列，分成两个区间：有序区间、无序区间。循环遍历无序区间，依次将无序区间的元素，插入到有序区间的合适位置，所谓合适位置：就是要保证插入元素后，有序区间始终有序。</p>
+<p>这里的关键词有：</p>
+<p>1.待排序序列，分成：有序区间、无序区间<br>2.将无序区间数据，插入到有序区间的合适位置<br>3.有序区间始终保证有序，如下图：</p>
+<p>3.2.插入排序代码实现<br>3.2.1.排序代码<br>复制代码<br>/**</p>
+<ul>
+<li><p>插入排序</p>
+</li>
+<li><p>@param array：待排序数组</p>
+</li>
+<li><p>@param n：待排序数组大小</p>
+</li>
+<li><p>/<br>public static void sort(Integer [] array,int n) {<br> // 如果排序数组规模小于等于1，直接返回<br> if (n &lt;= 1) {</p>
+<pre><code>return;</code></pre><p> }</p>
+<p> // 将数据分为两个区域：<br> // 有序数据区域：array[0]<br> // 无序数据区域：array[1]…array[n-1]<br> // 循环遍历无序区域的数据，插入到有序数据区域<br> for(int i = 1; i &lt; n; i++){</p>
+<pre><code>// 临时存储待插入目标元素
+int tmp = array[i];
+// 有序区域最后一个元素下标
+int j = i - 1;
+// 从后往前查找插入位置,并移动数据
+for(; j &gt;= 0;j--){
+  if(array[j] &gt; tmp){
+     // 向后移动数据
+     array[j+1] = array[j];
+   }else{
+       break;
+    }
+ }
+
+ // 插入数据
+ System.out.println(&quot;第【&quot; + i + &quot;】次插入排序&quot;);
+ array[j+1] = tmp;
+}</code></pre><p>}<br>复制代码</p>
+</li>
+</ul>
+<p>3.2.2.测试代码<br>复制代码<br>/**</p>
+<ul>
+<li><p>插入排序：</p>
+</li>
+<li><p>1.时间复杂度：</p>
+</li>
+<li><p>O(n^2)</p>
+</li>
+<li><p>2.空间复杂度：</p>
+</li>
+<li><p>O(1)是原地排序算法</p>
+</li>
+<li><p>3.算法稳定性：</p>
+</li>
+<li><p>是稳定排序算法<br>*/<br>public static void main(String[] args) {<br>// 初始化测试数组<br>Integer[] array = {4,5,6,3,2,1};<br>// 排序前<br>System.out.println(“1.排序前数组：” + Arrays.deepToString(array));</p>
+<p>// 排序<br>System.out.println(“2.开始排序——————————-start”);<br>sort(array,array.length);</p>
+<p>// 排序后<br>System.out.println(“3.排序后数组：” + Arrays.deepToString(array));</p>
+</li>
+</ul>
+<p>}<br>复制代码<br>测试结果：</p>
+<p>复制代码<br>D:\02teach\01soft\jdk8\bin\java<br>com.anan.algorithm.sort.InsertSort<br>1.排序前数组：[6, 5, 4, 3, 2, 1]<br>2.开始排序——————————-start<br>第【1】次插入排序<br>第【2】次插入排序<br>第【3】次插入排序<br>第【4】次插入排序<br>第【5】次插入排序<br>3.排序后数组：[1, 2, 3, 4, 5, 6]</p>
+<p>Process finished with exit code 0<br>复制代码<br>4.讨论分享<br>复制代码<br>#考考你答案：<br>1.你知道插入排序的核心思想吗？<br>  1.1.待排序序列，分成：有序区间、无序区间<br>  1.2.循环遍历无序区间元素，插入到有序区间的合适位置<br>  1.3.插入元素后，始终保证有序区间有序</p>
+<p>2.你能用java实现插入排序吗？<br>  2.1.参考【3.2】节案例实现<br>复制代码</p>
+]]></content>
+      <tags>
+        <tag>数据结构与算法</tag>
+      </tags>
   </entry>
 </search>

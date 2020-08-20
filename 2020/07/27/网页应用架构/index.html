@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="description" content="岁月的痕迹" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    网页应用架构 |  印记
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-网页应用架构"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  网页应用架构
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/27/%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84/" class="article-date">
+  <time datetime="2020-07-27T06:19:00.000Z" itemprop="datePublished">2020-07-27</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%9E%B6%E6%9E%84/">架构</a>
+  </div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h3 id="现代Web应用程序体系结构概述"><a href="#现代Web应用程序体系结构概述" class="headerlink" title="现代Web应用程序体系结构概述"></a>现代Web应用程序体系结构概述</h3><p><img src="/images/pasted-149.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<p>上图很好地表示了Storyblocks上的体系结构。如果您不是经验丰富的Web开发人员，则可能会发现它很复杂。在我们深入研究每个组件的细节之前，下面的逐步操作应该使其更容易上手。</p>
+<blockquote>
+<p>一位用户在Google上搜索“森林中浓烈的美丽雾和阳光”。第一个结果刚好来自Storyblocks，这是我们领先的照片和载体网站。用户单击结果，将其浏览器重定向到图像详细信息页面。在后台，用户的浏览器向DNS服务器发送请求，以查找如何联系Storyblock，然后发送请求。<br>该请求到达我们的负载均衡器，该负载均衡器随机选择我们当时正在运行该站点的10台左右的Web服务器之一来处理该请求。Web服务器从我们的缓存服务中查找有关该图像的一些信息，并从数据库中获取有关该图像的剩余数据。我们注意到尚未计算图像的颜色配置文件，因此我们将“颜色配置文件”作业发送到我们的作业队列，作业服务器将对其进行异步处理，并根据结果适当更新数据库。<br>接下来，我们尝试通过使用照片标题作为输入向我们的全文搜索服务发送请求来查找相似的照片。该用户恰好以成员身份登录到Storyblocks，因此我们从帐户服务中查找其帐户信息。最后，我们向数据防火墙触发页面查看事件，以将其记录在我们的云存储系统中，并最终加载到我们的数据仓库中，分析师使用该事件来帮助回答有关业务的问题。<br>现在，服务器将视图呈现为HTML，并将其发送回用户的浏览器，首先通过负载平衡器。该页面包含我们加载到与CDN连接的云存储系统中的Javascript和CSS资产，因此用户的浏览器与CDN联系以检索内容。最后，浏览器将页面可视化呈现给用户查看。</p>
+</blockquote>
+<p>接下来，我将引导您完成每个组件，并为每个组件提供“ 101”介绍，这将为您提供一个很好的思维模式，以便您思考未来的Web体系结构。我将继续阅读其他系列文章，这些文章根据我在Storyblocks所学的知识提供具体的实施建议。</p>
+<h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><p>DNS代表“域名系统”，它是使万维网成为可能的骨干技术。在最基本的级别，DNS提供从域名（例如google.com）到IP地址（例如85.129.83.120）的键/值查找，这是您的计算机将请求路由到适当地址所必需的服务器。与电话号码类似，域名和IP地址之间的区别是“致电John Doe”和“致电201-867-5309”之间的区别。就像您过去需要一本电话簿来查找John的号码一样，您也需要DNS来查找域的IP地址。因此，您可以将DNS视为互联网的电话簿。</p>
+<p>我们可以在这里进行更多详细介绍，但是我们将跳过它，因为它对于我们的101级介绍并不重要。</p>
+<h3 id="负载均衡器"><a href="#负载均衡器" class="headerlink" title="负载均衡器"></a>负载均衡器</h3><p>在深入研究负载平衡之前，我们需要退后一步来讨论水平与垂直应用程序扩展。它们是什么，有什么区别？非常简单地放在此StackOverflow帖子中，水平缩放意味着通过向资源池中添加更多计算机来进行扩展，而“垂直”缩放意味着通过向现有计算机中添加更多的功能（例如CPU，RAM）来进行扩展。</p>
+<p>在Web开发中，您（几乎）总是想要水平缩放，因为为简单起见，东西会中断。服务器随机崩溃。网络退化。整个数据中心有时会脱机。拥有多台服务器可以使您计划中断，以便应用程序继续运行。换句话说，您的应用程序是“容错的”。其次，水平缩放允许您将应用程序后端的不同部分（分别在Web服务器，数据库，服务X等上）运行在不同的服务器上，以最小的方式耦合它们。最后，您可能无法再进行垂直缩放。世界上没有足够大的计算机来执行您所有应用程序的计算。尽管这适用于规模较小的公司，但可以将Google的搜索平台视为一个典型的例子。例如，故事块 在任何给定时间点运行150到400个AWS EC2实例。通过垂直缩放来提供整个计算能力将是一个挑战。</p>
+<p>好，回到负载平衡器。它们是使水平缩放成为可能的魔术酱。它们将传入请求路由到通常是彼此克隆/镜像的许多应用程序服务器之一，并将响应从应用程序服务器发送回客户端。它们中的任何一个都应该以相同的方式处理请求，因此只需在服务器之间分配请求，这样就不会超载。</p>
+<p>而已。从概念上讲，负载均衡器相当简单。在引擎盖下肯定有复杂之处，但无需深入了解我们的101版本。</p>
+<h3 id="Web应用程序服务器"><a href="#Web应用程序服务器" class="headerlink" title="Web应用程序服务器"></a>Web应用程序服务器</h3><p>在较高级别，Web应用程序服务器的描述相对简单。它们执行处理用户请求的核心业务逻辑，并将HTML发送回用户的浏览器。为了完成工作，他们通常与各种后端基础架构进行通信，例如数据库，缓存层，作业队列，搜索服务，其他微服务，数据/日志记录队列等等。如上所述，为了处理用户请求，通常将至少两个（通常是更多）插入负载平衡器。</p>
+<p>您应该知道，应用服务器的实现需要选择一种特定的语言（Node.js，Ruby，PHP，Scala，Java，C＃.NET等）和该语言的Web MVC框架（Express for Node.js，Ruby on Rails） ，Scala播放，Laravel PHP播放等等）。但是，深入探讨这些语言和框架的细节不在本文的讨论范围之内。</p>
+<h3 id="数据库服务器"><a href="#数据库服务器" class="headerlink" title="数据库服务器"></a>数据库服务器</h3><p>每个现代的Web应用程序都利用一个或多个数据库来存储信息。数据库提供了定义数据结构，插入新数据，查找现有数据，更新或删除现有数据，对数据进行计算等方法。在大多数情况下，Web应用程序服务器与作业服务器直接进行通信。此外，每个后端服务可能都有自己的数据库，该数据库与应用程序的其余部分隔离。</p>
+<p>尽管我避免深入探讨每个体系结构组件的特定技术，但对您而言，更不用说数据库的下一级细节了：SQL和NoSQL。</p>
+<p>SQL代表“结构化查询语言”，并且是在1970年代发明的，旨在提供一种标准的查询关系数据集的方法，该方法可供广大读者访问。SQL数据库将数据存储在通过通用ID（通常为整数）链接在一起的表中。让我们来看一个为用户存储历史地址信息的简单示例。您可能有两个表，用户表和用户地址，通过用户的ID链接在一起。参见下图以获取简化版本。这些表被链接，因为user_addresses中的user_id列是users表中id列的“外键”。<br><img src="/images/pasted-150.png" alt="upload successful"></p>
+<p>如果您对SQL不太了解，我强烈建议您逐步学习一个教程，就像您可以在此处的 Khan Academy上找到的那样。它在Web开发中无处不在，因此您至少想要了解基础知识，以便正确地构建应用程序。</p>
+<p>NoSQL代表“ Non-SQL”，它是一组较新的数据库技术，可以处理大型Web应用程序可能产生的大量数据（大多数SQL变体不能很​​好地水平扩展，并且只能垂直缩放到某个点）。如果您对NoSQL一无所知，建议从以下高级介绍开始：</p>
+<ul>
+<li><a href="https://www.w3resource.com/mongodb/nosql.php" target="_blank" rel="noopener">https://www.w3resource.com/mongodb/nosql.php</a></li>
+<li><a href="http://www.kdnuggets.com/2016/07/seven-steps-understanding-nosql-databases.html" target="_blank" rel="noopener">http://www.kdnuggets.com/2016/07/seven-steps-understanding-nosql-databases.html</a></li>
+<li><a href="https://resources.mongodb.com/getting-started-with-mongodb/back-to-basics-1-introduction-to-nosql" target="_blank" rel="noopener">https://resources.mongodb.com/getting-started-with-mongodb/back-to-basics-1-introduction-to-nosql</a></li>
+</ul>
+<p>我还要牢记，总的来说，整个行业都在将SQL用作NoSQL数据库的接口，因此，如果您不了解SQL，那么您真的应该学习SQL。这些天几乎没有办法避免这种情况。</p>
+<h3 id="缓存服务"><a href="#缓存服务" class="headerlink" title="缓存服务"></a>缓存服务</h3><p>缓存服务提供了一个简单的键/值数据存储，使您可以在接近O（1）的时间内保存和查找信息。应用程序通常利用缓存服务来保存昂贵的计算结果，以便可以从缓存中检索结果，而不必在下次需要时重新计算结果。应用程序可能会缓存数据库查询，对外部服务的调用，给定URL的HTML等结果。这是真实应用程序中的一些示例：</p>
+<ul>
+<li>Google会为“狗”或“泰勒·斯威夫特”之类的常见搜索查询缓存搜索结果，而不是每次都重新计算它们</li>
+<li>Facebook会缓存您登录时看到的许多数据，例如帖子数据，朋友等。在此处阅读有关Facebook缓存技术的详细文章。</li>
+<li>Storyblocks缓存来自服务器端React渲染，搜索结果，预输入结果等的HTML输出。<br>两种最广泛使用的缓存服务器技术是Redis和Memcache。我将在另一篇文章中详细介绍。</li>
+</ul>
+<h3 id="作业队列和服务器"><a href="#作业队列和服务器" class="headerlink" title="作业队列和服务器"></a>作业队列和服务器</h3><p>大多数Web应用程序需要在后台异步执行一些与响应用户请求没有直接关联的工作。例如，Google需要对整个互联网进行爬网并编制索引，以便返回搜索结果。并非每次搜索都这样做。取而代之的是，它异步地爬网，并一路更新搜索索引。</p>
+<p>尽管有不同的体系结构可以完成异步工作，但最普遍的是我称之为“作业队列”体系结构。它由两个部分组成：一个需要运行的“作业”队列和一个或多个运行该队列中作业的作业服务器（通常称为“工人”）。</p>
+<p>作业队列存储需要异步运行的作业列表。最简单的是先进先出（FIFO）队列，尽管大多数应用程序最终需要某种优先级排队系统。无论何时应用程序需要按某种常规计划运行或由用户操作确定运行作业，它都只会将适当的作业添加到队列中。</p>
+<p>例如，Storyblocks利用工作队列来支持支持我们的市场所需的许多幕后工作。我们运行作业来对视频和照片进行编码，处理CSV以进行元数据标记，汇总用户统计信息，发送密码重设电子邮件等。我们从简单的FIFO队列开始，但我们已升级到优先级队列，以确保诸如发送密码重置电子邮件之类的时间敏感操作能尽快完成。</p>
+<p>作业服务器处理作业。他们轮询作业队列以确定是否有工作要做，如果有，他们将作业弹出队列并执行。基本语言和框架的选择与Web服务器一样多，因此在本文中我将不做详细介绍。</p>
+<h3 id="全文检索服务"><a href="#全文检索服务" class="headerlink" title="全文检索服务"></a>全文检索服务</h3><p>许多（如果不是大多数）网络应用程序都支持某种搜索功能，其中用户提供文本输入（通常称为“查询”），并且该应用程序返回最“相关”的结果。支持此功能的技术通常称为“ 全文搜索 ”，它利用反向索引快速查找包含查询关键字的文档。<br><img src="/images/pasted-151.png" alt="upload successful"></p>
+<pre><code>该示例显示了如何将三个文档标题转换为反向索引，以帮助快速查找从特定关键字到标题中带有该关键字的文档。注意，诸如“ in”，“ the”，“ with”等的常用词（称为停用词）通常不包括在倒排索引中。</code></pre><p>尽管可以直接从某些数据库中进行全文搜索（例如，MySQL支持全文搜索），但通常运行单独的“搜索服务”来计算和存储倒排索引并提供查询接口。尽管还有其他选择，例如Sphinx或Apache Solr，但当今最受欢迎的全文搜索平台是Elasticsearch。</p>
+<h3 id="服务"><a href="#服务" class="headerlink" title="服务"></a>服务</h3><p>一旦应用达到一定规模，就有可能将某些“服务”分拆为单独的应用程序运行。它们不会暴露于外部世界，但是应用程序和其他服务会与它们交互。例如，Storyblocks具有多项运营和计划服务：</p>
+<ul>
+<li>帐户服务在我们所有站点上存储用户数据，这使我们能够轻松地提供交叉销售机会并创建更统一的用户体验</li>
+<li>内容服务存储我们所有视频，音频和图像内容的元数据。它还提供了用于下载内容和查看下载历史的界面。</li>
+<li>付款服务提供了用于为客户信用卡开帐单的界面。</li>
+<li>HTML→PDF服务提供了一个简单的界面，该界面接受HTML并返回相应的PDF文档。</li>
+</ul>
+<h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><p>如今，公司的生存与否取决于其如何利用数据。如今，几乎每个应用程序一旦达到一定规模，就会利用数据管道来确保可以收集，存储和分析数据。典型的管道具有三个主要阶段：</p>
+<ol>
+<li>该应用程序将数据（通常是有关用户交互的事件）发送到数据“ firehose”，该“ firehose”提供了流接口以提取和处理数据。通常，原始数据会被转换或扩充并传递给另一个防火墙。AWS Kinesis和Kafka是用于此目的的两种最常见的技术。</li>
+<li>原始数据以及最终的转换/增强数据将保存到云存储中。AWS Kinesis提供了一个称为“ firehose”的设置，该设置使将原始数据保存到其云存储（S3）的过程非常容易配置。</li>
+<li>转换/增强的数据通常被加载到数据仓库中进行分析。我们使用AWS Redshift，并且在新兴世界中越来越大的一部分也使用AWS Redshift，尽管大型公司通常会使用Oracle或其他专有仓库技术。如果数据集足够大，则可能需要类似Hadoop的NoSQL MapReduce技术进行分析。</li>
+</ol>
+<p>架构图中未描绘的另一步骤：将数据从应用程序和服务的操作数据库加载到数据仓库中。例如，在Storyblocks，我们每晚将VideoBlocks，AudioBlocks，Storyblocks，帐户服务和贡献者门户数据库加载到Redshift中。通过将核心业务数据与我们的用户交互事件数据一起定位，从而为我们的分析师提供了一个整体数据集。</p>
+<h3 id="云存储"><a href="#云存储" class="headerlink" title="云存储"></a>云存储</h3><p>根据AWS的说法， “云存储是一种通过Internet存储，访问和共享数据的简单且可扩展的方式” 。您可以使用它来存储或访问或多或少地存储在本地文件系统上的任何内容，其优点是可以通过HTTP上的RESTful API与之交互。到目前为止，Amazon的S3产品是当今最受欢迎的云存储，我们在Storyblocks广泛依赖于此存储来存储我们的视频，照片和音频资产，我们的CSS和Javascript，我们的用户事件数据等等。</p>
+<h3 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h3><p>CDN代表“内容交付网络”，该技术提供了一种在Web上为静态HTML，CSS，Javascript和图像之类的资产提供服务的方法，其速度比从单个原始服务器提供这些资源的速度要快得多。它的工作原理是将内容分布在世界各地的许多“边缘”服务器上，以便用户最终从“边缘”服务器而不是原始服务器下载资产。例如，在下图中，西班牙的用户从具有纽约原始服务器的站点请求网页，但是该页面的静态资产是从英格兰的CDN“边缘”服务器加载的，从而避免了许多缓慢的跨大西洋HTTP要求。<br><img src="/images/pasted-148.png" alt="upload successful"></p>
+<p>查看本文以获得更全面的介绍。通常，Web应用程序应始终使用CDN来提供CSS，Javascript，图像，视频和任何其他资产。某些应用程序也许还可以利用CDN来提供静态HTML页面。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag">架构</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/07/29/Web%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84%E6%89%A9%E5%B1%95/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Web应用架构扩展
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/07/24/%E8%BE%BE%E8%8A%AC%E5%A5%87%E7%9A%84%E6%B1%82%E8%81%8C%E4%BF%A1/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">达芬奇的求职信</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> JianJian Liu
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="印记"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/jianjunliu119/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/jianjunliu119/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

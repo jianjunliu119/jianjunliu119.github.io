@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="description" content="岁月的痕迹" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Linux服务器的安全 - 基础 |  印记
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Linux服务器的安全-基础"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Linux服务器的安全 - 基础
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/30/Linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E5%AE%89%E5%85%A8-%E5%9F%BA%E7%A1%80/" class="article-date">
+  <time datetime="2020-07-30T00:41:00.000Z" itemprop="datePublished">2020-07-30</time>
+</a>  
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><img src="/images/pasted-162.png" alt="upload successful"></p>
+<h3 id="配置SSH密钥"><a href="#配置SSH密钥" class="headerlink" title="配置SSH密钥"></a>配置SSH密钥</h3><p>要访问远程服务器，您将必须使用密码登录或使用SSH密钥。</p>
+<p>密码的问题在于它们很容易被暴力破解。此外，您需要在需要访问服务器的任何时间键入它们。</p>
+<p>为避免上述缺点，您将必须设置SSH密钥身份验证。它比密码更安全，因为黑客无法对其进行暴力破解。</p>
+<p>由于不需要输入密码，因此连接到服务器也更加轻松快捷。</p>
+<p>这是为服务器设置SSH身份验证的方法。</p>
+<ul>
+<li>在本地计算机上，通过键入以下命令生成SSH密钥对：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>上面的命令将引导您完成一些步骤来生成SSH密钥。记下将存储密钥的文件。</p>
+<ul>
+<li>使用以下命令将公用密钥添加到服务器：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-copy-id username @ remote_host</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>确保用您的真实用户名和服务器的IP地址替换username和remote_host。系统将提示您输入密码。</p>
+<ul>
+<li>尝试使用以下命令登录到服务器：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh username @ remote_host</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>不要忘记用服务器的详细信息替换username和remote_host。您应该注意，这次不会提示您输入密码。</p>
+<h3 id="保持系统时间为最新"><a href="#保持系统时间为最新" class="headerlink" title="保持系统时间为最新"></a>保持系统时间为最新</h3><p>许多安全协议利用系统时间来运行cron作业，日期日志和执行其他关键任务。<br>如果系统时间不正确，则可能会对服务器造成负面影响。为了防止这种情况发生，您可以安装NTP客户端。该客户端将使您的系统时间与全局NTP服务器保持同步。</p>
+<p>使用以下命令安装NTP客户端：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install ntp</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看活动端口"><a href="#查看活动端口" class="headerlink" title="查看活动端口"></a>查看活动端口</h3><p>服务器上的应用程序公开某些端口，以便网络中的其他应用程序可以访问它们。<br>黑客还可以在您的服务器上安装后门，并公开用于控制服务器的端口。<br>因此，我们不希望您的服务器在不知道的端口上侦听请求。</p>
+<p>要查看活动端口，请使用以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ss -lntup</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置防火墙"><a href="#设置防火墙" class="headerlink" title="设置防火墙"></a>设置防火墙</h3><p>防火墙允许您停止/允许来自服务器特定端口的通信。为此，我通常使用UFW（简单的防火墙）。<br>UFW的工作原理是让您配置以下规则：</p>
+<ul>
+<li>允许或拒绝</li>
+<li>传入或传出流量</li>
+<li>往返</li>
+<li>特定或所有端口</li>
+</ul>
+<h4 id="设置UFW"><a href="#设置UFW" class="headerlink" title="设置UFW"></a>设置UFW</h4><ul>
+<li><p>安装ufw。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ufw</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>您可以拒绝所有传出的流量…</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw default deny outgoing comment &#39;deny all outgoing traffic&#39;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>…或允许所有传出流量。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw default allow outgoing comment &#39;allow all outgoing traffic&#39;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>接下来，我们要拒绝所有传入的流量…</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw default deny incoming comment &#39;deny all incoming traffic&#39;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>…除SSH连接外，以便我们可以访问系统。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw limit in ssh comment &#39;allow SSH connections in&#39;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果将UFW配置为拒绝所有传出流量，请不要忘记根据需要允许特定的流量。以下是一些示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># allow traffic out on port 53 -- DNS</span><br><span class="line">sudo ufw allow out 53 comment &#39;allow DNS calls out&#39;</span><br><span class="line"># allow traffic out on port 123 -- NTP</span><br><span class="line">sudo ufw allow out 123 comment &#39;allow NTP out&#39;</span><br><span class="line"># allow traffic out for HTTP, HTTPS, or FTP</span><br><span class="line"># apt might needs these depending on which sources you&#39;re using</span><br><span class="line">sudo ufw allow out http comment &#39;allow HTTP traffic out&#39;</span><br><span class="line">sudo ufw allow out https comment &#39;allow HTTPS traffic out&#39;</span><br><span class="line">sudo ufw allow out ftp comment &#39;allow FTP traffic out&#39;</span><br><span class="line"># allow whois</span><br><span class="line">sudo ufw allow out whois comment &#39;allow whois&#39;</span><br><span class="line"># allow traffic out on port 68 -- the DHCP client</span><br><span class="line"># you only need this if you&#39;re using DHCP</span><br><span class="line">sudo ufw allow out 68 comment &#39;allow the DHCP client to update&#39;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>要拒绝端口99上的任何流量，请使用以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw deny 99</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>最后，使用以下命令启动UFW：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw enable</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>您还可以使用以下命令查看UFW状态：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw status</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="防止自动攻击"><a href="#防止自动攻击" class="headerlink" title="防止自动攻击"></a>防止自动攻击</h3><p>有两种实用程序可用来阻止大多数自动攻击：</p>
+<ul>
+<li>PSAD。</li>
+<li>Fail2Ban。</li>
+</ul>
+<h4 id="PSAD和Fail2Ban之间的区别"><a href="#PSAD和Fail2Ban之间的区别" class="headerlink" title="PSAD和Fail2Ban之间的区别"></a>PSAD和Fail2Ban之间的区别</h4><p>我们了解到，端口可以访问服务器上的应用程序。</p>
+<p>攻击者可能决定扫描您的服务器以查找开放端口，然后他们可以使用这些开放端口来访问服务器。</p>
+<p><strong>PSAD</strong>监视网络活动，以检测并有选择地阻止此类扫描和其他类型的可疑流量，例如DDoS或OS指纹尝试。</p>
+<p>另一方面，<strong>Fail2Ban</strong>扫描各种应用程序（例如FTP）的日志文件，并自动禁止显示恶意迹象的IP（例如自动登录尝试）。</p>
+<h3 id="安装logwatch"><a href="#安装logwatch" class="headerlink" title="安装logwatch"></a>安装logwatch</h3><p>服务器上的应用程序通常会将日志消息保存到日志文件中。除非打算手动监视日志文件，否则需要安装logwatch。</p>
+<p>logwatch扫描系统日志文件并对其进行汇总。</p>
+<p>您可以直接从命令行运行它，也可以计划将其按定期计划运行。例如，您可以将logwatch配置为通过电子邮件向您发送日志文件的每日摘要。请注意，您的服务器将需要能够发送电子邮件才能正常工作。</p>
+<p>logwatch使用服务文件来了解如何读取和总结日志文件。您可以在中查看所有库存服务文件/usr/share/logwatch/scripts/services。</p>
+<p>logwatch的配置文件/usr/share/logwatch/default.conf/logwatch.conf指定默认选项。您可以通过命令行参数覆盖它们。</p>
+<p>要在Ubuntu或Debian上安装logwatch，请运行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install logwatch</span><br></pre></td></tr></table></figure>
+
+<p>对于使用其他Linux发行版的用户，请查看Linode的本史诗指南。</p>
+<p>如果需要查看收集到的样本，可以尝试直接运行logwatch。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo &#x2F;usr&#x2F;sbin&#x2F;logwatch --output stdout --format text --range yesterday --service all</span><br></pre></td></tr></table></figure>
+
+<p>最后，告诉logwatch向我们发送包含我们的日志文件摘要的每日电子邮件。为此，请打开文件/etc/cron.daily/00logwatch并找到执行行，然后将其更改为以下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;sbin&#x2F;logwatch --output mail --format html --mailto root --range yesterday --service all</span><br></pre></td></tr></table></figure>
+
+<h3 id="进行安全审核"><a href="#进行安全审核" class="headerlink" title="进行安全审核"></a>进行安全审核</h3><p>保护Linux服务器安全之后，应执行安全审核，以发现可能遗漏的任何安全漏洞。</p>
+<p>为此，您可以使用Lynis，该开源软件可以执行以下操作：</p>
+<ul>
+<li>安全审核。</li>
+<li>一致性测试（例如PCI，HIPAA，SOx）。</li>
+<li>渗透测试。</li>
+<li>漏洞检测。</li>
+<li>系统强化。</li>
+</ul>
+<h4 id="如何使用Lynis"><a href="#如何使用Lynis" class="headerlink" title="如何使用Lynis"></a>如何使用Lynis</h4><p>首先，通过克隆Github存储库来安装Lynis。这可以确保您安装Lynis的最新版本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;CISOfy&#x2F;lynis</span><br></pre></td></tr></table></figure>
+
+<p>切换到我们将Lynis克隆到的目录：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd lynis</span><br></pre></td></tr></table></figure>
+
+<p>最后，使用以下命令运行第一次审核：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lynis audit system</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/08/19/Python%E9%97%AE%E7%AD%94/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Python技术问题
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/07/29/Web%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84%E6%89%A9%E5%B1%95/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Web应用架构扩展</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> JianJian Liu
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="印记"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/jianjunliu119/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/jianjunliu119/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>
