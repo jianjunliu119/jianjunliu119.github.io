@@ -81,6 +81,417 @@
     
     
     <article
+  id="post-数据结构与算法-递归2"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%922/"
+    >数据结构与算法 - 递归2</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%922/" class="article-date">
+  <time datetime="2020-07-07T03:22:00.000Z" itemprop="datePublished">2020-07-07</time>
+</a>  
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>1.引子<br>1.1.为什么要学习数据结构与算法？<br>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！</p>
+<p>有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？</p>
+<p>于是问题来了：为什么还要学习数据结构与算法呢？</p>
+<p>复制代码<br>#理由一：<br>    面试的时候，千万不要被数据结构与算法拖了后腿<br>#理由二：<br>    你真的愿意做一辈子CRUD Boy吗<br>#理由三：<br>    不想写出开源框架，中间件的工程师，不是好厨子<br>复制代码<br>1.2.如何系统化学习数据结构与算法？<br>我想好了，还是需要学习数据结构与算法。但是我有两个困惑：</p>
+<p>1.如何着手学习呢？</p>
+<p>2.有哪些内容要学习呢？</p>
+<p>学习方法推荐：</p>
+<p>#学习方法<br>1.从基础开始，系统化学习<br>2.多动手，每一种数据结构与算法，都自己用代码实现出来<br>3.思路更重要：理解实现思想，不要背代码<br>4.与日常开发结合，对应应用场景<br>学习内容推荐：</p>
+<p>数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法</p>
+<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>在上一篇【数据结构与算法系列八（递归见面礼）】中，通过两个小案例：</p>
+<p>1.求最终推荐人</p>
+<p>2.电影院看电影</p>
+<p>相信你已经对递归有一个直观的认识了。那么这一篇我们来对递归做一个详细的分析，比如以下这几个问题，如果你都知道，那么恭喜你！你都会抢答了（开个玩笑，这是黑土大爷说的：不是卖车，就是卖拐，对吧）。</p>
+<p>言归正传，关于递归，我们只需要搞清楚以下几个问题，就算是完全掌握了。很简单有没有？</p>
+<p>#考考你：<br>1.你知道哪些问题适合用递归解决吗？<br>2.你知道编写递归代码的关键步骤吗？<br>3.案例<br>3.1.递归解决的问题模板<br>我们说每一种数据结构与算法，都是在特定问题域下的产物；也就是说每一种数据结构与算法，都有它们各自适用的问题场景。</p>
+<p>关于递归，结合上一篇：求最终推荐人、电影院看电影案例，我们可以归纳如下：</p>
+<p>1.问题可以分解为子问题</p>
+<p>简述：</p>
+<p>对于一个问题的求解，本身可以被分解为更小的子问题</p>
+<p>案例：</p>
+<p>电影院案例：我们在哪一排的问题，可以分解为我们的前一排人在哪一排的子问题</p>
+<p>2.问题的求解，与分解后的子问题，求解思路一致</p>
+<p>简述：</p>
+<p>问题本身的求解思路，与分解后的子问题求解思路一致</p>
+<p>案例：</p>
+<p>电影院案例：求解我们在哪一排的问题思路，与求解我们前一排人在哪一排的思路一致</p>
+<p>3.问题的求解，存在终止条件</p>
+<p>简述：</p>
+<p>注意，这一条很重要，递归一定要有明确的终止条件，否则就等于死循环了</p>
+<p>案例：</p>
+<p>电影院案例：存在终止条件，如果是第一排，则f(1)=1</p>
+<p>3.2.编写递归代码关键步骤<br>知道了递归适合解决的问题，那么在实际软件开发中，我们该如何更有效率的编写递归代码呢？有没有什么套路，或者模板。答案是有。</p>
+<p>编写递归代码，有两个关键步骤：</p>
+<p>1.找出递推公式</p>
+<p>简述：</p>
+<p>前面我们说了，递归适合于将问题分解为子问题，然后问题本身的求解，与子问题求解思路一致。你需要仔细琢磨并理解这句话的含义，这句话是精髓。如果你理解了，你会发现这其实是一个重复性的问题。</p>
+<p>那么顺着这个思路，我们只需要将子问题，在继续分解问为更小的子问题……一直到子问题不能再分解为止。</p>
+<p>这里需要提醒一个常见的思维误区：我们在分解问题的时候，千万不要在大脑里去重现每一个分解步骤，这样容易把自己绕进去：走火入魔。毕竟人类的大脑只适合平铺直叙的思维方式，重复性的东西更适合电脑，对吧。你只需要找出不能再分解的最小子问题，然后解决它就对了。</p>
+<p>案例：</p>
+<p>电影院案例：f(n)=f(n-1)+1</p>
+<p>2.找出终止条件</p>
+<p>简述：</p>
+<p>关于递归就是一个不断分解子问题，与求解子问题的过程。因此一定要存在明确的终止条件。一定要找到它，不然就死循环了。</p>
+<p>案例：</p>
+<p>电影院案例：f(1)=1</p>
+<p>3.3.走台阶案例<br>我们通过一个稍微复杂些的案例，来巩固3.1与3.2两节的内容。假设有一个n阶的台阶，小明每一步可以走1个台阶，或者走2个台阶。求小明走完台阶，总共有多少种走法？</p>
+<p>3.3.1.找出递推公式<br>我们首先尝试分析，有这么几个前提：</p>
+<p>1.总台阶数是n</p>
+<p>2.走台阶的方式，一次可以走1个台阶，或者一次可以走2个台阶</p>
+<p>那么根据递归求解过程：分解子问题。不过这个案例稍微复杂一些，我们可以假设小明第一步只走1个台阶，是一种走法，即 f(n-1)；第一步走2个台阶，又是一种走法，即f(n-2)。</p>
+<p>这样一来，我们就可以得出递推公式，走完n个台阶的走法f(n)，等于第一步走1个台阶的走法f(n-1)，加上第一步走2个台阶的走法f(n-2)。即：</p>
+<p>#走n个台阶的递推公式<br>f(n)=f(n-1)+f(n-2)<br>3.3.2.找出终止条件<br>寻找终止条件的前提是，假设子问题不能再分解为更小的子问题的时候，有明确的终止条件。我们继续尝试分析：</p>
+<p>1.我们假设最后只剩下1个台阶的情况，只有一种走法，即：f(1)=1</p>
+<p>2.我们假设最后剩下2个台阶的情况，一次可以走1个台阶，是一种走法；一次可以走2个台阶，又是一种走法。那么剩下2个台阶的走法是：f(2)=2</p>
+<p>#走n个台阶的终止条件<br>只剩下1个台阶：f(1)=1<br>剩下2个台阶：f(2)=2<br>3.3.3.实现代码<br>有了递推公式，与终止条件，再来编写递归代码就是水到渠成的事情了，很简单了有没有</p>
+<p>复制代码<br>/**</p>
+<ul>
+<li><p>递归求解走n阶抬价的走法：</p>
+</li>
+<li><p>1.求解递推公式</p>
+</li>
+<li><p>1.1.前提：每次可以走1步台阶，或者2步台阶</p>
+</li>
+<li><p>1.2.第一步走法是关键：</p>
+</li>
+<li><p>1.2.1.如果第一步走1步台阶，则剩下n-1步台阶</p>
+</li>
+<li><p>1.2.2.如果第一步走2步台阶，则剩下n-2步台阶</p>
+</li>
+<li><p>1.3.根据1.2.1与1.2.2得出：</p>
+</li>
+<li><p>1.3.1.递推公式：f(n) = f(n-1) + f(n-2)</p>
+</li>
+<li><p>1.3.2.f(n-1)表示剩下n-1步台阶走法</p>
+</li>
+<li><p>1.3.3.f(n-2)表示剩下n-2步台阶走法</p>
+</li>
+<li></li>
+<li><p>2.求解终止条件</p>
+</li>
+<li><p>2.1.如果只剩下1步台阶，则f(1)=1</p>
+</li>
+<li><p>2.2.如果剩下2步台阶，则f(2)=2，有两种走法</p>
+</li>
+<li><p>@param n</p>
+</li>
+<li><p>/<br>public static int walkingMethod(int n){<br>   // 终止条件f(1)=1<br>   if(n == 1) return 1;</p>
+<p>   // 终止条件f(2)=2<br>   if(n == 2) return 2;</p>
+<p>   return walkingMethod(n - 1) + walkingMethod(n -2);<br>}<br>复制代码</p>
+</li>
+</ul>
+<p>4.讨论分享<br>复制代码<br>#考考你答案：<br>1.你知道哪些问题适合用递归解决吗？<br>  1.1.如果一个问题，满足三个条件，适合用递归解决<br>    a.问题本身，可以分解为子问题<br>    b.问题本身的求解思路，与分解后的子问题求解思路一致<br>    c.求解问题，本身存在明确的终止条件</p>
+<p>2.你知道编写递归代码的关键步骤吗？<br>  2.1.编写递归代码的关键步骤，有两步<br>    a.根据分解后的子问题，找出递推公式<br>    b.当子问题足够小的时候，找出终止条件<br>复制代码</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-数据结构与算法-递归"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%92/"
+    >数据结构与算法 - 递归1</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%92/" class="article-date">
+  <time datetime="2020-07-07T03:20:00.000Z" itemprop="datePublished">2020-07-07</time>
+</a>  
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>1.引子<br>1.1.为什么要学习数据结构与算法？<br>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！</p>
+<p>有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？</p>
+<p>于是问题来了：为什么还要学习数据结构与算法呢？</p>
+<p>复制代码<br>#理由一：<br>    面试的时候，千万不要被数据结构与算法拖了后腿<br>#理由二：<br>    你真的愿意做一辈子CRUD Boy吗<br>#理由三：<br>    不想写出开源框架，中间件的工程师，不是好厨子<br>复制代码<br>1.2.如何系统化学习数据结构与算法？<br>我想好了，还是需要学习数据结构与算法。但是我有两个困惑：</p>
+<p>1.如何着手学习呢？</p>
+<p>2.有哪些内容要学习呢？</p>
+<p>学习方法推荐：</p>
+<p>#学习方法<br>1.从基础开始，系统化学习<br>2.多动手，每一种数据结构与算法，都自己用代码实现出来<br>3.思路更重要：理解实现思想，不要背代码<br>4.与日常开发结合，对应应用场景<br>学习内容推荐：</p>
+<p>数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法</p>
+<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>到目前为止，基于线性表的数据结构我们都看完了，简单回顾一下，它们是：数组、链表、栈、队列。这些数据结构是其它数据结构与算法的基础，需要重点关注。</p>
+<p>这一篇开始，我们开启算法的列车了，请系好安全带！第一个要看的算法是：递归。递归这两个字你一定很熟悉，有没有？</p>
+<p>如果没有的话，我们先举一个例子。从2016年开始到如今，知识付费发展的如火如荼。如果你也是其中的一员，比如说在xx平台购买了xx课程。大多数平台都会告诉你，将你购买的课程分享出去，假如有人通过你分享的链接购买了该课程，那么平台会给你佣金返现。</p>
+<p>既然与钱有关系，那就比较麻烦了！对于平台来说，有这么几个问题需要搞清楚。比如说：1.谁是一级推荐人？</p>
+<p>2.谁是二级推荐人……？</p>
+<p>3.谁是最终推荐人？</p>
+<p>因为不同级的推荐人，返现佣金的比例可不一样，千万别返错了，对吧。关于这种类似求推荐人的问题，有请我们今天的主角登场，它就是：递归。</p>
+<p>复制代码<br>#递归稍微有些复杂，我们通过两篇来学习：<br>1.第一篇是见面礼：<br>  1.1.体会两个生活中的小案例</p>
+<p>2.第二篇是重头戏：<br>  2.1.详细分析递归的实现<br>  2.2.递归实现的注意事项<br>复制代码<br>3.案例<br>3.1.求最终推荐人<br>简述：</p>
+<p>1.A在某某知识付费平台购买了课程：xx。并将链接分享到了微信朋友圈</p>
+<p>2.B通过A分享的链接，购买了课程：xx。并且将链接分享到了微信朋友圈</p>
+<p>3.C通过B分享的链接，购买了课程：xx。并且将连接分享到了微信朋友圈</p>
+<p>4.以此类推下去……</p>
+<p>5.假如以C为起点，如何求出课程：xx的最终推荐人？</p>
+<p>6.假设数据库中存储的数据是这样的：</p>
+<p>求解：</p>
+<p>1.你肯定想到了，这个问题好简单，经常写如下类似这样的代码：</p>
+<p>复制代码<br>/**</p>
+<ul>
+<li><p>求最终推荐人</p>
+</li>
+<li><p>/<br>public String findRootRecommend(String userId,String xx){<br>   // 根据购买课程用户id、课程  查询数据库，获取推荐用户id<br>   String 【分享用户id】 = select 【分享用户id】 from 【购买课程表】 where 【用户id】 = 【userId】 and 【课程id】 = 【xx】;</p>
+<p>   // 判断是否是根据好友分享购买的课程<br>   if(分享用户id == null){</p>
+<pre><code>return userId;</code></pre><p>   }</p>
+<p>   // 递归查找<br>   return findRootRecommend(分享用户id,xx);<br>}<br>复制代码</p>
+</li>
+</ul>
+<p>3.2.电影院看电影<br>简述：</p>
+<p>1.你与女朋友正在电影院看电影，电影已经放映</p>
+<p>2.突然，女朋友问你：我们坐在电影院的第几排？</p>
+<p>3.你一看，坏了：电影院一片漆黑，伸手不见五指</p>
+<p>4.这个问题必须要回答，因为是女朋友问的，你该怎么办？</p>
+<p>求解：</p>
+<p>1.别忘了，你是程序员，对于程序员来说，这个问题太简单了</p>
+<p>2.用递归：先问前一排的人，他们在第几排？</p>
+<p>3.前一排的人，再问他的前一排，在第几排？</p>
+<p>4.以此类推……</p>
+<p>5.一直问到第一排的人，第一排不需要再问了，直接回答在第一排</p>
+<p>6.第二排的人：在第一排的人基础上 + 1</p>
+<p>7.以此类推……</p>
+<p>8.每一排都在前一排的基础上 + 1，最后到了你们这一排，女朋友得到了满意的答案</p>
+<p>9.你很骄傲有没有？用代码回答，类似这样：</p>
+<p>复制代码<br>public int movies(int n){<br>    // 如果是第一排，返回1<br>    if(n == 1){ return 1;}</p>
+<pre><code>// 递归向前一排询问
+return movies(n - 1) + 1;</code></pre><p>}<br>复制代码</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-数据结构与算法-队列"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/07/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%98%9F%E5%88%97/"
+    >数据结构与算法 - 队列</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%98%9F%E5%88%97/" class="article-date">
+  <time datetime="2020-07-06T00:57:00.000Z" itemprop="datePublished">2020-07-06</time>
+</a>  
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>1.引子<br>1.1.为什么要学习数据结构与算法？<br>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！</p>
+<p>有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？</p>
+<p>于是问题来了：为什么还要学习数据结构与算法呢？</p>
+<p>复制代码<br>#理由一：<br>    面试的时候，千万不要被数据结构与算法拖了后腿<br>#理由二：<br>    你真的愿意做一辈子CRUD Boy吗<br>#理由三：<br>    不想写出开源框架，中间件的工程师，不是好厨子<br>复制代码<br>1.2.如何系统化学习数据结构与算法？<br>我想好了，还是需要学习数据结构与算法。但是我有两个困惑：</p>
+<p>1.如何着手学习呢？</p>
+<p>2.有哪些内容要学习呢？</p>
+<p>学习方法推荐：</p>
+<p>#学习方法<br>1.从基础开始，系统化学习<br>2.多动手，每一种数据结构与算法，都自己用代码实现出来<br>3.思路更重要：理解实现思想，不要背代码<br>4.与日常开发结合，对应应用场景<br>学习内容推荐：</p>
+<p>数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法</p>
+<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>你还记得在数组那一篇中，我们说过基于线性表的数据结构有哪些吗？它们是：数组、链表、栈、队列。</p>
+<p>上一篇【数据结构与算法系列六（栈）】中，我们已经详细了解了栈这种数据结构：栈是一种操作受限的数据结构。队列是基于线性表的数据结构中，最后一种了，很巧！它也是一种操作受限的数据结构。</p>
+<p>队列同样可以基于数组实现：顺序队列；也可以基于链表实现：链式队列。</p>
+<p>那么问题来了：具体如何实现一个队列呢？它都有哪些应用场景呢？</p>
+<p>复制代码<br>#考考你：<br>1.你能用自己的话描述队列吗？<br>2.你知道常见的队列分类吗？<br>3.你知道队列代码实现的关键吗？<br>4.你知道如何实现一个循环队列吗？<br>5.你知道队列的常见的应用场景吗？<br>复制代码<br>3.案例<br>3.1.队列的定义<br>队列是一种基于线性表的数据结构，与栈一样，都是操作受限的数据结构。栈的特点是后进先出，而队列的特点是先进先出（FIFO），就像我们平常在火车站排队候车一样。</p>
+<p>队列有两头：队头，和队尾。从队头出队元素，在队尾入队新的元素。</p>
+<p>3.2.代码实现<br>顺序队列代码：</p>
+<p>复制代码<br>package com.anan.struct.linetable;</p>
+<p>/**</p>
+<ul>
+<li><p>顺序队列：基于数组实现</p>
+</li>
+<li><p>@param <E></p>
+</li>
+<li><p>/<br>public class ArrayQueue<E> {<br>  private Object[] items;<br>  private  int n;</p>
+<p>  // 队列需要两个下标：对头下标索引、队尾下标索引<br>  private int head;<br>  private int tail;</p>
+<p>  public ArrayQueue(int capacity){</p>
+<pre><code>this.items = new Object[capacity];
+this.n = capacity;</code></pre><p>  }</p>
+<p>  /**</p>
+<ul>
+<li><p>入队操作：</p>
+</li>
+<li><p>/<br>public boolean enqueue(E e){<br>  // 检查队列是否满<br>  // 队列满条件 tail==n &amp;&amp; head == 0<br>  if(tail == n){</p>
+<pre><code>// 检查对头是否没有出队
+if(head == 0){
+    return false;
+}
+
+// 如果已经有元素出队，则向对头移动数据
+for (int i = head; i &lt; tail ; i++) {
+    items[i - head] = items[i];
+}
+
+tail = tail - head;
+head = 0;</code></pre><p>  }</p>
+<p>  // 入队<br>  items[tail] = e;<br>  tail ++;</p>
+<p>  return true;<br>}</p>
+<p>/**</p>
+</li>
+<li><p>出队操作：</p>
+</li>
+<li><p>/<br>public E dequeue(){<br>  // 检查队列是否空<br>  // 队列空条件：head == tail<br>  if(head == tail){</p>
+<pre><code>return null;</code></pre><p>  }</p>
+<p>  // 出队<br>  E e = (E)items[head];<br>  head ++;</p>
+<p>  return e;<br>}</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>}<br>复制代码<br>测试代码：</p>
+<p>复制代码<br>package com.anan.struct.linetable;</p>
+<p>/**</p>
+<ul>
+<li><p>测试队列</p>
+</li>
+<li><p>/<br>public class ArrayQueueTest {</p>
+<p>  public static void main(String[] args) {</p>
+<pre><code>// 1.创建队列
+int capacity = 10;
+ArrayQueue&lt;Integer&gt; queue = new ArrayQueue&lt;Integer&gt;(capacity);
+System.out.println(&quot;1.创建队列---------队列容量：&quot; + capacity);
+
+// 2.入队操作
+System.out.println(&quot;2.入队操作---------&quot;);
+int count = 5;
+for (int i = 0; i &lt; count; i++) {
+    queue.enqueue(i);
+    System.out.println(&quot;入队元素：&quot; + i);
+}</code></pre></li>
+</ul>
+<pre><code>    // 3.出队操作
+    System.out.println(&quot;3.出队操作---------&quot;);
+    for (int i = 0; i &lt; count; i++) {
+        System.out.println(&quot;出队元素：&quot; + queue.dequeue());
+    }
+
+}</code></pre><p>}<br>复制代码<br>测试结果：</p>
+<p>复制代码<br>D:\02teach\01soft\jdk8\bin\java com.anan.struct.linetable.ArrayQueueTest<br>1.创建队列———队列容量：10<br>2.入队操作———<br>入队元素：0<br>入队元素：1<br>入队元素：2<br>入队元素：3<br>入队元素：4<br>3.出队操作———<br>出队元素：0<br>出队元素：1<br>出队元素：2<br>出队元素：3<br>出队元素：4</p>
+<p>Process finished with exit code 0<br>复制代码<br>3.3.循环队列代码实现<br>复制代码<br>package com.anan.struct.linetable;</p>
+<p>/**</p>
+<ul>
+<li><p>循环队列</p>
+</li>
+<li><p>/<br>public class CircularQueue<E> {</p>
+<p>  private Object[] items;<br>  private int n;</p>
+<p>  // 队头、对尾指针<br>  private int head;<br>  private int tail;</p>
+<p>  public CircularQueue(int capacity){</p>
+<pre><code>items = new Object[capacity];
+n = capacity;</code></pre><p>  }</p>
+<p>  /**</p>
+<ul>
+<li><p>入队操作</p>
+</li>
+<li><p>/<br>public boolean enqueue(E e){<br>  // 判断队列是否满<br>  // 队列满条件：(tail + 1) % n == head<br>  if((tail + 1) % n == head){</p>
+<pre><code>return false;</code></pre><p>  }</p>
+<p>  items[tail] = e;<br>  tail = (tail + 1) % n;</p>
+<p>  return true;<br>}</p>
+<p>/**</p>
+</li>
+<li><p>出队操作</p>
+</li>
+<li><p>/<br>public E dequeue(){<br>  // 判断队列是否空<br>  // 队列空条件：tail == head<br>  if(tail == head){</p>
+<pre><code>return null;</code></pre><p>  }</p>
+<p>  E e = (E)items[head];<br>  head = (head + 1) % n;</p>
+<p>  return e;<br>}<br>}<br>复制代码<br>4.讨论分享<br>复制代码<br>#考考你答案：<br>1.你能用自己的话描述队列吗？<br>1.1.队列是基于线性表的数据结构<br>1.2.队列是一种操作受限的数据结构<br>1.3.队列满足先进先出（FIFO）的特点<br>1.4.队列在队头出队元素，在队尾入队元素</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>2.你知道常见的队列分类吗？<br>  2.1.从底层数据结构分类有：顺序队列、链式队列<br>  2.2.从实现特点分类有：循环队列、阻塞队列、并发队列</p>
+<p>3.你知道队列代码实现的关键吗？<br>  3.1.队列满足先进先出（FIFO）特点<br>  3.2.队列在队头出队元素，在队尾入队元素<br>  3.3.实现队列的关键：<br>    a.需要两个指针：head、tail分别指向队头和队尾<br>    b.入队时，判断队列满条件：tail == n &amp;&amp; head == 0<br>    c.出队时，判断队列空条件：tail == head</p>
+<p>4.你知道如何实现一个循环队列吗？<br>  4.1.在案例中，基于数组实现了一个普通的队列<br>  4.2.入队操作的时候，如果队列满，需要移动数据<br>  // 如果队列满，且已经有元素出队，则向对头移动数据<br>   for (int i = head; i &lt; tail ; i++) {<br>          items[i - head] = items[i];<br>   }<br>  4.3.这样会将入队操作，时间复杂度从O(1)，转变成O(n)，执行效率下降<br>  4.4.有没有更好的方式，保持入队操作的时间复杂度为O(1)不变呢？<br>  4.5.答案是：通过循环队列来实现<br>  4.6.关于循环队列的代码，你可以参考【3.3】循环队列实现<br>  4.7.重点关注队列满的条件：(tail + 1) % n == head<br>  4.8.看你是否能理解，欢迎留言我们一起讨论</p>
+<p>5.你知道队列的常见的应用场景吗？<br>  5.1.队列主要针对有限资源控制的应用场景<br>  5.2.比如数据库连接池的应用<br>  5.3.比如线程池的应用<br>  5.4.如果你有兴趣，可以看一下JUC中线程池的底层实现<br>  5.5.JUC线程池的底层，应用了：阻塞队列<br>  5.6.通过队列还能实现：生产者—消费者模型<br>复制代码<br>JUC创建线程池：</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
   id="post-数据结构与算法-栈"
   class="article article-type-post"
   itemscope
