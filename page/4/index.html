@@ -81,6 +81,81 @@
     
     
     <article
+  id="post-数据结构与算法-排序"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8E%92%E5%BA%8F/"
+    >数据结构与算法 - 排序</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%8E%92%E5%BA%8F/" class="article-date">
+  <time datetime="2020-07-07T03:23:00.000Z" itemprop="datePublished">2020-07-07</time>
+</a>  
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>1.引子<br>1.1.为什么要学习数据结构与算法？<br>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！</p>
+<p>有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？</p>
+<p>于是问题来了：为什么还要学习数据结构与算法呢？</p>
+<p>复制代码<br>#理由一：<br>    面试的时候，千万不要被数据结构与算法拖了后腿<br>#理由二：<br>    你真的愿意做一辈子CRUD Boy吗<br>#理由三：<br>    不想写出开源框架，中间件的工程师，不是好厨子<br>复制代码<br>1.2.如何系统化学习数据结构与算法？<br>我想好了，还是需要学习数据结构与算法。但是我有两个困惑：</p>
+<p>1.如何着手学习呢？</p>
+<p>2.有哪些内容要学习呢？</p>
+<p>学习方法推荐：</p>
+<p>#学习方法<br>1.从基础开始，系统化学习<br>2.多动手，每一种数据结构与算法，都自己用代码实现出来<br>3.思路更重要：理解实现思想，不要背代码<br>4.与日常开发结合，对应应用场景<br>学习内容推荐：</p>
+<p>数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法</p>
+<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>在前面两篇，我们详细看了常用算法的第一个主题：递归。接下来我们来看常用算法的第二个主题：排序。排序内容有点多，常见的排序算法就有：冒泡排序、插入排序、选择排序、归并排序、快速排序、桶排序、计数排序、基数排序。</p>
+<p>这些排序算法中，不知道有没有你熟悉的，或者不熟悉的。让我们开启排序算法之旅吧。首先第一篇中，我们先来对排序算法做一个总体上的认识。</p>
+<p>#考考你：<br>1.你知道常用的排序算法有哪些吗？<br>2.你知道如何衡量排序算法的优劣吗？<br>3.你知道排序算法的基础概念：有序度、逆序度、满有序度吗？<br>3.案例<br>3.1.排序算法分类<br>在考考你中，我们说排序算法有：冒泡排序、插入排序、选择排序、归并排序、快速排序、桶排序、计数排序、基数排序。这样看起来有点散乱，能不能给它们归一下类呢？答案是可以的。</p>
+<p>对于排序算法，我们可以从时间复杂度上进行归类：</p>
+<p>3.2.从三个角度分析排序算法<br>在实际软件开发中，有众多的排序算法，如何选择和取舍呢？真的会有选择困难症啊！有没有一些好的、可行的方法，去综合衡量排序算法的优劣呢？</p>
+<p>答案是：有</p>
+<p>我们可以从三个角度去综合分析排序算法：时间复杂度、空间复杂度、算法稳定性</p>
+<p>复制代码<br>#时间复杂度<br>  1.分析最好情况、最坏情况、平均情况时间复杂度<br>  2.复杂度分析中，关于系数、常数、低阶平常可以省略<br>  3.但是，需要特别注意：在排序算法中，我们需要考虑进来</p>
+<p>#空间复杂度<br>  1.空间复杂度分析，主要看是否是：原地排序算法<br>  2.原地排序算法，是指：空间复杂度是O(1)<br>  3.注意：在实际软件开发中，这一条很重要</p>
+<p>#算法稳定性<br>  1.算法稳定性，是指如果待排序序列中，有值相同的元素<br>  2.如果经过排序后，原来值相同的元素，顺序保持不变<br>  3.那么我们说，该排序算法是稳定的排序算法<br>  4.否则，该排序算法是不稳定排序算法</p>
+<p>  5.比如，有一个待排序序列：3,6,5,2,6,8<br>  6.待排序序列中，有两个值为6的元素<br>  7.假设用数组a来存储，对应的下标是：a[1]=6,a[4]=6<br>  8.排序后：a[3]=6,a[4]=6<br>  9.这里的a[3]是排序前的a[1]<br>  10.这里的a[4]还是排序前的a[4]<br>  11.这就是稳定排序算法的要求，如下图：<br>复制代码<br>理解排序算法稳定性：</p>
+<p>3.3.排序基础概念：有序度、逆序度、满有序度<br>在排序算法中，我们需要关注三个基础概念：有序度、逆序度、满有序度。</p>
+<p>整个排序过程，我们可以理解为：增加有序度，减少逆序度，最终达到满有序度的过程。</p>
+<p>那么，它们具体的含义是什么呢？</p>
+<p>复制代码<br>#有序度：<br>  待排序序列中，如果下标索引：i&lt;j，且a[i]&lt;a[j],则称为有序度<br>#逆序度<br>  待排序序列中，如果下标索引：i&lt;j，且a[i]&gt;a[j],则称为逆序度<br>#满有序度<br>  1.待排序序列中，如果有序度达到：n(n-1)/2，则称为满有序度<br>  2.即此时待排序序列，其实是有序的<br>复制代码<br>以上关于有序度、逆序度的概念，相信很多朋友都能理解。这里我们解释一下关于满有序度的公式：n(n-1)/2。</p>
+<p>要理解满有序度的概念，你可能需要回顾一下数学中的：排列、组合知识点，应该是在高二的时候学的，可以这样去理解它们：</p>
+<p>复制代码<br>#排列：<br>  1.有n个元素，如果每两个元素，组成一个排列<br>  2.则总共有排列数：n(n-1)<br>  3.比如，有3个元素：a b c<br>  4.每两个元素组成排列数是：3*(3-1)=6<br>  5.组成的排列有：(a,b) (a,c) (b,a) (b,c) (c,a) (c,b)</p>
+<p>#组合：<br>  1.有n个元素，如果每两个元素，组成一个组合<br>  2.则总共有组合数：n(n-1)/2<br>  3.比如，有3个元素：a b c<br>  4.每两个元素组成的组合数是：3(3-1)/2=3<br>  5.组成的组合有：(a,b) (a,c) (b,c)</p>
+<p>#综合结论：<br>   1.假设待排序序列有n个元素<br>   2.如果有序度，等于每2个元素的组合数：n(n-1)/2<br>   3.那么该待排序序列，其实是有序的<br>   4.这就是满有序度的概念<br>复制代码</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
   id="post-数据结构与算法-递归2"
   class="article article-type-post"
   itemscope
@@ -927,79 +1002,13 @@ j.以此类推...直到处理完成整个表达式</code></pre><p>复制代码<b
 </article>
 
     
-    <article
-  id="post-数据机构与算法"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/06/30/%E6%95%B0%E6%8D%AE%E6%9C%BA%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"
-    >数据结构与算法 - 开篇</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/06/30/%E6%95%B0%E6%8D%AE%E6%9C%BA%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" class="article-date">
-  <time datetime="2020-06-30T02:16:00.000Z" itemprop="datePublished">2020-06-30</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><h3 id="为什么要学习数据结构与算法？"><a href="#为什么要学习数据结构与算法？" class="headerlink" title="为什么要学习数据结构与算法？"></a>为什么要学习数据结构与算法？</h3><pre><code>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！
-
-有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？
-
-于是问题来了：为什么还要学习数据结构与算法呢？
-
-理由一：
-    面试的时候，千万不要被数据结构与算法拖了后腿
-理由二：
-    你真的愿意做一辈子CRUD吗
-理由三：
-    不想写出开源框架，中间件的工程师，不是好厨子</code></pre> 
-      <a class="article-more-link" href="/2020/06/30/%E6%95%B0%E6%8D%AE%E6%9C%BA%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
   </article>
   
 
   
   <nav class="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/3/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+    <a class="extend prev" rel="prev" href="/page/3/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">下一页</a>
   </nav>
   
 </section>
