@@ -163,6 +163,171 @@
       </tags>
   </entry>
   <entry>
+    <title>Git 的远端操作</title>
+    <url>/2020/07/20/Git-%E7%9A%84%E8%BF%9C%E7%AB%AF%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<p><img src="/images/pasted-75.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>大家好，我是多选参数的程序锅，一个正在 neng 操作系统、学数据结构和算法以及 Java 的硬核菜鸡。Git 是 4 月份时候开的一个坑，一直没填完，所以今天我先来填一下 Git 的坑。最近正在学习的内容，有的已经挖了坑，有的正在挖坑中。首先依旧是先来一份本篇内容的提纲。</p>
+<p><img src="/images/pasted-76.png" alt="upload successful"></p>
+<h4 id="远端仓库"><a href="#远端仓库" class="headerlink" title="远端仓库"></a>远端仓库</h4><p>git 中远端的定义较为广泛，任何其他位置，只要不是当前仓库，都可以算作远端。同一台机器上，只要不是当前仓库的位置也可以算作远端。另外，我们常见的 github、gitlab 也是远端仓库。那么本地仓库和远端仓库之间的传输协议有以下那么几种：<br>常用协议语法格式说明本地协议(1)/path/to/repo.git哑协议本地协议(2)file:///path/to/repo.git智能协议http/https 协议<a href="http://git-server.com:port/to/repo.git">http://git-server.com:port/to/repo.git</a> <a href="https://git-server.com:port/to/repo.git平时接触的都是智能协议ssh">https://git-server.com:port/to/repo.git平时接触的都是智能协议ssh</a> 协议<a href="mailto:user@git-server.com">user@git-server.com</a>:path/to/repo.git工作中最常用的智能协议</p>
+<ul>
+<li>本地协议是指同一台机器上，通过文件路径能访问到的</li>
+<li>http/https 方式需要账号密码</li>
+<li>ssh 协议是需要公私秘钥的</li>
+<li>哑协议传输进度不可见，智能传输协议可见，另外智能协议比哑协议传输速度快</li>
+</ul>
+<h4 id="远端操作"><a href="#远端操作" class="headerlink" title="远端操作"></a>远端操作</h4><ol>
+<li><p>git remote 与远端仓库建立连接</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote add &lt;远端名&gt; &lt;远端仓库地址&gt;  # 这边远端名的意思是远端仓库的别名，push、pull 都将用到远端名</span><br><span class="line">git remote -v          # 查看远端仓库连接情况</span><br><span class="line">git remote set-url &lt;远端名&gt; 你新的远程仓库地址 # 修改远端仓库地址</span><br><span class="line">git remote rm &lt;远端名&gt;      # 删除远端仓库</span><br></pre></td></tr></table></figure>
+<p>在使用 git remote 命令之后，会多出一个远端分支。</p>
+</li>
+<li><p>git clone 将远端仓库 clone 下来</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git clone &lt;远端仓库地址&gt; # 把远端仓库 clone 下来</span><br><span class="line">git clone --bare  &lt;远端仓库地址&gt; # bare 是指不带工作目录，也就相当于只 clone .git 目录</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>从远端上 clone 一个仓库的时候，那么 clone 下来的仓库已经和远端建立了连接，不需要再使用 git remote 命令</p>
+</blockquote>
+</li>
+<li><p>git push 将本地分支推到远端</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git push &lt;远端名&gt; &lt;本地分支名&gt; </span><br><span class="line">git push -u &lt;远端名&gt; &lt;本地分支名&gt; # -u 表示将本地分支的内容推到远端分支，并且将本地分支和远端分支关联起来</span><br><span class="line">git push -u origin master # 表示把本地 master 分支的内容推到远端分支 origin&#x2F;master，并且将本地分支 master 和远端分支 origin&#x2F;master 关联起来</span><br><span class="line">git push # 这条命令也可以使用，默认是将当前本地分支推到相关联的远端分支</span><br></pre></td></tr></table></figure>
+<p>git push 的意思是本地比较新，要把本地 push 到远端，对远端进行更新，其实也就是更新 origin/master 的指向。所以 git push origin master， 其实就相当于把 origin/master 的指针移到 master 的位置，这样子 origin/master 就被更新了，然后将远端分支拷贝到远端，这样就相当于远端被更新了，但是在执行 push 的时候得要求远端仓库的 origin/master 是本地更新之后的 origin/master 的 fast-forward，也就相当于远端仓库的 origin/master 得在本地更新之后的 origin/master 的前面，其实也就是在一条线上。简单来说 git push 就是先将改变 origin/master ，然后将其复制到远端。（Hint：经过测试，本地仓库处于 master 分支，那么执行 git push origin temp 命令，操作的两个分支其实是 origin/temp 和 temp 分支）</p>
+</li>
+</ol>
+<blockquote>
+<p>在push的时候有时候会遇到 None fast-forward 问题，None fast-forward 是指：同分支情况下或者说两个相互绑定的远端分支和本地分支的情况下（通常origin/master 和 master 属于同分支），远端分支不是本地分支的父亲上的，也就是远端分支跟本地分支不在同一个分支上也就是远端分支所指的 commit 不在本地分支最新的 commit 的前面。</p>
+</blockquote>
+<ol start="4">
+<li><p>git fetch 将远端分支 fetch 到本地</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git fetch &lt;远端名&gt; &lt;本地分支名&gt;</span><br><span class="line">git fetch origin master # 将远端分支 origin&#x2F;master fetch 到本地</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git pull 这个命令是 git fetch 和 git merge 的整合</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git pull &lt;远端名&gt; &lt;本地分支名&gt; # 将远端分支 fetch 到本地，并且将远端分支和本地所处分支进行合并</span><br><span class="line">git pull --rebase # 以 rebase 方式进行合并，也就是将本地分支 rebase 到远端分支</span><br></pre></td></tr></table></figure>
+<p>git pull 的意思是远端比较新，要把本地分支进行更新。那么 git pull origin master，是相当于先把远端的 origin/master fetch 到本地，然后让 master 移到 origin/master 的位置（这是本地所在分支为 master，并且是 fast-forward 的情况）。假如 master 和 origin/master 不是 fast-forward（但是本地所在分支是 master），那么 master 和 origin/master 会进行 merge。那么假如本地当前分支不是 master，而是 temp，并且 temp 分支跟 origin/master 也不是 fast-forward，那么 temp 分支会和 origin/master 分支进行 merge。所以简单来说 git pull 就是先把远端分支 fetch 下来，然后将本地分支更新为远端分支所指的地方，这跟 git push 正好是反操作。</p>
+</li>
+</ol>
+<blockquote>
+<p>多人开发的情况下，一定要先 git fetch 或者 git pull。</p>
+</blockquote>
+<ol start="6">
+<li>远端操作总结—个人理解</li>
+</ol>
+<p>刚开始的时候对 git 的远端概念不太懂，怎么一会儿远端分支 origin/master、一会儿本地分支 master的，为啥 push 了之后，远端仓库内容就被更新了呢，pull 之后本地仓库就被更新了呢。在接触之后，其实从 git 是分布式的角度可以理解一波，git 分布式也就意味着一份仓库的内容，同时在远端和本地都有备份。如下图所示</p>
+<p><img src="/images/pasted-77.png" alt="upload successful"></p>
+<p>那么远端分支和本地分支都是这个仓库的分支，比如 origin/master 和 master 都是仓库的分支。只是本地仓库操作的分支是都是本地分支，而远端仓库只在远端分支上进行操作，远端仓库显示的内容是远端分支的内容。那么 push、pull 等操作其实就可以简单的当做对本地仓库分支的操作，比如 push 操作就是把本地仓库中的远端分支指向本地分支，然后把远端分支的情况同步到远端。pull 操作就是把远端仓库的远端分支同步下来，然后对将本地分支指向远端分支。</p>
+<h4 id="git-与-github-简单同步"><a href="#git-与-github-简单同步" class="headerlink" title="git 与 github 简单同步"></a>git 与 github 简单同步</h4><p>上文提到了 github 也可以算是一个远端仓库，那么本地仓库与远端仓库之间通信的方式有四种。显然，假如把 github 当成远端仓库，本地协议不能用了，只能用 http/https 协议或者 SSH 协议。假如需要想用 SSH 协议的话，需要配置公私钥，但是这个步骤在这里省略，下面是已经配好公私钥的。</p>
+<ol>
+<li>Github 上创建仓库</li>
+</ol>
+<p><img src="/images/pasted-78.png" alt="upload successful"></p>
+<p>依次将所需填写的内容填写完成，之后点击 “Create repository” 即可创建相应的仓库，其中关于填写选项有以下几点说明：</p>
+<ul>
+<li>Description：如果希望别人很容易搜到你的 repository 的话，那么需要在这块写具体一点</li>
+<li>Public：repository 可以让所有看到，但是仅有只读权限。</li>
+<li>Private：repository 并不是对外开放的，需要授权。</li>
+<li>README：搜索 repository 的时候，会到 README 里面搜索关键字的。</li>
+<li>Add .gitignore：有很多 .gitignore 的模板供你选择，可以根据仓库会使用的语言选择一个，也可不选。</li>
+<li>Add a license：选择开源协议</li>
+</ul>
+<p>创建完成之后，如下图所示：</p>
+<p><img src="/images/pasted-79.png" alt="upload successful"></p>
+<ol start="2">
+<li>本地仓库同步到 Github 上</li>
+</ol>
+<p>现在要将本地的这个仓库同步到 Github 上</p>
+<ul>
+<li>首先与远端仓库进行关联<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote add test git@github.com:******&#x2F;*****.git</span><br><span class="line"># test 是远端连接的名字，test 就表示后面那个仓库的地址，git 默认的是 origin，也可以改为别的；</span><br><span class="line"># git@...  这是上面新建仓库的地址，这是 SSH 协议的格式，也可以选择 https 方式的</span><br></pre></td></tr></table></figure></li>
+<li>之后使用 git push 命令把本地库的内容推送到远程<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git push -u test master</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>由于远程库是空的，我们第一次推送时，加上了 -u 参数，Git不但会把本地的 master 分支内容推送到远程新的 master 分支，还会把本地的 master 分支和远程的 master 分支关联起来。此后，每次本地提交后，就可以使用命令 git push origin master 推送最新修改。上述提交完成之后，Github 上面的内容就和本地的一样了。</p>
+<ol start="3">
+<li>本地仓库与远程仓库进行整合<br>上面所述的是在 Github 创建的是一个空仓库，假如Github上创建的仓库已经存在了东西，如下所示，仓库中已经还有了 LICENSE 文件，那么在 push 之前需要先 pull 或者 fetch &amp;&amp; merge。</li>
+</ol>
+<p><img src="/images/pasted-80.png" alt="upload successful"></p>
+<ul>
+<li><p>先使用 git remote 命令与远端仓库建立连接</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote add git_learning git@github.com:******&#x2F;******&#x2F;.git</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>之后先把远端的东西 fetch 下来</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git fetch git_learning master</span><br></pre></td></tr></table></figure>
+<p>假如不把远端的仓库中的东西 fetch 下来的话，而是直接 push 的话会报 fast-forward 错误。</p>
+</li>
+</ul>
+<p><img src="/images/pasted-81.png" alt="upload successful"></p>
+<ul>
+<li><p>使用 git merge 将两颗不相关的分支进行整合</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git merge --allow-unrelated-histories git_learning&#x2F;master</span><br><span class="line"># allow-unrelated-histories 表示允许两颗不相关的分支进行整合，这边不相关可以指没有父子关系</span><br><span class="line"># git_learning&#x2F;master  表示要 merge 的两个分支</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>最后再 git push</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git push git_learning master</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>其他方法</p>
+<ul>
+<li>其实针第二步开始可以使用 git pull 命令，因为 git pull 命令就包含了 fetch 和 merge 两个命令。</li>
+<li>当然，我们可以不用 merge 的方式进行合并，还可以使用 rebase 的方式进行合并，使用 git rebase orgin/master （假设本地仓库 HEAD 指向 master），那么就相当于把本地 master 中的 commit 以线性的方式依次合并到 origin/master 中。</li>
+<li>甚至可以在 git pull 的时候直接使用 git pull –rebase。</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git 常用操作汇总</title>
+    <url>/2020/07/20/Git-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E6%B1%87%E6%80%BB/</url>
+    <content><![CDATA[<p><img src="/images/pasted-82.png" alt="upload successful"></p>
+<p>&lt;</p>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>大家好，我是多选参数的程序锅，一个正在 neng 操作系统、学数据结构和算法以及 Java 的硬核菜鸡。到今天为止，关于 Git 的大坑算是给填上了。但是 Git 这个系列并不会结束，程序锅偶尔看到比较好的关于 Git 的文章也会整理一番发出来，争取在 Git 的坑上再长棵树。</p>
+<p><img src="/images/pasted-83.png" alt="upload successful"></p>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><ol>
+<li><p>git 配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 显示 config 的配置 加--list</span><br><span class="line"># 优先级：local &gt; global &gt; system</span><br><span class="line">git config --list --local # local 的范围是某个仓库</span><br><span class="line">git config --list --global # global 的范围是登录的用户</span><br><span class="line">git config --list --system # system 的范围是系统所有登录的用户</span><br><span class="line"># 配置用户 name 和 email</span><br><span class="line">git config --global user.name &#39;your_name &#39;</span><br><span class="line">git config --global user.email &#39;your_email@domain.com&#39;</span><br><span class="line"># 清除配置信息</span><br><span class="line">git config --unset --global user.name</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>仓库初始化</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 将执行该命令时所在的目录初始化为一个 git 仓库（如：进入某目录后执行该命令会将该目录初始化为一个 git 仓库）</span><br><span class="line">git init</span><br><span class="line"># 会在当前路径下创建和项目名称同名的文件夹，并将其初始化为 git 仓库</span><br><span class="line">git init your_project</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git add</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git add readme.md # 将 readme.md 文件添加到暂存区</span><br><span class="line">git add . # 将当前工作目录的所有文件添加到暂存区</span><br><span class="line">git add -u # 把修改之后的文件（这些文件已经被管理起来了）一次性提交到暂存区</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git status</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git status # 查看工作目录和暂存区的状态</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git commit</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git commit -m &#39;Add readme.md&#39; # -m 指定 commit 的信息</span><br><span class="line">git commit # 这时候会跳出一个文本输入界面，让你输入更多的 commit 信息</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git mv</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git mv readme readme.md # 将 git 管理的文件进行重命名</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git rm</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git rm filename # 从 git 管理的文件删除某个已管理的文件，同时把修改的情况添加到暂存区</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>git log</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git log # 只查看当前分支(Head所指的分支)的log情况</span><br><span class="line">git log --oneline # 简洁的显示版本更新信息</span><br><span class="line">git log -n2  # n2 代表查看最近两次commit历史</span><br><span class="line">git log -2   # 2 代表查看最近两次commit历史</span><br><span class="line">git log -n2 --oneline # 简洁的显示最近两次的版本更新信息</span><br><span class="line">git log branch_name # 后面跟上分支名表示查看该分支的log日志</span><br><span class="line">git log -all # 列出所有分支的log</span><br><span class="line">git log --all --graph # 以图形化的方式查看</span><br><span class="line">git log --oneline --all # 以简洁的方式查看所有分支的log</span><br><span class="line">git log --oneline --all -n4# 以简洁的方式查看所有分支的log</span><br><span class="line">git help log # 以web的方式查看log的帮助文档，等同于</span><br><span class="line">git help --web log # 和上面那条效果一样</span><br></pre></td></tr></table></figure>
+<h3 id="分支相关"><a href="#分支相关" class="headerlink" title="分支相关"></a>分支相关</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git branch -v # 查看本地分支的详细情况</span><br><span class="line">git branch -a # 查看所有分支，包括远端分支，但没有过于详细的信息</span><br><span class="line">git branch -av # 查看所有分支情况</span><br><span class="line">git branch branch_name hash_value # 创建一个新的分支，基于 hash_value 的这个 commit 创建一个新的分支，hash_value 可以省略，那么默认是基于当前分支的最后一个 commit 创建。</span><br><span class="line">git branch -d branch_name</span><br><span class="line">git branch -D branch_name  # 这个分支已经有了一些 commit</span><br><span class="line">git checkout branch_name # 切换分支</span><br><span class="line">git checkout master</span><br><span class="line">git checkout -b branch_name git_id # 创建一个新的分支并切换过去，git_id可以是hash_value，也可以是某个分支的名字（分支的名字其实就指向了某个 commit）</span><br><span class="line">git checkout -b temp 9ef147d</span><br><span class="line">git checkout -b temp2 master</span><br><span class="line">git checkout hash_value  # 分离头指针</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git diff hash_value1 hash_value2 # hash_value1 对应的 comimit 和 hash_value2 对应的 commit 进行比较</span><br><span class="line">git diff hash_value1 hash_value2 -- file_name1 file_name2 # 在上述基础之上，只比较 file_name1、file_name2 这两个文件</span><br><span class="line">git diff branch_name1 branch_name2 # 对两个分支进行比较，也可以跟 -- 只看某些文件</span><br><span class="line">git diff HEAD HEAD^  # HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD^^ # HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD~  # HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD~1 # 同上 </span><br><span class="line">git diff HEAD HEAD~2 # HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较</span><br><span class="line">git diff --cached  # 暂存区和 HEAD 做比较，也可以跟 -- 只看某些文件</span><br><span class="line">git diff      # 工作目录和暂存区中所有文件进行比较，也可以跟 -- 只看某些文件</span><br></pre></td></tr></table></figure>
+
+<h3 id="版本历史更改"><a href="#版本历史更改" class="headerlink" title="版本历史更改"></a>版本历史更改</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git commit --amend # 最近一次 commit 的 message 修改</span><br><span class="line">git rebase -i hash_value # 交互文件中选择 reword，老旧 commit 的 message 修改。hash_value，是需要的 commit 的父亲 commit 的 hash_value</span><br><span class="line">git rabase -i hash_value # 交互文件中选择 squash，多个连续 commit 合并成一个，hash_value 同上</span><br><span class="line">git rebase -i hash_value # 交互文件中选择 squash，把间隔的 commit 移到一块，即可合并成一个，hash_value</span><br><span class="line">git rebase origin&#x2F;master # 把当前分支基于 origin&#x2F;master 做 rebase 操作，也就相当于把当前分支的东西加到 origin&#x2F;master 中</span><br></pre></td></tr></table></figure>
+
+<h3 id="回滚操作"><a href="#回滚操作" class="headerlink" title="回滚操作"></a>回滚操作</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git reset HEAD        # 暂存区恢复成和 HEAD 一样</span><br><span class="line">git reset HEAD -- file_name1 file_name2 # 暂存区部分文件变得跟 HEAD 一样</span><br><span class="line">git checkout -- file_name # 工作目录指定文件恢复为和暂存区一样</span><br><span class="line">git checkout -- *|. ## 工作目录全部文件恢复为和暂存区一样</span><br><span class="line">git reset --hard hash_value # 把 HEAD、暂存区、工作目录都回滚到 hash_value 所代表的 commit 中。</span><br><span class="line">git reset --hard  # 把暂存区里面的修改去掉，也就是让暂存区、工作目录默认恢复到 HEAD 的位置</span><br></pre></td></tr></table></figure>
+
+<h3 id="工作目录、暂存区状态保存"><a href="#工作目录、暂存区状态保存" class="headerlink" title="工作目录、暂存区状态保存"></a>工作目录、暂存区状态保存</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git stash # 把相应的修改内容给存下来，之后 git status 查看的话又变为什么都没改变的了</span><br><span class="line">git stash list # 查看存下来的内容</span><br><span class="line">git stash apply # 存下来的内容又恢复了，但是存下来的内容还在 stash 中</span><br><span class="line">git stash pop   # 存下来的内容恢复了，但是存下来的内容也没了</span><br></pre></td></tr></table></figure>
+
+<h3 id="合并"><a href="#合并" class="headerlink" title="合并"></a>合并</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git merge branch_name1 branch_name2</span><br><span class="line">git merge hash_value1 hash_value2</span><br><span class="line">git merge --squash # 以 squash 方式进行 merge</span><br></pre></td></tr></table></figure>
+
+<h3 id="Git-对象操作"><a href="#Git-对象操作" class="headerlink" title="Git 对象操作"></a>Git 对象操作</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git cat-file -t|p|s hash_value # 显示版本库对象的内容，类型及大小信息</span><br><span class="line">git cat-file -t hash_value  # 查看版本库对象的类型</span><br><span class="line">git cat-file -p hash_value  # 查看版本库对象的内容</span><br><span class="line">git cat-file -s hash_value  # 查看版本库对象的大小</span><br></pre></td></tr></table></figure>
+
+<h3 id="Git-远端操作"><a href="#Git-远端操作" class="headerlink" title="Git 远端操作"></a>Git 远端操作</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote add &lt;远端名&gt; &lt;远端仓库地址&gt; # 这边远端名的意思是远端仓库的别名，push、pull 都将用到远端名</span><br><span class="line">git remote -v  # 查看远端仓库连接情况</span><br><span class="line">git remote set-url &lt;远端名&gt; 你新的远程仓库地址 # 修改远端仓库地址</span><br><span class="line">git remote rm &lt;远端名&gt;      # 删除远端仓库</span><br><span class="line">git clone &lt;远端仓库地址&gt; # 把远端仓库 clone 下来</span><br><span class="line">git clone --bare  &lt;远端仓库地址&gt; # bare 是指不带工作目录，也就相当于只 clone .git 目录</span><br><span class="line">git push &lt;远端名&gt; &lt;本地分支名&gt; </span><br><span class="line">git push -u &lt;远端名&gt; &lt;本地分支名&gt; # -u 表示将本地分支的内容推到远端分支，并且将本地分支和远端分支关联起来</span><br><span class="line">git push -u origin master # 表示把本地 master 分支的内容推到远端分支 origin&#x2F;master，并且将本地分支 master 和远端分支 origin&#x2F;master 关联起来</span><br><span class="line">git push # 这条命令也可以使用，默认是将当前本地所在分支推到相关联的远端分支</span><br><span class="line">git fetch &lt;远端名&gt; &lt;本地分支名&gt;</span><br><span class="line">git fetch origin master # 将远端分支 origin&#x2F;master fetch 到本地</span><br><span class="line">git pull &lt;远端名&gt; &lt;本地分支名&gt; # 将远端分支 fetch 到本地，并且将远端分支和本地所处分支进行合并</span><br><span class="line">git pull --rebase # 以 rebase 方式进行合并，也就是将本地分支 rebase 到远端分支</span><br></pre></td></tr></table></figure>]]></content>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Git - 基础篇</title>
     <url>/2020/07/16/Git-%E5%9F%BA%E7%A1%80%E7%AF%87/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这是程序锅对之前学习和使用 Git 做的一份整理，后头继续使用和学习 Git 的话，还会更新这份内容，所以喜欢的话可以关注一波【多选参数】哦，会第一时间在【多选参数】发布的。因此，这份就算是 v1.0 版本的吧。另外，附上了本篇内容的提纲，后头还会有几篇关于 Git 的，每篇都有这样的一份提纲。    </p>
@@ -282,293 +447,6 @@
 </ul>
 <p>比如一开始的话，HEAD 、暂存区和工作目录都是一样的，都是状态A，并且 readme*.md 文件都已经被跟踪起来了。下面我们修改 readme3.md 文件，但是不 add 到暂存区，然后使用上述命令进行比较，由于readme3.md 是在工作区中已经被更改了，工作区是版本 B，而暂存区还没更新是版本 A，所以进行比较会有如下结果。</p>
 <p><img src="/images/pasted-46.png" alt="upload successful"></p>
-]]></content>
-      <tags>
-        <tag>Git</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Git 常用操作汇总</title>
-    <url>/2020/07/20/Git-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E6%B1%87%E6%80%BB/</url>
-    <content><![CDATA[<p><img src="/images/pasted-82.png" alt="upload successful"></p>
-<p>&lt;</p>
-<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>大家好，我是多选参数的程序锅，一个正在 neng 操作系统、学数据结构和算法以及 Java 的硬核菜鸡。到今天为止，关于 Git 的大坑算是给填上了。但是 Git 这个系列并不会结束，程序锅偶尔看到比较好的关于 Git 的文章也会整理一番发出来，争取在 Git 的坑上再长棵树。</p>
-<p><img src="/images/pasted-83.png" alt="upload successful"></p>
-<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><ol>
-<li><p>git 配置</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 显示 config 的配置 加--list</span><br><span class="line"># 优先级：local &gt; global &gt; system</span><br><span class="line">git config --list --local # local 的范围是某个仓库</span><br><span class="line">git config --list --global # global 的范围是登录的用户</span><br><span class="line">git config --list --system # system 的范围是系统所有登录的用户</span><br><span class="line"># 配置用户 name 和 email</span><br><span class="line">git config --global user.name &#39;your_name &#39;</span><br><span class="line">git config --global user.email &#39;your_email@domain.com&#39;</span><br><span class="line"># 清除配置信息</span><br><span class="line">git config --unset --global user.name</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>仓库初始化</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 将执行该命令时所在的目录初始化为一个 git 仓库（如：进入某目录后执行该命令会将该目录初始化为一个 git 仓库）</span><br><span class="line">git init</span><br><span class="line"># 会在当前路径下创建和项目名称同名的文件夹，并将其初始化为 git 仓库</span><br><span class="line">git init your_project</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>git add</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git add readme.md # 将 readme.md 文件添加到暂存区</span><br><span class="line">git add . # 将当前工作目录的所有文件添加到暂存区</span><br><span class="line">git add -u # 把修改之后的文件（这些文件已经被管理起来了）一次性提交到暂存区</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>git status</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git status # 查看工作目录和暂存区的状态</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>git commit</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git commit -m &#39;Add readme.md&#39; # -m 指定 commit 的信息</span><br><span class="line">git commit # 这时候会跳出一个文本输入界面，让你输入更多的 commit 信息</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>git mv</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git mv readme readme.md # 将 git 管理的文件进行重命名</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>git rm</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git rm filename # 从 git 管理的文件删除某个已管理的文件，同时把修改的情况添加到暂存区</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>git log</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git log # 只查看当前分支(Head所指的分支)的log情况</span><br><span class="line">git log --oneline # 简洁的显示版本更新信息</span><br><span class="line">git log -n2  # n2 代表查看最近两次commit历史</span><br><span class="line">git log -2   # 2 代表查看最近两次commit历史</span><br><span class="line">git log -n2 --oneline # 简洁的显示最近两次的版本更新信息</span><br><span class="line">git log branch_name # 后面跟上分支名表示查看该分支的log日志</span><br><span class="line">git log -all # 列出所有分支的log</span><br><span class="line">git log --all --graph # 以图形化的方式查看</span><br><span class="line">git log --oneline --all # 以简洁的方式查看所有分支的log</span><br><span class="line">git log --oneline --all -n4# 以简洁的方式查看所有分支的log</span><br><span class="line">git help log # 以web的方式查看log的帮助文档，等同于</span><br><span class="line">git help --web log # 和上面那条效果一样</span><br></pre></td></tr></table></figure>
-<h3 id="分支相关"><a href="#分支相关" class="headerlink" title="分支相关"></a>分支相关</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git branch -v # 查看本地分支的详细情况</span><br><span class="line">git branch -a # 查看所有分支，包括远端分支，但没有过于详细的信息</span><br><span class="line">git branch -av # 查看所有分支情况</span><br><span class="line">git branch branch_name hash_value # 创建一个新的分支，基于 hash_value 的这个 commit 创建一个新的分支，hash_value 可以省略，那么默认是基于当前分支的最后一个 commit 创建。</span><br><span class="line">git branch -d branch_name</span><br><span class="line">git branch -D branch_name  # 这个分支已经有了一些 commit</span><br><span class="line">git checkout branch_name # 切换分支</span><br><span class="line">git checkout master</span><br><span class="line">git checkout -b branch_name git_id # 创建一个新的分支并切换过去，git_id可以是hash_value，也可以是某个分支的名字（分支的名字其实就指向了某个 commit）</span><br><span class="line">git checkout -b temp 9ef147d</span><br><span class="line">git checkout -b temp2 master</span><br><span class="line">git checkout hash_value  # 分离头指针</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<h3 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git diff hash_value1 hash_value2 # hash_value1 对应的 comimit 和 hash_value2 对应的 commit 进行比较</span><br><span class="line">git diff hash_value1 hash_value2 -- file_name1 file_name2 # 在上述基础之上，只比较 file_name1、file_name2 这两个文件</span><br><span class="line">git diff branch_name1 branch_name2 # 对两个分支进行比较，也可以跟 -- 只看某些文件</span><br><span class="line">git diff HEAD HEAD^  # HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD^^ # HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD~  # HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较</span><br><span class="line">git diff HEAD HEAD~1 # 同上 </span><br><span class="line">git diff HEAD HEAD~2 # HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较</span><br><span class="line">git diff --cached  # 暂存区和 HEAD 做比较，也可以跟 -- 只看某些文件</span><br><span class="line">git diff      # 工作目录和暂存区中所有文件进行比较，也可以跟 -- 只看某些文件</span><br></pre></td></tr></table></figure>
-
-<h3 id="版本历史更改"><a href="#版本历史更改" class="headerlink" title="版本历史更改"></a>版本历史更改</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git commit --amend # 最近一次 commit 的 message 修改</span><br><span class="line">git rebase -i hash_value # 交互文件中选择 reword，老旧 commit 的 message 修改。hash_value，是需要的 commit 的父亲 commit 的 hash_value</span><br><span class="line">git rabase -i hash_value # 交互文件中选择 squash，多个连续 commit 合并成一个，hash_value 同上</span><br><span class="line">git rebase -i hash_value # 交互文件中选择 squash，把间隔的 commit 移到一块，即可合并成一个，hash_value</span><br><span class="line">git rebase origin&#x2F;master # 把当前分支基于 origin&#x2F;master 做 rebase 操作，也就相当于把当前分支的东西加到 origin&#x2F;master 中</span><br></pre></td></tr></table></figure>
-
-<h3 id="回滚操作"><a href="#回滚操作" class="headerlink" title="回滚操作"></a>回滚操作</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git reset HEAD        # 暂存区恢复成和 HEAD 一样</span><br><span class="line">git reset HEAD -- file_name1 file_name2 # 暂存区部分文件变得跟 HEAD 一样</span><br><span class="line">git checkout -- file_name # 工作目录指定文件恢复为和暂存区一样</span><br><span class="line">git checkout -- *|. ## 工作目录全部文件恢复为和暂存区一样</span><br><span class="line">git reset --hard hash_value # 把 HEAD、暂存区、工作目录都回滚到 hash_value 所代表的 commit 中。</span><br><span class="line">git reset --hard  # 把暂存区里面的修改去掉，也就是让暂存区、工作目录默认恢复到 HEAD 的位置</span><br></pre></td></tr></table></figure>
-
-<h3 id="工作目录、暂存区状态保存"><a href="#工作目录、暂存区状态保存" class="headerlink" title="工作目录、暂存区状态保存"></a>工作目录、暂存区状态保存</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git stash # 把相应的修改内容给存下来，之后 git status 查看的话又变为什么都没改变的了</span><br><span class="line">git stash list # 查看存下来的内容</span><br><span class="line">git stash apply # 存下来的内容又恢复了，但是存下来的内容还在 stash 中</span><br><span class="line">git stash pop   # 存下来的内容恢复了，但是存下来的内容也没了</span><br></pre></td></tr></table></figure>
-
-<h3 id="合并"><a href="#合并" class="headerlink" title="合并"></a>合并</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git merge branch_name1 branch_name2</span><br><span class="line">git merge hash_value1 hash_value2</span><br><span class="line">git merge --squash # 以 squash 方式进行 merge</span><br></pre></td></tr></table></figure>
-
-<h3 id="Git-对象操作"><a href="#Git-对象操作" class="headerlink" title="Git 对象操作"></a>Git 对象操作</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git cat-file -t|p|s hash_value # 显示版本库对象的内容，类型及大小信息</span><br><span class="line">git cat-file -t hash_value  # 查看版本库对象的类型</span><br><span class="line">git cat-file -p hash_value  # 查看版本库对象的内容</span><br><span class="line">git cat-file -s hash_value  # 查看版本库对象的大小</span><br></pre></td></tr></table></figure>
-
-<h3 id="Git-远端操作"><a href="#Git-远端操作" class="headerlink" title="Git 远端操作"></a>Git 远端操作</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote add &lt;远端名&gt; &lt;远端仓库地址&gt; # 这边远端名的意思是远端仓库的别名，push、pull 都将用到远端名</span><br><span class="line">git remote -v  # 查看远端仓库连接情况</span><br><span class="line">git remote set-url &lt;远端名&gt; 你新的远程仓库地址 # 修改远端仓库地址</span><br><span class="line">git remote rm &lt;远端名&gt;      # 删除远端仓库</span><br><span class="line">git clone &lt;远端仓库地址&gt; # 把远端仓库 clone 下来</span><br><span class="line">git clone --bare  &lt;远端仓库地址&gt; # bare 是指不带工作目录，也就相当于只 clone .git 目录</span><br><span class="line">git push &lt;远端名&gt; &lt;本地分支名&gt; </span><br><span class="line">git push -u &lt;远端名&gt; &lt;本地分支名&gt; # -u 表示将本地分支的内容推到远端分支，并且将本地分支和远端分支关联起来</span><br><span class="line">git push -u origin master # 表示把本地 master 分支的内容推到远端分支 origin&#x2F;master，并且将本地分支 master 和远端分支 origin&#x2F;master 关联起来</span><br><span class="line">git push # 这条命令也可以使用，默认是将当前本地所在分支推到相关联的远端分支</span><br><span class="line">git fetch &lt;远端名&gt; &lt;本地分支名&gt;</span><br><span class="line">git fetch origin master # 将远端分支 origin&#x2F;master fetch 到本地</span><br><span class="line">git pull &lt;远端名&gt; &lt;本地分支名&gt; # 将远端分支 fetch 到本地，并且将远端分支和本地所处分支进行合并</span><br><span class="line">git pull --rebase # 以 rebase 方式进行合并，也就是将本地分支 rebase 到远端分支</span><br></pre></td></tr></table></figure>]]></content>
-      <tags>
-        <tag>Git</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Git 的远端操作</title>
-    <url>/2020/07/20/Git-%E7%9A%84%E8%BF%9C%E7%AB%AF%E6%93%8D%E4%BD%9C/</url>
-    <content><![CDATA[<p><img src="/images/pasted-75.png" alt="upload successful"></p>
-<a id="more"></a>
-
-<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>大家好，我是多选参数的程序锅，一个正在 neng 操作系统、学数据结构和算法以及 Java 的硬核菜鸡。Git 是 4 月份时候开的一个坑，一直没填完，所以今天我先来填一下 Git 的坑。最近正在学习的内容，有的已经挖了坑，有的正在挖坑中。首先依旧是先来一份本篇内容的提纲。</p>
-<p><img src="/images/pasted-76.png" alt="upload successful"></p>
-<h4 id="远端仓库"><a href="#远端仓库" class="headerlink" title="远端仓库"></a>远端仓库</h4><p>git 中远端的定义较为广泛，任何其他位置，只要不是当前仓库，都可以算作远端。同一台机器上，只要不是当前仓库的位置也可以算作远端。另外，我们常见的 github、gitlab 也是远端仓库。那么本地仓库和远端仓库之间的传输协议有以下那么几种：<br>常用协议语法格式说明本地协议(1)/path/to/repo.git哑协议本地协议(2)file:///path/to/repo.git智能协议http/https 协议<a href="http://git-server.com:port/to/repo.git">http://git-server.com:port/to/repo.git</a> <a href="https://git-server.com:port/to/repo.git平时接触的都是智能协议ssh">https://git-server.com:port/to/repo.git平时接触的都是智能协议ssh</a> 协议<a href="mailto:user@git-server.com">user@git-server.com</a>:path/to/repo.git工作中最常用的智能协议</p>
-<ul>
-<li>本地协议是指同一台机器上，通过文件路径能访问到的</li>
-<li>http/https 方式需要账号密码</li>
-<li>ssh 协议是需要公私秘钥的</li>
-<li>哑协议传输进度不可见，智能传输协议可见，另外智能协议比哑协议传输速度快</li>
-</ul>
-<h4 id="远端操作"><a href="#远端操作" class="headerlink" title="远端操作"></a>远端操作</h4><ol>
-<li><p>git remote 与远端仓库建立连接</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote add &lt;远端名&gt; &lt;远端仓库地址&gt;  # 这边远端名的意思是远端仓库的别名，push、pull 都将用到远端名</span><br><span class="line">git remote -v          # 查看远端仓库连接情况</span><br><span class="line">git remote set-url &lt;远端名&gt; 你新的远程仓库地址 # 修改远端仓库地址</span><br><span class="line">git remote rm &lt;远端名&gt;      # 删除远端仓库</span><br></pre></td></tr></table></figure>
-<p>在使用 git remote 命令之后，会多出一个远端分支。</p>
-</li>
-<li><p>git clone 将远端仓库 clone 下来</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git clone &lt;远端仓库地址&gt; # 把远端仓库 clone 下来</span><br><span class="line">git clone --bare  &lt;远端仓库地址&gt; # bare 是指不带工作目录，也就相当于只 clone .git 目录</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>从远端上 clone 一个仓库的时候，那么 clone 下来的仓库已经和远端建立了连接，不需要再使用 git remote 命令</p>
-</blockquote>
-</li>
-<li><p>git push 将本地分支推到远端</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git push &lt;远端名&gt; &lt;本地分支名&gt; </span><br><span class="line">git push -u &lt;远端名&gt; &lt;本地分支名&gt; # -u 表示将本地分支的内容推到远端分支，并且将本地分支和远端分支关联起来</span><br><span class="line">git push -u origin master # 表示把本地 master 分支的内容推到远端分支 origin&#x2F;master，并且将本地分支 master 和远端分支 origin&#x2F;master 关联起来</span><br><span class="line">git push # 这条命令也可以使用，默认是将当前本地分支推到相关联的远端分支</span><br></pre></td></tr></table></figure>
-<p>git push 的意思是本地比较新，要把本地 push 到远端，对远端进行更新，其实也就是更新 origin/master 的指向。所以 git push origin master， 其实就相当于把 origin/master 的指针移到 master 的位置，这样子 origin/master 就被更新了，然后将远端分支拷贝到远端，这样就相当于远端被更新了，但是在执行 push 的时候得要求远端仓库的 origin/master 是本地更新之后的 origin/master 的 fast-forward，也就相当于远端仓库的 origin/master 得在本地更新之后的 origin/master 的前面，其实也就是在一条线上。简单来说 git push 就是先将改变 origin/master ，然后将其复制到远端。（Hint：经过测试，本地仓库处于 master 分支，那么执行 git push origin temp 命令，操作的两个分支其实是 origin/temp 和 temp 分支）</p>
-</li>
-</ol>
-<blockquote>
-<p>在push的时候有时候会遇到 None fast-forward 问题，None fast-forward 是指：同分支情况下或者说两个相互绑定的远端分支和本地分支的情况下（通常origin/master 和 master 属于同分支），远端分支不是本地分支的父亲上的，也就是远端分支跟本地分支不在同一个分支上也就是远端分支所指的 commit 不在本地分支最新的 commit 的前面。</p>
-</blockquote>
-<ol start="4">
-<li><p>git fetch 将远端分支 fetch 到本地</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git fetch &lt;远端名&gt; &lt;本地分支名&gt;</span><br><span class="line">git fetch origin master # 将远端分支 origin&#x2F;master fetch 到本地</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>git pull 这个命令是 git fetch 和 git merge 的整合</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git pull &lt;远端名&gt; &lt;本地分支名&gt; # 将远端分支 fetch 到本地，并且将远端分支和本地所处分支进行合并</span><br><span class="line">git pull --rebase # 以 rebase 方式进行合并，也就是将本地分支 rebase 到远端分支</span><br></pre></td></tr></table></figure>
-<p>git pull 的意思是远端比较新，要把本地分支进行更新。那么 git pull origin master，是相当于先把远端的 origin/master fetch 到本地，然后让 master 移到 origin/master 的位置（这是本地所在分支为 master，并且是 fast-forward 的情况）。假如 master 和 origin/master 不是 fast-forward（但是本地所在分支是 master），那么 master 和 origin/master 会进行 merge。那么假如本地当前分支不是 master，而是 temp，并且 temp 分支跟 origin/master 也不是 fast-forward，那么 temp 分支会和 origin/master 分支进行 merge。所以简单来说 git pull 就是先把远端分支 fetch 下来，然后将本地分支更新为远端分支所指的地方，这跟 git push 正好是反操作。</p>
-</li>
-</ol>
-<blockquote>
-<p>多人开发的情况下，一定要先 git fetch 或者 git pull。</p>
-</blockquote>
-<ol start="6">
-<li>远端操作总结—个人理解</li>
-</ol>
-<p>刚开始的时候对 git 的远端概念不太懂，怎么一会儿远端分支 origin/master、一会儿本地分支 master的，为啥 push 了之后，远端仓库内容就被更新了呢，pull 之后本地仓库就被更新了呢。在接触之后，其实从 git 是分布式的角度可以理解一波，git 分布式也就意味着一份仓库的内容，同时在远端和本地都有备份。如下图所示</p>
-<p><img src="/images/pasted-77.png" alt="upload successful"></p>
-<p>那么远端分支和本地分支都是这个仓库的分支，比如 origin/master 和 master 都是仓库的分支。只是本地仓库操作的分支是都是本地分支，而远端仓库只在远端分支上进行操作，远端仓库显示的内容是远端分支的内容。那么 push、pull 等操作其实就可以简单的当做对本地仓库分支的操作，比如 push 操作就是把本地仓库中的远端分支指向本地分支，然后把远端分支的情况同步到远端。pull 操作就是把远端仓库的远端分支同步下来，然后对将本地分支指向远端分支。</p>
-<h4 id="git-与-github-简单同步"><a href="#git-与-github-简单同步" class="headerlink" title="git 与 github 简单同步"></a>git 与 github 简单同步</h4><p>上文提到了 github 也可以算是一个远端仓库，那么本地仓库与远端仓库之间通信的方式有四种。显然，假如把 github 当成远端仓库，本地协议不能用了，只能用 http/https 协议或者 SSH 协议。假如需要想用 SSH 协议的话，需要配置公私钥，但是这个步骤在这里省略，下面是已经配好公私钥的。</p>
-<ol>
-<li>Github 上创建仓库</li>
-</ol>
-<p><img src="/images/pasted-78.png" alt="upload successful"></p>
-<p>依次将所需填写的内容填写完成，之后点击 “Create repository” 即可创建相应的仓库，其中关于填写选项有以下几点说明：</p>
-<ul>
-<li>Description：如果希望别人很容易搜到你的 repository 的话，那么需要在这块写具体一点</li>
-<li>Public：repository 可以让所有看到，但是仅有只读权限。</li>
-<li>Private：repository 并不是对外开放的，需要授权。</li>
-<li>README：搜索 repository 的时候，会到 README 里面搜索关键字的。</li>
-<li>Add .gitignore：有很多 .gitignore 的模板供你选择，可以根据仓库会使用的语言选择一个，也可不选。</li>
-<li>Add a license：选择开源协议</li>
-</ul>
-<p>创建完成之后，如下图所示：</p>
-<p><img src="/images/pasted-79.png" alt="upload successful"></p>
-<ol start="2">
-<li>本地仓库同步到 Github 上</li>
-</ol>
-<p>现在要将本地的这个仓库同步到 Github 上</p>
-<ul>
-<li>首先与远端仓库进行关联<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote add test git@github.com:******&#x2F;*****.git</span><br><span class="line"># test 是远端连接的名字，test 就表示后面那个仓库的地址，git 默认的是 origin，也可以改为别的；</span><br><span class="line"># git@...  这是上面新建仓库的地址，这是 SSH 协议的格式，也可以选择 https 方式的</span><br></pre></td></tr></table></figure></li>
-<li>之后使用 git push 命令把本地库的内容推送到远程<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git push -u test master</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>由于远程库是空的，我们第一次推送时，加上了 -u 参数，Git不但会把本地的 master 分支内容推送到远程新的 master 分支，还会把本地的 master 分支和远程的 master 分支关联起来。此后，每次本地提交后，就可以使用命令 git push origin master 推送最新修改。上述提交完成之后，Github 上面的内容就和本地的一样了。</p>
-<ol start="3">
-<li>本地仓库与远程仓库进行整合<br>上面所述的是在 Github 创建的是一个空仓库，假如Github上创建的仓库已经存在了东西，如下所示，仓库中已经还有了 LICENSE 文件，那么在 push 之前需要先 pull 或者 fetch &amp;&amp; merge。</li>
-</ol>
-<p><img src="/images/pasted-80.png" alt="upload successful"></p>
-<ul>
-<li><p>先使用 git remote 命令与远端仓库建立连接</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote add git_learning git@github.com:******&#x2F;******&#x2F;.git</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>之后先把远端的东西 fetch 下来</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git fetch git_learning master</span><br></pre></td></tr></table></figure>
-<p>假如不把远端的仓库中的东西 fetch 下来的话，而是直接 push 的话会报 fast-forward 错误。</p>
-</li>
-</ul>
-<p><img src="/images/pasted-81.png" alt="upload successful"></p>
-<ul>
-<li><p>使用 git merge 将两颗不相关的分支进行整合</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git merge --allow-unrelated-histories git_learning&#x2F;master</span><br><span class="line"># allow-unrelated-histories 表示允许两颗不相关的分支进行整合，这边不相关可以指没有父子关系</span><br><span class="line"># git_learning&#x2F;master  表示要 merge 的两个分支</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>最后再 git push</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git push git_learning master</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>其他方法</p>
-<ul>
-<li>其实针第二步开始可以使用 git pull 命令，因为 git pull 命令就包含了 fetch 和 merge 两个命令。</li>
-<li>当然，我们可以不用 merge 的方式进行合并，还可以使用 rebase 的方式进行合并，使用 git rebase orgin/master （假设本地仓库 HEAD 指向 master），那么就相当于把本地 master 中的 commit 以线性的方式依次合并到 origin/master 中。</li>
-<li>甚至可以在 git pull 的时候直接使用 git pull –rebase。</li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>Git</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Git - 进级篇</title>
-    <url>/2020/07/17/Git-%E8%BF%9B%E7%BA%A7%E7%AF%87/</url>
-    <content><![CDATA[<p><img src="/images/pasted-53.png" alt="upload successful"></p>
-<a id="more"></a>
-
-<p><img src="/images/pasted-54.png" alt="upload successful"></p>
-<h3 id="Git-进阶使用"><a href="#Git-进阶使用" class="headerlink" title="Git 进阶使用"></a>Git 进阶使用</h3><h4 id="版本历史更改"><a href="#版本历史更改" class="headerlink" title="版本历史更改"></a>版本历史更改</h4><ol>
-<li>最近一次 commit 的 message 修改</li>
-</ol>
-<p>使用如下命令就可以对最近一次 commit 的 message 进行变更了</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>老旧 commit 的 message 修改 — rebase + reword<br>输入如下命令</li>
-</ol>
-<p>git rebase -i hash_value # hash_value，是需要的 commit 的父亲 commit 的 hash_value<br>之后会发生一系列交互，比如你想某个 commit 对应的message，那么将该 commit 之前的 pick 改为 reword 或者 r（看下面的注释信息），然后保存退出。之后就跳到了修改 message 的文档了，在这里输入改变之后的 message 保存退出即可。</p>
-<p><img src="/images/pasted-55.png" alt="upload successful"><br>注意：这种方式修改之后会导致该 commit 及后面 commit 的 hash_value 都被改变掉，所以不适合团队集成开发中使用。</p>
-<ol start="3">
-<li>把连续的多个 commit 合并成一个 — rebase + squash<br>输入如下命令，</li>
-</ol>
-<p>git rebase -i hash_value # hash_value 是要合并的 commit 的父亲 commit<br>输入之后会发生一系列的交互，如下所示，</p>
-<p><img src="/images/pasted-56.png" alt="upload successful"><br>假如我想要把上面两个 commit 合并成一个，需要使用 squash ，版本历史中较早的 commit 在上面，较晚的 commit 在下面，进行合并的话，是把较早的保留，较晚的合并到较早中去，所以要将上述两个 commit 进行合并的话，修改为如下所示，并保存退出</p>
-<p><img src="/images/pasted-57.png" alt="upload successful"><br>之后会进入另一个交互，在下面填写更改之后的 message 信息，保存退出之后即可。</p>
-<p><img src="/images/pasted-58.png" alt="upload successful"><br>4. 把间隔的几个 commit 合并成一个 — rebase + squash<br>与上述类似，就是把间隔的 commit 移到一块即可。同样首先是输入如下命令，hash_value 是间隔多个 commit 中的最开始那个 commit 的父亲 commit 的 hash_value</p>
-<p>git rebase -i hash_value<br>之后会进入交互界面，</p>
-<p><img src="/images/pasted-59.png" alt="upload successful"><br>比如想要合并 760df21 和 2234131 这两个 commit的话，那么修改为如下内容，保存退出即可</p>
-<p><img src="/images/pasted-60.png" alt="upload successful"><br>之后会进入修改 message 的页面，修改之后保存退出即可</p>
-<p><img src="/images/pasted-61.png" alt="upload successful"><br>5. rebase 其他操作<br>上述都使用了 git rebase 的命令，rebase 的意思是说改变基底，把版本历史中的某些 commit 给修改了。</p>
-<p>git rebase origin/master # 把当前分支基于 origin/master 做 rebase 操作，也就相当于把当前分支的东西加到 origin/master 中<br>git rerere      # 记录冲突解决的方式，然后可以在 rebase 的时候反复应用，可以和 rebase 结合用<br>6. 碎碎念<br>上述对 commit 的修改和合并，会导致该 commit 及后面 commit 的 hash_value 都被改变掉，所以不适合团队集成开发中使用。</p>
-<p>假如 commit 修改和合并这一步操作完成之后不是直接进入修改 message 的页面，请根据提示进行进一步操作，比如git rebase –continue。</p>
-<p>假如合并的包含了根 commit，那么 hash_value 则是根 commit 的 hash_value，之后在交互文档中把根 commit 填入即可，只需要填入要操作的名称和 hash_value 即可。</p>
-<p>在合并 commit 中，假如一个 commit 没有被 pick 的话，比如注释了或者删除，那么在完成一系列操作中之后，这个 commit 将会被丢弃。如下图所示，275a765 这个 commit 被注释掉了的话，那么在完成之后，这个 commit 将会被丢弃。</p>
-<p><img src="/images/pasted-62.png" alt="upload successful"></p>
-<h4 id="回滚操作-—-git-reset"><a href="#回滚操作-—-git-reset" class="headerlink" title="回滚操作 — git reset"></a>回滚操作 — git reset</h4><ol>
-<li>暂存区恢复成和 HEAD 一样<br>git reset HEAD<br>git reset HEAD – file_name1 file_name2 # 暂存区部分文件变得跟 HEAD 一样<br>比如一开始的话，HEAD 、暂存区和工作目录都是一样的，都是状态A，并且 readme*.md 文件都已经被跟踪起来了。下面我们修改 readme3.md 文件，之后把它 add 到暂存区。那么这样子工作目录和暂存区都是状态 B，而 HEAD 是状态 A。那么使用上述命令之后，会将暂存区恢复成状态 A。</li>
-</ol>
-<p><img src="/images/pasted-63.png" alt="upload successful"><br>2. 工作目录恢复为和暂存区一样<br>git checkout – file_name # 工作目录中指定文件恢复为和暂存区一样<br>git checkout – *|. ## 工作目录全部文件恢复为和暂存区一样</p>
-<p><img src="/images/pasted-64.png" alt="upload successful"><br>3. 回滚到某个 commit<br>git reset –hard hash_value # 把 HEAD、暂存区、工作目录都回滚到 hash_value 所代表的 commit 中。<br>git reset –hard  # 把暂存区里面的修改去掉，也就是让暂存区、工作目录默认恢复到 HEAD 的位置</p>
-<p><img src="/images/pasted-65.png" alt="upload successful"></p>
-<p><img src="/images/pasted-66.png" alt="upload successful"><br>4. 碎碎念<br>工作目录内容的修改使用 git checkout，</p>
-<p>暂存区内容的修改使用 git reset</p>
-<p>版本历史的修改使用 git rabase</p>
-<h4 id="工作目录、暂存区的更改状态保存下来"><a href="#工作目录、暂存区的更改状态保存下来" class="headerlink" title="工作目录、暂存区的更改状态保存下来"></a>工作目录、暂存区的更改状态保存下来</h4><p>这个应用在开发中临时加塞了紧急任务的情况，可以把处理了一半，还在工作目录、暂存区的更改状态保存下来。</p>
-<p>git stash # 把相应的修改内容给存下来，之后 git status 查看的话又变为什么都没改变的了<br>git stash list # 查看存下来的内容<br>git stash apply # 存下来的内容又恢复了，但是存下来的内容还在 stash 中<br>git stash pop   # 存下来的内容恢复了，但是存下来的内容也没了</p>
-<p><img src="/images/pasted-67.png" alt="upload successful"></p>
-<h4 id="git-merge"><a href="#git-merge" class="headerlink" title="git merge"></a>git merge</h4><p>将两个分支或者两个 commit 进行 merge，merge 之后也会产生一个 commit</p>
-<p>git merge branch_name1 branch_name2<br>git merge hash_value1 hash_value2<br>git merge –squash # 以 squash 方式进行 merge<br>在 merge 的过程中有时候会产生冲突，比如两个分支修改或者两个 commit 修改的是同文件的同一区域，那么就会发生冲突，那么会在相应文件冲突的地方有提示，大致如下所示。</p>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD<br>windows<br>=======<br>root</p>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>origin/master<br>通过协商和决定之后，确定文件最终内容，同时把上述内容删除。之后 git add 、git commit 即可。</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-<p>不同人修改了不同文件不会产生冲突。比如说两个人维护一个仓库，一个人修改 A 文件，另一个修改 B 文件，那么 merge 的话不会产生冲突，直接将内容合并在一起。</p>
-<p>不同人修改了同文件不同区域不会产生冲突。merge 的话直接将内容合并在一起。</p>
-<p>同一文件改成不同的文件名会产生冲突。同上，一个人把文件名改成了 rename1，另一个人把文件名改成了 rename2，那么 merge 会发生冲突，需要进行协商确定最终的文件名。</p>
-<p>不同人修改了同文件的同一区域会产生冲突。merge 的话因为不能确定保留谁的内容所以会产生冲突。</p>
-<h4 id="分离头指针"><a href="#分离头指针" class="headerlink" title="分离头指针"></a>分离头指针</h4><p>分离头指针的例子如下所示，上面提到切换到某个分支的用法是</p>
-<p>$ git checkout branch_name<br>那么假如把 branch_name 变成了 hash_value，那么这个就相当于“分离头指针”（PS：个人的理解是相当于创建了一个匿名 branch，这个匿名的 branch 是从 hash_value 的地方分出来的）</p>
-<p>$ git checkout hash_value<br>之后的 commit 都是基于这个分离头指针的位置开始的，这些 commit 都没有基于某个 branch，相当于都是“游离”状态的。那么当切回到某个分支之后，这些 commit 都会被当成垃圾一样清理掉。如果这些 commit 很重要，那么请把这些 commit 跟某个 branch 绑在一起。</p>
-<p>另外分类头指针也是可以用的，比如我们先用分离头指针进行一波修改和测试，如果测试不错，那么就把这些修改的 commit 添加成 branch。</p>
-<h4 id="gitignore-—-指定不需要-git-管理的文件"><a href="#gitignore-—-指定不需要-git-管理的文件" class="headerlink" title=".gitignore — 指定不需要 git 管理的文件"></a>.gitignore — 指定不需要 git 管理的文件</h4><p>git 更多是管理代码的版本控制，而代码构建出来的东西可以不用管理，因为这些是可以复现的。那么 .gitignore 这个文件就是告诉 git 哪些文件不需要被纳入版本控制系统的，也就是相当于会被忽视。</p>
-<p>doc  # doc 文件和 doc 目录都不会被管理<br>doc/  # 只指定 doc 目录不会被管理，但是 doc 文件没被说明，假如 doc 在的话，还是会被管理起来的<br>上面内容的有效范围是在整个项目中，即包括子目录等</p>
-<p><img src="/images/pasted-68.png" alt="upload successful"></p>
-<p><img src="/images/pasted-69.png" alt="upload successful"><br>.gitignore 可以借助 github 创建仓库时生成，常用的 .gitignore 如下所示，自己写的时候也值得参考一波：<a href="https://github.com/github/gitignore" target="_blank" rel="noopener">https://github.com/github/gitignore</a> ；</p>
-<p>另外想要 git 不管理某些文件，只能在 .gitignore 文件中指定；</p>
-<h4 id="团队合作注意事项"><a href="#团队合作注意事项" class="headerlink" title="团队合作注意事项"></a>团队合作注意事项</h4><p>如果你的 git 仓库是跟其他人一起维护的，那么请注意一下几点：</p>
-<p>git push -f 不能使用</p>
-<p>公共的分支严禁拉倒本地做 rebase 操作的，因为一旦做了 rebase 操作之后，历史的 commit 就变了，但是其他人那边还是老旧的 commit，他们是基于老旧的 commit 做事情的，而你是几于新的 commit 做事情了，那么就相当于是两条分支了。所以记住了，不能向集成分支执行变更历史操作，建议的方式是在现在 commit 的基础之上再做调整。</p>
-<p><img src="/images/pasted-70.png" alt="upload successful"><br>A 在 temp 分支上做 rabase 操作，那么 temp 分支就会和 master 分开。如下图所示，</p>
-<p><img src="/images/pasted-71.png" alt="upload successful"><br>然而在另一个人，还是基于如下情况做的 commit 等，那么这样，就出现问题了</p>
-<p><img src="/images/pasted-72.png" alt="upload successful"></p>
-<h3 id="git-中的对象及其操作"><a href="#git-中的对象及其操作" class="headerlink" title="git 中的对象及其操作"></a>git 中的对象及其操作</h3><p>git 中的对象有三种：commit、tree、blob。下面对这三种对象进行阐述。</p>
-<h4 id="commit"><a href="#commit" class="headerlink" title="commit"></a>commit</h4><p>每次执行git commit都会创建一个commit对象，一个 commit 对象只包含一个 tree 对象，这个 tree 对象是 .git 所在父目录的对象， 那么这样子的话，一次 commit 就相当于把当前目录的情况给记录下来了。</p>
-<h4 id="tree"><a href="#tree" class="headerlink" title="tree"></a>tree</h4><p>目录的对象，那么由于目录中可以包含目录，也可以包含文件，所以 tree 对象可以包含 tree 对象，也可以包含 blob 对象。</p>
-<h4 id="blob"><a href="#blob" class="headerlink" title="blob"></a>blob</h4><p>blob 是一个文件的具体对象，比如png图像，css文件，这些文件都会对应一个blob对象，可以说是 git 对象中最基本的。另外，blob 跟文件名一点关系都么有，只要文件内容相同，不管文件名叫什么，blob 只有一份。</p>
-<p>新建的Git 仓库中，有且仅有一个 commit，仅仅包含了 /doc/readme，请问内含多少个 tree，多个 blob？</p>
-<p>含两个 tree，一个 blob。首先是 git 仓库所在目录是一个 tree (也就是 /doc/readme 的父目录)，doc 是一个tree，而 readme 文件是唯一 blob。</p>
-<h4 id="对象的相关操作"><a href="#对象的相关操作" class="headerlink" title="对象的相关操作"></a>对象的相关操作</h4><p>git cat-file -t|p|s hash_value # 显示版本库对象的内容，类型及大小信息<br>git cat-file -t hash_value  # 查看版本库对象的类型<br>git cat-file -p hash_value  # 查看版本库对象的内容<br>git cat-file -s hash_value  # 查看版本库对象的大小</p>
-<h3 id="git-目录探索"><a href="#git-目录探索" class="headerlink" title=".git 目录探索"></a>.git 目录探索</h3><h4 id="HEAD-文件"><a href="#HEAD-文件" class="headerlink" title="HEAD 文件"></a>HEAD 文件</h4><p>HEAD文件的内容显示了 HEAD 当前所指的分支信息，通过下面的内容可以佐证上面 HEAD 说到的一点：HEAD 指向的是某个分支，但通过查看分支文件内容可以发现里面其实是 commit 的 hash_value，也就是说 HEAD 实际指向的是某个commit。</p>
-<p><img src="/images/pasted-73.png" alt="upload successful"><br>git_head_temp</p>
-<p>使用 git checkout 命令之后，查看HEAD 文件的内容</p>
-<p><img src="/images/pasted-74.png" alt="upload successful"><br>git_head_chang_to_master</p>
-<h4 id="config-文件"><a href="#config-文件" class="headerlink" title="config 文件"></a>config 文件</h4><p>存放本地仓库（local）相关的配置信息，假如之前设置了 local 下的 user.name ，那么会在这个文件中存储相关的内容等信息。修改 config 文件中 user.name 配置项的内容，使用命令查看到的也是修改之后的。</p>
-<h4 id="refs-目录"><a href="#refs-目录" class="headerlink" title="refs 目录"></a>refs 目录</h4><ol>
-<li>heads 子目录<br>目录中包含的是各分支信息，每一个文件的内容都是 hash value，这个是值是该分支最后一次 commit 的 hash_value 值</li>
-</ol>
-<p>…/.git/refs/heads# ls<br>master  temp  temp2<br>…/.git/refs/heads# cat master<br>9ef147d58eb7e09987cf5ce92254b1600ac92cd9<br>2. tags 子目录<br>里面显示的是标签的信息，Git 仓库可以有很多标签，项目开发到一定程度，是一个关键的成果了，比如开发到 v1.0，那可以打上一个标签了。</p>
-<h4 id="objects-目录"><a href="#objects-目录" class="headerlink" title="objects 目录"></a>objects 目录</h4><p>存放对象的目录。git 中的对象都是由 40 位字符组成，前两位字符用来当 object 目录中子目录名，后 38 位做文件名。</p>
-]]></content>
-      <tags>
-        <tag>Git</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Git常用操作</title>
-    <url>/2020/07/14/Git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</url>
-    <content><![CDATA[<p><img src="/images/pasted-34.png" alt="upload successful"></p>
-<a id="more"></a>
-
-<p> 常用命令<br>1.1. git 配置</p>
-<h1 id="显示-config-的配置-加–list"><a href="#显示-config-的配置-加–list" class="headerlink" title="显示 config 的配置 加–list"></a>显示 config 的配置 加–list</h1><h1 id="优先级：local-gt-global-gt-system"><a href="#优先级：local-gt-global-gt-system" class="headerlink" title="优先级：local &gt; global &gt; system"></a>优先级：local &gt; global &gt; system</h1><p>git config –list –local # local 的范围是某个仓库<br>git config –list –global # global 的范围是登录的用户<br>git config –list –system # system 的范围是系统所有登录的用户</p>
-<h1 id="配置用户-name-和-email"><a href="#配置用户-name-和-email" class="headerlink" title="配置用户 name 和 email"></a>配置用户 name 和 email</h1><p>git config –global user.name ‘your_name ‘<br>git config –global user.email ‘your_email@domain.com’</p>
-<h1 id="清除配置信息"><a href="#清除配置信息" class="headerlink" title="清除配置信息"></a>清除配置信息</h1><p>git config –unset –global user.name<br>1.2. 仓库初始化</p>
-<h1 id="将执行该命令时所在的目录初始化为一个-git-仓库（如：进入某目录后执行该命令会将该目录初始化为一个-git-仓库）"><a href="#将执行该命令时所在的目录初始化为一个-git-仓库（如：进入某目录后执行该命令会将该目录初始化为一个-git-仓库）" class="headerlink" title="将执行该命令时所在的目录初始化为一个 git 仓库（如：进入某目录后执行该命令会将该目录初始化为一个 git 仓库）"></a>将执行该命令时所在的目录初始化为一个 git 仓库（如：进入某目录后执行该命令会将该目录初始化为一个 git 仓库）</h1><p>git init</p>
-<h1 id="会在当前路径下创建和项目名称同名的文件夹，并将其初始化为-git-仓库"><a href="#会在当前路径下创建和项目名称同名的文件夹，并将其初始化为-git-仓库" class="headerlink" title="会在当前路径下创建和项目名称同名的文件夹，并将其初始化为 git 仓库"></a>会在当前路径下创建和项目名称同名的文件夹，并将其初始化为 git 仓库</h1><p>git init your_project<br>1.3. git add<br>git add readme.md # 将 readme.md 文件添加到暂存区<br>git add . # 将当前工作目录的所有文件添加到暂存区<br>git add -u # 把修改之后的文件（这些文件已经被管理起来了）一次性提交到暂存区<br>1.4. git status<br>git status # 查看工作目录和暂存区的状态<br>1.5. git commit<br>git commit -m ‘Add readme.md’ # -m 指定 commit 的信息<br>git commit # 这时候会跳出一个文本输入界面，让你输入更多的 commit 信息<br>1.6. git mv<br>git mv readme readme.md # 将 git 管理的文件进行重命名<br>1.7. git rm<br>git rm filename # 从 git 管理的文件删除某个已管理的文件，同时把修改的情况添加到暂存区<br>1.8. git log<br>git log # 只查看当前分支(Head所指的分支)的log情况<br>git log –oneline # 简洁的显示版本更新信息<br>git log -n2  # n2 代表查看最近两次commit历史<br>git log -2   # 2 代表查看最近两次commit历史<br>git log -n2 –oneline # 简洁的显示最近两次的版本更新信息<br>git log branch_name # 后面跟上分支名表示查看该分支的log日志<br>git log -all # 列出所有分支的log<br>git log –all –graph # 以图形化的方式查看<br>git log –oneline –all # 以简洁的方式查看所有分支的log<br>git log –oneline –all -n4# 以简洁的方式查看所有分支的log<br>git help log # 以web的方式查看log的帮助文档，等同于<br>git help –web log # 和上面那条效果一样<br>2. 分支相关<br>git branch -v # 查看本地分支的详细情况<br>git branch -a # 查看所有分支，包括远端分支，但没有过于详细的信息<br>git branch -av # 查看所有分支情况<br>git branch branch_name hash_value # 创建一个新的分支，基于 hash_value 的这个 commit 创建一个新的分支，hash_value 可以省略，那么默认是基于当前分支的最后一个 commit 创建。<br>git branch -d branch_name<br>git branch -D branch_name  # 这个分支已经有了一些 commit<br>git checkout branch_name # 切换分支<br>git checkout master<br>git checkout -b branch_name git_id # 创建一个新的分支并切换过去，git_id可以是hash_value，也可以是某个分支的名字（分支的名字其实就指向了某个 commit）<br>git checkout -b temp 9ef147d<br>git checkout -b temp2 master<br>git checkout hash_value  # 分离头指针<br>3. 比较<br>git diff hash_value1 hash_value2 # hash_value1 对应的 comimit 和 hash_value2 对应的 commit 进行比较<br>git diff hash_value1 hash_value2 – file_name1 file_name2 # 在上述基础之上，只比较 file_name1、file_name2 这两个文件<br>git diff branch_name1 branch_name2 # 对两个分支进行比较，也可以跟 – 只看某些文件<br>git diff HEAD HEAD^  # HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较<br>git diff HEAD HEAD^^ # HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较<br>git diff HEAD HEAD~  # HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较<br>git diff HEAD HEAD<del>1 # 同上<br>git diff HEAD HEAD</del>2 # HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较<br>git diff –cached  # 暂存区和 HEAD 做比较，也可以跟 – 只看某些文件<br>git diff      # 工作目录和暂存区中所有文件进行比较，也可以跟 – 只看某些文件<br>4. 版本历史更改<br>git commit –amend # 最近一次 commit 的 message 修改<br>git rebase -i hash_value # 交互文件中选择 reword，老旧 commit 的 message 修改。hash_value，是需要的 commit 的父亲 commit 的 hash_value<br>git rabase -i hash_value # 交互文件中选择 squash，多个连续 commit 合并成一个，hash_value 同上<br>git rebase -i hash_value # 交互文件中选择 squash，把间隔的 commit 移到一块，即可合并成一个，hash_value<br>git rebase origin/master # 把当前分支基于 origin/master 做 rebase 操作，也就相当于把当前分支的东西加到 origin/master 中<br>5. 回滚操作<br>git reset HEAD        # 暂存区恢复成和 HEAD 一样<br>git reset HEAD – file_name1 file_name2 # 暂存区部分文件变得跟 HEAD 一样<br>git checkout – file_name # 工作目录指定文件恢复为和暂存区一样<br>git checkout – *|. ## 工作目录全部文件恢复为和暂存区一样<br>git reset –hard hash_value # 把 HEAD、暂存区、工作目录都回滚到 hash_value 所代表的 commit 中。<br>git reset –hard  # 把暂存区里面的修改去掉，也就是让暂存区、工作目录默认恢复到 HEAD 的位置<br>6. 工作目录、暂存区状态保存<br>git stash # 把相应的修改内容给存下来，之后 git status 查看的话又变为什么都没改变的了<br>git stash list # 查看存下来的内容<br>git stash apply # 存下来的内容又恢复了，但是存下来的内容还在 stash 中<br>git stash pop   # 存下来的内容恢复了，但是存下来的内容也没了<br>7. 合并<br>git merge branch_name1 branch_name2<br>git merge hash_value1 hash_value2<br>git merge –squash # 以 squash 方式进行 merge<br>8. Git 对象操作<br>git cat-file -t|p|s hash_value # 显示版本库对象的内容，类型及大小信息<br>git cat-file -t hash_value  # 查看版本库对象的类型<br>git cat-file -p hash_value  # 查看版本库对象的内容<br>git cat-file -s hash_value  # 查看版本库对象的大小<br>9. Git 远端操作<br>git remote add &lt;远端名&gt; &lt;远端仓库地址&gt; # 这边远端名的意思是远端仓库的别名，push、pull 都将用到远端名<br>git remote -v  # 查看远端仓库连接情况<br>git remote set-url &lt;远端名&gt; 你新的远程仓库地址 # 修改远端仓库地址<br>git remote rm &lt;远端名&gt;      # 删除远端仓库<br>git clone &lt;远端仓库地址&gt; # 把远端仓库 clone 下来<br>git clone –bare  &lt;远端仓库地址&gt; # bare 是指不带工作目录，也就相当于只 clone .git 目录<br>git push &lt;远端名&gt; &lt;本地分支名&gt;<br>git push -u &lt;远端名&gt; &lt;本地分支名&gt; # -u 表示将本地分支的内容推到远端分支，并且将本地分支和远端分支关联起来<br>git push -u origin master # 表示把本地 master 分支的内容推到远端分支 origin/master，并且将本地分支 master 和远端分支 origin/master 关联起来<br>git push # 这条命令也可以使用，默认是将当前本地所在分支推到相关联的远端分支<br>git fetch &lt;远端名&gt; &lt;本地分支名&gt;<br>git fetch origin master # 将远端分支 origin/master fetch 到本地<br>git pull &lt;远端名&gt; &lt;本地分支名&gt; # 将远端分支 fetch 到本地，并且将远端分支和本地所处分支进行合并<br>git pull –rebase # 以 rebase 方式进行合并，也就是将本地分支 rebase 到远端分支</p>
 ]]></content>
       <tags>
         <tag>Git</tag>
@@ -785,6 +663,111 @@
       </tags>
   </entry>
   <entry>
+    <title>Git - 进级篇</title>
+    <url>/2020/07/17/Git-%E8%BF%9B%E7%BA%A7%E7%AF%87/</url>
+    <content><![CDATA[<p><img src="/images/pasted-53.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<p><img src="/images/pasted-54.png" alt="upload successful"></p>
+<h3 id="Git-进阶使用"><a href="#Git-进阶使用" class="headerlink" title="Git 进阶使用"></a>Git 进阶使用</h3><h4 id="版本历史更改"><a href="#版本历史更改" class="headerlink" title="版本历史更改"></a>版本历史更改</h4><ol>
+<li>最近一次 commit 的 message 修改</li>
+</ol>
+<p>使用如下命令就可以对最近一次 commit 的 message 进行变更了</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>老旧 commit 的 message 修改 — rebase + reword<br>输入如下命令</li>
+</ol>
+<p>git rebase -i hash_value # hash_value，是需要的 commit 的父亲 commit 的 hash_value<br>之后会发生一系列交互，比如你想某个 commit 对应的message，那么将该 commit 之前的 pick 改为 reword 或者 r（看下面的注释信息），然后保存退出。之后就跳到了修改 message 的文档了，在这里输入改变之后的 message 保存退出即可。</p>
+<p><img src="/images/pasted-55.png" alt="upload successful"><br>注意：这种方式修改之后会导致该 commit 及后面 commit 的 hash_value 都被改变掉，所以不适合团队集成开发中使用。</p>
+<ol start="3">
+<li>把连续的多个 commit 合并成一个 — rebase + squash<br>输入如下命令，</li>
+</ol>
+<p>git rebase -i hash_value # hash_value 是要合并的 commit 的父亲 commit<br>输入之后会发生一系列的交互，如下所示，</p>
+<p><img src="/images/pasted-56.png" alt="upload successful"><br>假如我想要把上面两个 commit 合并成一个，需要使用 squash ，版本历史中较早的 commit 在上面，较晚的 commit 在下面，进行合并的话，是把较早的保留，较晚的合并到较早中去，所以要将上述两个 commit 进行合并的话，修改为如下所示，并保存退出</p>
+<p><img src="/images/pasted-57.png" alt="upload successful"><br>之后会进入另一个交互，在下面填写更改之后的 message 信息，保存退出之后即可。</p>
+<p><img src="/images/pasted-58.png" alt="upload successful"><br>4. 把间隔的几个 commit 合并成一个 — rebase + squash<br>与上述类似，就是把间隔的 commit 移到一块即可。同样首先是输入如下命令，hash_value 是间隔多个 commit 中的最开始那个 commit 的父亲 commit 的 hash_value</p>
+<p>git rebase -i hash_value<br>之后会进入交互界面，</p>
+<p><img src="/images/pasted-59.png" alt="upload successful"><br>比如想要合并 760df21 和 2234131 这两个 commit的话，那么修改为如下内容，保存退出即可</p>
+<p><img src="/images/pasted-60.png" alt="upload successful"><br>之后会进入修改 message 的页面，修改之后保存退出即可</p>
+<p><img src="/images/pasted-61.png" alt="upload successful"><br>5. rebase 其他操作<br>上述都使用了 git rebase 的命令，rebase 的意思是说改变基底，把版本历史中的某些 commit 给修改了。</p>
+<p>git rebase origin/master # 把当前分支基于 origin/master 做 rebase 操作，也就相当于把当前分支的东西加到 origin/master 中<br>git rerere      # 记录冲突解决的方式，然后可以在 rebase 的时候反复应用，可以和 rebase 结合用<br>6. 碎碎念<br>上述对 commit 的修改和合并，会导致该 commit 及后面 commit 的 hash_value 都被改变掉，所以不适合团队集成开发中使用。</p>
+<p>假如 commit 修改和合并这一步操作完成之后不是直接进入修改 message 的页面，请根据提示进行进一步操作，比如git rebase –continue。</p>
+<p>假如合并的包含了根 commit，那么 hash_value 则是根 commit 的 hash_value，之后在交互文档中把根 commit 填入即可，只需要填入要操作的名称和 hash_value 即可。</p>
+<p>在合并 commit 中，假如一个 commit 没有被 pick 的话，比如注释了或者删除，那么在完成一系列操作中之后，这个 commit 将会被丢弃。如下图所示，275a765 这个 commit 被注释掉了的话，那么在完成之后，这个 commit 将会被丢弃。</p>
+<p><img src="/images/pasted-62.png" alt="upload successful"></p>
+<h4 id="回滚操作-—-git-reset"><a href="#回滚操作-—-git-reset" class="headerlink" title="回滚操作 — git reset"></a>回滚操作 — git reset</h4><ol>
+<li>暂存区恢复成和 HEAD 一样<br>git reset HEAD<br>git reset HEAD – file_name1 file_name2 # 暂存区部分文件变得跟 HEAD 一样<br>比如一开始的话，HEAD 、暂存区和工作目录都是一样的，都是状态A，并且 readme*.md 文件都已经被跟踪起来了。下面我们修改 readme3.md 文件，之后把它 add 到暂存区。那么这样子工作目录和暂存区都是状态 B，而 HEAD 是状态 A。那么使用上述命令之后，会将暂存区恢复成状态 A。</li>
+</ol>
+<p><img src="/images/pasted-63.png" alt="upload successful"><br>2. 工作目录恢复为和暂存区一样<br>git checkout – file_name # 工作目录中指定文件恢复为和暂存区一样<br>git checkout – *|. ## 工作目录全部文件恢复为和暂存区一样</p>
+<p><img src="/images/pasted-64.png" alt="upload successful"><br>3. 回滚到某个 commit<br>git reset –hard hash_value # 把 HEAD、暂存区、工作目录都回滚到 hash_value 所代表的 commit 中。<br>git reset –hard  # 把暂存区里面的修改去掉，也就是让暂存区、工作目录默认恢复到 HEAD 的位置</p>
+<p><img src="/images/pasted-65.png" alt="upload successful"></p>
+<p><img src="/images/pasted-66.png" alt="upload successful"><br>4. 碎碎念<br>工作目录内容的修改使用 git checkout，</p>
+<p>暂存区内容的修改使用 git reset</p>
+<p>版本历史的修改使用 git rabase</p>
+<h4 id="工作目录、暂存区的更改状态保存下来"><a href="#工作目录、暂存区的更改状态保存下来" class="headerlink" title="工作目录、暂存区的更改状态保存下来"></a>工作目录、暂存区的更改状态保存下来</h4><p>这个应用在开发中临时加塞了紧急任务的情况，可以把处理了一半，还在工作目录、暂存区的更改状态保存下来。</p>
+<p>git stash # 把相应的修改内容给存下来，之后 git status 查看的话又变为什么都没改变的了<br>git stash list # 查看存下来的内容<br>git stash apply # 存下来的内容又恢复了，但是存下来的内容还在 stash 中<br>git stash pop   # 存下来的内容恢复了，但是存下来的内容也没了</p>
+<p><img src="/images/pasted-67.png" alt="upload successful"></p>
+<h4 id="git-merge"><a href="#git-merge" class="headerlink" title="git merge"></a>git merge</h4><p>将两个分支或者两个 commit 进行 merge，merge 之后也会产生一个 commit</p>
+<p>git merge branch_name1 branch_name2<br>git merge hash_value1 hash_value2<br>git merge –squash # 以 squash 方式进行 merge<br>在 merge 的过程中有时候会产生冲突，比如两个分支修改或者两个 commit 修改的是同文件的同一区域，那么就会发生冲突，那么会在相应文件冲突的地方有提示，大致如下所示。</p>
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD<br>windows<br>=======<br>root</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>origin/master<br>通过协商和决定之后，确定文件最终内容，同时把上述内容删除。之后 git add 、git commit 即可。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>不同人修改了不同文件不会产生冲突。比如说两个人维护一个仓库，一个人修改 A 文件，另一个修改 B 文件，那么 merge 的话不会产生冲突，直接将内容合并在一起。</p>
+<p>不同人修改了同文件不同区域不会产生冲突。merge 的话直接将内容合并在一起。</p>
+<p>同一文件改成不同的文件名会产生冲突。同上，一个人把文件名改成了 rename1，另一个人把文件名改成了 rename2，那么 merge 会发生冲突，需要进行协商确定最终的文件名。</p>
+<p>不同人修改了同文件的同一区域会产生冲突。merge 的话因为不能确定保留谁的内容所以会产生冲突。</p>
+<h4 id="分离头指针"><a href="#分离头指针" class="headerlink" title="分离头指针"></a>分离头指针</h4><p>分离头指针的例子如下所示，上面提到切换到某个分支的用法是</p>
+<p>$ git checkout branch_name<br>那么假如把 branch_name 变成了 hash_value，那么这个就相当于“分离头指针”（PS：个人的理解是相当于创建了一个匿名 branch，这个匿名的 branch 是从 hash_value 的地方分出来的）</p>
+<p>$ git checkout hash_value<br>之后的 commit 都是基于这个分离头指针的位置开始的，这些 commit 都没有基于某个 branch，相当于都是“游离”状态的。那么当切回到某个分支之后，这些 commit 都会被当成垃圾一样清理掉。如果这些 commit 很重要，那么请把这些 commit 跟某个 branch 绑在一起。</p>
+<p>另外分类头指针也是可以用的，比如我们先用分离头指针进行一波修改和测试，如果测试不错，那么就把这些修改的 commit 添加成 branch。</p>
+<h4 id="gitignore-—-指定不需要-git-管理的文件"><a href="#gitignore-—-指定不需要-git-管理的文件" class="headerlink" title=".gitignore — 指定不需要 git 管理的文件"></a>.gitignore — 指定不需要 git 管理的文件</h4><p>git 更多是管理代码的版本控制，而代码构建出来的东西可以不用管理，因为这些是可以复现的。那么 .gitignore 这个文件就是告诉 git 哪些文件不需要被纳入版本控制系统的，也就是相当于会被忽视。</p>
+<p>doc  # doc 文件和 doc 目录都不会被管理<br>doc/  # 只指定 doc 目录不会被管理，但是 doc 文件没被说明，假如 doc 在的话，还是会被管理起来的<br>上面内容的有效范围是在整个项目中，即包括子目录等</p>
+<p><img src="/images/pasted-68.png" alt="upload successful"></p>
+<p><img src="/images/pasted-69.png" alt="upload successful"><br>.gitignore 可以借助 github 创建仓库时生成，常用的 .gitignore 如下所示，自己写的时候也值得参考一波：<a href="https://github.com/github/gitignore" target="_blank" rel="noopener">https://github.com/github/gitignore</a> ；</p>
+<p>另外想要 git 不管理某些文件，只能在 .gitignore 文件中指定；</p>
+<h4 id="团队合作注意事项"><a href="#团队合作注意事项" class="headerlink" title="团队合作注意事项"></a>团队合作注意事项</h4><p>如果你的 git 仓库是跟其他人一起维护的，那么请注意一下几点：</p>
+<p>git push -f 不能使用</p>
+<p>公共的分支严禁拉倒本地做 rebase 操作的，因为一旦做了 rebase 操作之后，历史的 commit 就变了，但是其他人那边还是老旧的 commit，他们是基于老旧的 commit 做事情的，而你是几于新的 commit 做事情了，那么就相当于是两条分支了。所以记住了，不能向集成分支执行变更历史操作，建议的方式是在现在 commit 的基础之上再做调整。</p>
+<p><img src="/images/pasted-70.png" alt="upload successful"><br>A 在 temp 分支上做 rabase 操作，那么 temp 分支就会和 master 分开。如下图所示，</p>
+<p><img src="/images/pasted-71.png" alt="upload successful"><br>然而在另一个人，还是基于如下情况做的 commit 等，那么这样，就出现问题了</p>
+<p><img src="/images/pasted-72.png" alt="upload successful"></p>
+<h3 id="git-中的对象及其操作"><a href="#git-中的对象及其操作" class="headerlink" title="git 中的对象及其操作"></a>git 中的对象及其操作</h3><p>git 中的对象有三种：commit、tree、blob。下面对这三种对象进行阐述。</p>
+<h4 id="commit"><a href="#commit" class="headerlink" title="commit"></a>commit</h4><p>每次执行git commit都会创建一个commit对象，一个 commit 对象只包含一个 tree 对象，这个 tree 对象是 .git 所在父目录的对象， 那么这样子的话，一次 commit 就相当于把当前目录的情况给记录下来了。</p>
+<h4 id="tree"><a href="#tree" class="headerlink" title="tree"></a>tree</h4><p>目录的对象，那么由于目录中可以包含目录，也可以包含文件，所以 tree 对象可以包含 tree 对象，也可以包含 blob 对象。</p>
+<h4 id="blob"><a href="#blob" class="headerlink" title="blob"></a>blob</h4><p>blob 是一个文件的具体对象，比如png图像，css文件，这些文件都会对应一个blob对象，可以说是 git 对象中最基本的。另外，blob 跟文件名一点关系都么有，只要文件内容相同，不管文件名叫什么，blob 只有一份。</p>
+<p>新建的Git 仓库中，有且仅有一个 commit，仅仅包含了 /doc/readme，请问内含多少个 tree，多个 blob？</p>
+<p>含两个 tree，一个 blob。首先是 git 仓库所在目录是一个 tree (也就是 /doc/readme 的父目录)，doc 是一个tree，而 readme 文件是唯一 blob。</p>
+<h4 id="对象的相关操作"><a href="#对象的相关操作" class="headerlink" title="对象的相关操作"></a>对象的相关操作</h4><p>git cat-file -t|p|s hash_value # 显示版本库对象的内容，类型及大小信息<br>git cat-file -t hash_value  # 查看版本库对象的类型<br>git cat-file -p hash_value  # 查看版本库对象的内容<br>git cat-file -s hash_value  # 查看版本库对象的大小</p>
+<h3 id="git-目录探索"><a href="#git-目录探索" class="headerlink" title=".git 目录探索"></a>.git 目录探索</h3><h4 id="HEAD-文件"><a href="#HEAD-文件" class="headerlink" title="HEAD 文件"></a>HEAD 文件</h4><p>HEAD文件的内容显示了 HEAD 当前所指的分支信息，通过下面的内容可以佐证上面 HEAD 说到的一点：HEAD 指向的是某个分支，但通过查看分支文件内容可以发现里面其实是 commit 的 hash_value，也就是说 HEAD 实际指向的是某个commit。</p>
+<p><img src="/images/pasted-73.png" alt="upload successful"><br>git_head_temp</p>
+<p>使用 git checkout 命令之后，查看HEAD 文件的内容</p>
+<p><img src="/images/pasted-74.png" alt="upload successful"><br>git_head_chang_to_master</p>
+<h4 id="config-文件"><a href="#config-文件" class="headerlink" title="config 文件"></a>config 文件</h4><p>存放本地仓库（local）相关的配置信息，假如之前设置了 local 下的 user.name ，那么会在这个文件中存储相关的内容等信息。修改 config 文件中 user.name 配置项的内容，使用命令查看到的也是修改之后的。</p>
+<h4 id="refs-目录"><a href="#refs-目录" class="headerlink" title="refs 目录"></a>refs 目录</h4><ol>
+<li>heads 子目录<br>目录中包含的是各分支信息，每一个文件的内容都是 hash value，这个是值是该分支最后一次 commit 的 hash_value 值</li>
+</ol>
+<p>…/.git/refs/heads# ls<br>master  temp  temp2<br>…/.git/refs/heads# cat master<br>9ef147d58eb7e09987cf5ce92254b1600ac92cd9<br>2. tags 子目录<br>里面显示的是标签的信息，Git 仓库可以有很多标签，项目开发到一定程度，是一个关键的成果了，比如开发到 v1.0，那可以打上一个标签了。</p>
+<h4 id="objects-目录"><a href="#objects-目录" class="headerlink" title="objects 目录"></a>objects 目录</h4><p>存放对象的目录。git 中的对象都是由 40 位字符组成，前两位字符用来当 object 目录中子目录名，后 38 位做文件名。</p>
+]]></content>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Python技术问题</title>
     <url>/2020/08/19/Python%E9%97%AE%E7%AD%94/</url>
     <content><![CDATA[<p><img src="/images/pasted-163.png" alt="upload successful"></p>
@@ -970,6 +953,23 @@
 ]]></content>
       <tags>
         <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git常用操作</title>
+    <url>/2020/07/14/Git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<p><img src="/images/pasted-34.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<p> 常用命令<br>1.1. git 配置</p>
+<h1 id="显示-config-的配置-加–list"><a href="#显示-config-的配置-加–list" class="headerlink" title="显示 config 的配置 加–list"></a>显示 config 的配置 加–list</h1><h1 id="优先级：local-gt-global-gt-system"><a href="#优先级：local-gt-global-gt-system" class="headerlink" title="优先级：local &gt; global &gt; system"></a>优先级：local &gt; global &gt; system</h1><p>git config –list –local # local 的范围是某个仓库<br>git config –list –global # global 的范围是登录的用户<br>git config –list –system # system 的范围是系统所有登录的用户</p>
+<h1 id="配置用户-name-和-email"><a href="#配置用户-name-和-email" class="headerlink" title="配置用户 name 和 email"></a>配置用户 name 和 email</h1><p>git config –global user.name ‘your_name ‘<br>git config –global user.email ‘your_email@domain.com’</p>
+<h1 id="清除配置信息"><a href="#清除配置信息" class="headerlink" title="清除配置信息"></a>清除配置信息</h1><p>git config –unset –global user.name<br>1.2. 仓库初始化</p>
+<h1 id="将执行该命令时所在的目录初始化为一个-git-仓库（如：进入某目录后执行该命令会将该目录初始化为一个-git-仓库）"><a href="#将执行该命令时所在的目录初始化为一个-git-仓库（如：进入某目录后执行该命令会将该目录初始化为一个-git-仓库）" class="headerlink" title="将执行该命令时所在的目录初始化为一个 git 仓库（如：进入某目录后执行该命令会将该目录初始化为一个 git 仓库）"></a>将执行该命令时所在的目录初始化为一个 git 仓库（如：进入某目录后执行该命令会将该目录初始化为一个 git 仓库）</h1><p>git init</p>
+<h1 id="会在当前路径下创建和项目名称同名的文件夹，并将其初始化为-git-仓库"><a href="#会在当前路径下创建和项目名称同名的文件夹，并将其初始化为-git-仓库" class="headerlink" title="会在当前路径下创建和项目名称同名的文件夹，并将其初始化为 git 仓库"></a>会在当前路径下创建和项目名称同名的文件夹，并将其初始化为 git 仓库</h1><p>git init your_project<br>1.3. git add<br>git add readme.md # 将 readme.md 文件添加到暂存区<br>git add . # 将当前工作目录的所有文件添加到暂存区<br>git add -u # 把修改之后的文件（这些文件已经被管理起来了）一次性提交到暂存区<br>1.4. git status<br>git status # 查看工作目录和暂存区的状态<br>1.5. git commit<br>git commit -m ‘Add readme.md’ # -m 指定 commit 的信息<br>git commit # 这时候会跳出一个文本输入界面，让你输入更多的 commit 信息<br>1.6. git mv<br>git mv readme readme.md # 将 git 管理的文件进行重命名<br>1.7. git rm<br>git rm filename # 从 git 管理的文件删除某个已管理的文件，同时把修改的情况添加到暂存区<br>1.8. git log<br>git log # 只查看当前分支(Head所指的分支)的log情况<br>git log –oneline # 简洁的显示版本更新信息<br>git log -n2  # n2 代表查看最近两次commit历史<br>git log -2   # 2 代表查看最近两次commit历史<br>git log -n2 –oneline # 简洁的显示最近两次的版本更新信息<br>git log branch_name # 后面跟上分支名表示查看该分支的log日志<br>git log -all # 列出所有分支的log<br>git log –all –graph # 以图形化的方式查看<br>git log –oneline –all # 以简洁的方式查看所有分支的log<br>git log –oneline –all -n4# 以简洁的方式查看所有分支的log<br>git help log # 以web的方式查看log的帮助文档，等同于<br>git help –web log # 和上面那条效果一样<br>2. 分支相关<br>git branch -v # 查看本地分支的详细情况<br>git branch -a # 查看所有分支，包括远端分支，但没有过于详细的信息<br>git branch -av # 查看所有分支情况<br>git branch branch_name hash_value # 创建一个新的分支，基于 hash_value 的这个 commit 创建一个新的分支，hash_value 可以省略，那么默认是基于当前分支的最后一个 commit 创建。<br>git branch -d branch_name<br>git branch -D branch_name  # 这个分支已经有了一些 commit<br>git checkout branch_name # 切换分支<br>git checkout master<br>git checkout -b branch_name git_id # 创建一个新的分支并切换过去，git_id可以是hash_value，也可以是某个分支的名字（分支的名字其实就指向了某个 commit）<br>git checkout -b temp 9ef147d<br>git checkout -b temp2 master<br>git checkout hash_value  # 分离头指针<br>3. 比较<br>git diff hash_value1 hash_value2 # hash_value1 对应的 comimit 和 hash_value2 对应的 commit 进行比较<br>git diff hash_value1 hash_value2 – file_name1 file_name2 # 在上述基础之上，只比较 file_name1、file_name2 这两个文件<br>git diff branch_name1 branch_name2 # 对两个分支进行比较，也可以跟 – 只看某些文件<br>git diff HEAD HEAD^  # HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较<br>git diff HEAD HEAD^^ # HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较<br>git diff HEAD HEAD~  # HEAD 指向的 commit 与该 commit 的父亲 commit 进行比较<br>git diff HEAD HEAD<del>1 # 同上<br>git diff HEAD HEAD</del>2 # HEAD 指向的 commit 与该 commit 的父亲的父亲 commit 进行比较<br>git diff –cached  # 暂存区和 HEAD 做比较，也可以跟 – 只看某些文件<br>git diff      # 工作目录和暂存区中所有文件进行比较，也可以跟 – 只看某些文件<br>4. 版本历史更改<br>git commit –amend # 最近一次 commit 的 message 修改<br>git rebase -i hash_value # 交互文件中选择 reword，老旧 commit 的 message 修改。hash_value，是需要的 commit 的父亲 commit 的 hash_value<br>git rabase -i hash_value # 交互文件中选择 squash，多个连续 commit 合并成一个，hash_value 同上<br>git rebase -i hash_value # 交互文件中选择 squash，把间隔的 commit 移到一块，即可合并成一个，hash_value<br>git rebase origin/master # 把当前分支基于 origin/master 做 rebase 操作，也就相当于把当前分支的东西加到 origin/master 中<br>5. 回滚操作<br>git reset HEAD        # 暂存区恢复成和 HEAD 一样<br>git reset HEAD – file_name1 file_name2 # 暂存区部分文件变得跟 HEAD 一样<br>git checkout – file_name # 工作目录指定文件恢复为和暂存区一样<br>git checkout – *|. ## 工作目录全部文件恢复为和暂存区一样<br>git reset –hard hash_value # 把 HEAD、暂存区、工作目录都回滚到 hash_value 所代表的 commit 中。<br>git reset –hard  # 把暂存区里面的修改去掉，也就是让暂存区、工作目录默认恢复到 HEAD 的位置<br>6. 工作目录、暂存区状态保存<br>git stash # 把相应的修改内容给存下来，之后 git status 查看的话又变为什么都没改变的了<br>git stash list # 查看存下来的内容<br>git stash apply # 存下来的内容又恢复了，但是存下来的内容还在 stash 中<br>git stash pop   # 存下来的内容恢复了，但是存下来的内容也没了<br>7. 合并<br>git merge branch_name1 branch_name2<br>git merge hash_value1 hash_value2<br>git merge –squash # 以 squash 方式进行 merge<br>8. Git 对象操作<br>git cat-file -t|p|s hash_value # 显示版本库对象的内容，类型及大小信息<br>git cat-file -t hash_value  # 查看版本库对象的类型<br>git cat-file -p hash_value  # 查看版本库对象的内容<br>git cat-file -s hash_value  # 查看版本库对象的大小<br>9. Git 远端操作<br>git remote add &lt;远端名&gt; &lt;远端仓库地址&gt; # 这边远端名的意思是远端仓库的别名，push、pull 都将用到远端名<br>git remote -v  # 查看远端仓库连接情况<br>git remote set-url &lt;远端名&gt; 你新的远程仓库地址 # 修改远端仓库地址<br>git remote rm &lt;远端名&gt;      # 删除远端仓库<br>git clone &lt;远端仓库地址&gt; # 把远端仓库 clone 下来<br>git clone –bare  &lt;远端仓库地址&gt; # bare 是指不带工作目录，也就相当于只 clone .git 目录<br>git push &lt;远端名&gt; &lt;本地分支名&gt;<br>git push -u &lt;远端名&gt; &lt;本地分支名&gt; # -u 表示将本地分支的内容推到远端分支，并且将本地分支和远端分支关联起来<br>git push -u origin master # 表示把本地 master 分支的内容推到远端分支 origin/master，并且将本地分支 master 和远端分支 origin/master 关联起来<br>git push # 这条命令也可以使用，默认是将当前本地所在分支推到相关联的远端分支<br>git fetch &lt;远端名&gt; &lt;本地分支名&gt;<br>git fetch origin master # 将远端分支 origin/master fetch 到本地<br>git pull &lt;远端名&gt; &lt;本地分支名&gt; # 将远端分支 fetch 到本地，并且将远端分支和本地所处分支进行合并<br>git pull –rebase # 以 rebase 方式进行合并，也就是将本地分支 rebase 到远端分支</p>
+]]></content>
+      <tags>
+        <tag>Git</tag>
       </tags>
   </entry>
   <entry>
@@ -1316,89 +1316,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Redis - 进阶篇一</title>
-    <url>/2020/07/24/Redis-%E8%BF%9B%E9%98%B6%E7%AF%87%E4%B8%80/</url>
-    <content><![CDATA[<p><img src="/images/pasted-143.png" alt="upload successful"></p>
-<a id="more"></a>
-
-<h3 id="Redis-HyperLogLog"><a href="#Redis-HyperLogLog" class="headerlink" title="Redis HyperLogLog"></a>Redis HyperLogLog</h3><h4 id="HyperLogLog-是什么"><a href="#HyperLogLog-是什么" class="headerlink" title="HyperLogLog 是什么"></a>HyperLogLog 是什么</h4><p>Redis HyperLogLog 是用来做基数统计的算法，每个 HyperLoglog 键只需要占用 12KB 内存，就可以计算接近 264 个不同的基数。HyperLogLog 的优点是在应对大量数据事可以利用极小且固定的空间完成对独立总数的统计，但缺点是它的统计并不十分准确，存在一定误差。HyperLogLog 只会根据输入的元素来统计基数，而不会存储输入的元素，因此相比于 Set 集合类型，它不会出现元素越多占用内存多大的情况，但是它也不能像 Set 类型一样返回输入的元素。</p>
-<blockquote>
-<p>基数： 数据集中不同元素的个数。例如数据集 {8, 7, 3, 1, 0, 2, 1, 0} 中，基数集为 {8, 7, 3, 1, 0 , 2}，基数为 6。</p>
-</blockquote>
-<h4 id="HyperLogLog-命令"><a href="#HyperLogLog-命令" class="headerlink" title="HyperLogLog 命令"></a>HyperLogLog 命令</h4><ul>
-<li>PFADD key element1 [element2]：向 HyperLogLog 键 key 中添加一个或多个元素。至少有一个元素被添加返回 1，否则返回 0。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; PFADD test1 a b c d</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; PFADD test1 a</span><br><span class="line">(integer) 0</span><br></pre></td></tr></table></figure></li>
-<li>PFCOUNT key1 [key2]：返回给定 HyperLogLog 的基数估算值，多个 HyperLogLog 时返回基数值之和。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; PFCOUNT test1</span><br><span class="line">(integer) 4</span><br><span class="line">&gt; PFADD test2 e f g</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; PFCOUNT test1 test2</span><br><span class="line">(integer) 7</span><br></pre></td></tr></table></figure></li>
-<li>pfmerge destkey sourcekey1[sourcekey2]：将多个 HyperLogLog 合并为一个 HyperLogLog ，合并后的 HyperLogLog 的基数估算值是通过对所有给定 HyperLogLog 进行并集计算得出的。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; PFMERGE test test1 test2</span><br><span class="line">OK</span><br><span class="line">&gt; PFCOUNT test</span><br><span class="line">(integer) 7</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h4 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h4><p>由于 HyperLogLog 可以对基数进行统计，因此我们常常用于统计独立访客(Unique Visitor, 简称 UV)。比如今天有多少个人已经进行了签到或访问过，即使一天之内多次访问，对于总数来说还是只增加 1。</p>
-<h3 id="Redis-发布订阅"><a href="#Redis-发布订阅" class="headerlink" title="Redis 发布订阅"></a>Redis 发布订阅</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>由于 Redis 发布订阅机制本身的不足，实际中的消息通信并不常用 Redis 发布订阅完成，因此仅介绍一下。</p>
-<blockquote>
-<p>为什么不用 Redis 发布订阅机制</p>
-<ul>
-<li>数据可靠性原因：Redis 发布订阅要求客户端在线，由 1 个客户端发布消息，n 个客户端接收消息，且消息的发布是无状态的。比如我们使用微信时，消息未发送成功会有红色感叹号提醒，发出去的消息在短时间内仍可以撤回，对方上线后仍可以接收到消息，但 Redis 无法实现这些功能，它无法判断消息是否被接受了还是在传输过程中丢失了。</li>
-<li>稳定性原因：对于旧版的 Redis 来说，如果一个客户端订阅了某个或者某些频道，频道推送了很多消息但是它读取消息的速度不够快，那么不断积压的消息就会使得 Redis 输出缓冲区的体积越来越大，这可能会导致 redis 的速度变慢，甚至直接崩溃。也可能会导致 Redis 服务被操作系统强制杀死，甚至导致操作系统本身不可用。新版的 redis 不会出现这种问题，因为它会自动断开不符合 client-output-buffer-limit pubsub 配置选项要求的订阅客户端。</li>
-<li>资源消耗高：在 pub/sub 中发送者不需要独占一个 Redis 的链接，而订阅者则需要单独占用一个 Redis 的链接，而发布订阅一般对应多个订阅者，此时则有着过高的资源消耗。</li>
-</ul>
-</blockquote>
-<p>Redis 发布订阅(pub/sub)是一种消息通信模式：发送者(pub)发送消息，订阅者(sub)接收消息。Redis 客户端可以订阅任意数量的频道。下图展示了频道 channel 以及订阅了这个频道的三个客户端 client1、client2、client3 之间的关系：<br><img src="/images/pasted-104.png" alt="upload successful"></p>
-<p>当有新消息通过 publish 命令发送给频道 channel 时，这个消息就会被发送给订阅它的三个客户端：<br><img src="/images/pasted-105.png" alt="upload successful"></p>
-<h4 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h4><ul>
-<li>PSUBSCRIBE pattern [pattern …]：订阅一个或多个符合给定模式的频道。</li>
-<li>PUBLISH channel message：将信息发送到指定频道。</li>
-<li>PUNSUBSCRIBE [pattern [pattern …]]：退订所有给定模式的频道。</li>
-<li>SUBSCRIBE channel [channel …]：订阅一个或多个频道。</li>
-<li>UNSUBSCRIBE channel [channel …]：退订一个或多个频道。</li>
-</ul>
-<h4 id="简单实例"><a href="#简单实例" class="headerlink" title="简单实例"></a>简单实例</h4><p>简单演示一下 Redis 发布订阅，首先我们打开一个客户端订阅频道 channel1：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; SUBSCRIBE channel1</span><br><span class="line">Reading messages... (press Ctrl-C to quit)</span><br><span class="line">1) &quot;subscribe&quot;</span><br><span class="line">2) &quot;channel1&quot;</span><br><span class="line">3) (integer) 1</span><br></pre></td></tr></table></figure>
-
-<p>然后，我们再打开一个客户端，并向频道 channel1 发布一条消息：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; PUBLISH channel1 &quot;test message&quot;</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
-
-<p>此时，订阅了频道 channel1 的客户端会接受到消息，会多出以下几行：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">1) &quot;message&quot;</span><br><span class="line">2) &quot;channel1&quot;</span><br><span class="line">3) &quot;test message&quot;</span><br></pre></td></tr></table></figure>
-<p><img src="/images/pasted-106.png" alt="upload successful"></p>
-<h3 id="Redis-事务"><a href="#Redis-事务" class="headerlink" title="Redis 事务"></a>Redis 事务</h3><h4 id="事务简介"><a href="#事务简介" class="headerlink" title="事务简介"></a>事务简介</h4><p>Redis 事务可以一次执行多个命令，并且带有以下三个重要的保证：</p>
-<ul>
-<li>批量操作在发送 EXEC 命令之前都被放入队列缓存。</li>
-<li>收到 EXEC 命令之后开始执行事务，事务中任意命令执行失败，其余命令依旧执行。</li>
-<li>在事务执行过程中，其他客户端发出的命令请求不会插入到事务执行队列中。<br>由上述三个保证我们可以看出虽然 Redis 保证单个命令的执行是原子性的，但并没有在事务上增加任何保持原子性的机制，所以 Redis 事务的执行并不是原子性的。这不像 MySQL 数据库中的事务，在 MySQL 事务中，若有一条命令执行失败，则会发生事务回滚。Redis 中事务中的某一条命令执行失败既不会造成已完成命令的回滚，也不会影响未完成命令的执行。</li>
-</ul>
-<h4 id="事务命令"><a href="#事务命令" class="headerlink" title="事务命令"></a>事务命令</h4><ul>
-<li>MULTI：标记一个事务块的开始。</li>
-<li>EXEC：执行事务块内的所有命令。</li>
-<li>DISCARD：取消事务，放弃执行事务块内的所有命令。</li>
-<li>WATCH key [key …]：监视一个或多个 key，如果在事务执行之前被监视的 key 被其他命令所改动，则取消执行事务。</li>
-<li>UNWATCH：取消对 WATCH 命令中所有 key 的监视。</li>
-</ul>
-<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><p>一个事务从开始到执行会经历以下三个阶段：<br><img src="/images/pasted-107.png" alt="upload successful"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 监视 key，事务成功执行</span><br><span class="line">&gt; WATCH name1 score1</span><br><span class="line">OK</span><br><span class="line">&gt; MULTI  # 开始事务</span><br><span class="line">OK</span><br><span class="line">&gt; SET name1 &quot;Jack&quot;</span><br><span class="line">QUEUED</span><br><span class="line">&gt; SET score1 80</span><br><span class="line">QUEUED</span><br><span class="line">&gt; EXEC  # 执行事务</span><br><span class="line">1) OK</span><br><span class="line">2) OK</span><br></pre></td></tr></table></figure>
-
-<p>下图演示了监视 key 但事务被打断的情况：<br><img src="/images/pasted-108.png" alt="upload successful"></p>
-<h3 id="Redis-脚本"><a href="#Redis-脚本" class="headerlink" title="Redis 脚本"></a>Redis 脚本</h3><p>Redis 脚本使用 Lua 解释器来执行脚本。由于作者对 Lua 没什么了解，这里就只能网罗些有用的信息，简单介绍。</p>
-<h4 id="脚本命令"><a href="#脚本命令" class="headerlink" title="脚本命令"></a>脚本命令</h4><ul>
-<li>EVAL script numkeys key [key …] arg [arg …]：执行 Lua 脚本。numkeys 指定 key 和 arg 的个数。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; EVAL &quot;return &#123;KEYS[1],KEYS[2],ARGV[1],ARGV[2]&#125;&quot; 2 key1    key2 arg1 agr2</span><br><span class="line">1) &quot;key1&quot;</span><br><span class="line">2) &quot;key2&quot;</span><br><span class="line">3) &quot;arg1&quot;</span><br><span class="line">4) &quot;arg2&quot;</span><br></pre></td></tr></table></figure></li>
-<li>SCRIPT LOAD script：将脚本 script 添加到脚本缓存中，但不立即执行,返回 SHA1 校验和。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; SCRIPT LOAD &quot;return &#39;hello world&#39;&quot;</span><br><span class="line">&quot;5332031c6b470dc5a0dd9b4bf2030dea6d65de91&quot;</span><br></pre></td></tr></table></figure></li>
-<li>EVALSHA sha1 numkeys key [key …] arg [arg …]：根据给定的 sha1 校验码，执行缓存在服务器中的脚本。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; SCRIPT LOAD &quot;return &#123;KEYS[1],KEYS[2],ARGV[1],ARGV[2]&#125;&quot;</span><br><span class="line">&quot;a42059b356c875f0717db19a51f6aaca9ae659ea&quot;</span><br><span class="line">&gt; EVALSHA &quot;a42059b356c875f0717db19a51f6aaca9ae659ea&quot; 2 key1 key2 arg1 arg2</span><br><span class="line">1) &quot;key1&quot;</span><br><span class="line">2) &quot;key2&quot;</span><br><span class="line">3) &quot;arg1&quot;</span><br><span class="line">4) &quot;arg2&quot;</span><br></pre></td></tr></table></figure></li>
-<li>SCRIPT EXISTS script [script …]：通过 SHA1 校验和判断指定脚本是否被保存在缓存中。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; SCRIPT LOAD &quot;return &#39;hello world&#39;&quot;</span><br><span class="line">&quot;5332031c6b470dc5a0dd9b4bf2030dea6d65de91&quot;</span><br><span class="line">&gt; SCRIPT LOAD 5332031c6b470dc5a0dd9b4bf2030dea6d65de91</span><br><span class="line">1) (integer) 1</span><br></pre></td></tr></table></figure></li>
-<li>SCRIPT FLUSH：清空缓存中的所有脚本。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; SCRIPT FLUSH</span><br><span class="line">OK</span><br><span class="line">&gt; SCRIPT LOAD 5332031c6b470dc5a0dd9b4bf2030dea6d65de91  # &quot;return &#39;hello world&#39;&quot;的SHA1校验和</span><br><span class="line">1) (integer) 0</span><br></pre></td></tr></table></figure></li>
-<li>SCRIPT KILL：杀死目前正在运行的脚本。</li>
-</ul>
-<h4 id="使用优势"><a href="#使用优势" class="headerlink" title="使用优势"></a>使用优势</h4><p>开发者可以使用 Lua 语言编写脚本传到 Redis 中执行。在 Lua 脚本中可以调用大部分 Redis 命令。使用 Redis 脚本有以下几个优势：</p>
-<ul>
-<li>减少网络开销：通过脚本可以一次发送多个请求，减少网络延迟。</li>
-<li>原子性：Redis 将脚本作为一个整体执行，过程中不会被其他命令插入，也无需使用事务换言之，事务可以做的，脚本都可以做。</li>
-<li>复用性：客户端发送的脚本永久存储在 Redis 中，其他客户端在实现相同功能时可以直接复用而不必重复编写代码。</li>
-<li>可嵌入性：可嵌入 JAVA，C# 等多种编程语言，支持不同操作系统跨平台交互。</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>Redis</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Redis - 进阶篇三（主从复制）</title>
     <url>/2020/07/24/Redis-%E8%BF%9B%E9%98%B6%E7%AF%87%E4%B8%89%EF%BC%88%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%EF%BC%89/</url>
     <content><![CDATA[<p><img src="/images/pasted-140.png" alt="upload successful"></p>
@@ -1554,6 +1471,39 @@
       </tags>
   </entry>
   <entry>
+    <title>SQL分页</title>
+    <url>/2020/07/14/SQL%E5%88%86%E9%A1%B5/</url>
+    <content><![CDATA[<h2 id="请不要将OFFSET和LIMIT用于分页"><a href="#请不要将OFFSET和LIMIT用于分页" class="headerlink" title="请不要将OFFSET和LIMIT用于分页"></a>请不要将OFFSET和LIMIT用于分页</h2><p><img src="/images/pasted-27.png" alt="upload successful"></p>
+<p>不再需要担心数据库性能优化的日子已经一去不复返了。</p>
+<p>随着时代的发展，每个新企业家都希望建立下一个Facebook，并结合收集每个可能的数据点以提供更好的机器学习预测的心态，作为开发人员，我们需要比以往更好地准备我们的API，以提供可靠，高效的端点，应该能够毫不费力地浏览大量数据。</p>
+<p>如果您已经进行了一段时间的后端或数据库体系结构，则可能已经完成了分页查询，如下所示：</p>
+<p><img src="/images/pasted-28.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<p>对？<br>但是，如果您确实建立了这样的分页，很遗憾地说，您做错了。<br>你不同意我吗？你 并不 需要 到。 Slack， Shopify和Mixmax使用我们今天将要讨论的相同概念对API进行分页。<br>我想请您说说一个单一的后端开发人员，该人员从来没有为了分页目的而需要处理OFFSET和LIMIT。对于MVP和低数据列表中的分页，它“有效”。<br>但是，当您想从头开始构建可靠而有效的系统时，也可以直接进行。<br>今天，我们将讨论（错误地）广泛使用的实现所存在的问题以及如何实现高效的分页。</p>
+<h3 id="OFFSET和LIMIT有什么问题？"><a href="#OFFSET和LIMIT有什么问题？" class="headerlink" title="OFFSET和LIMIT有什么问题？"></a>OFFSET和LIMIT有什么问题？</h3><p>正如我们在上几段中简要探讨的那样，OFFSET和LIMIT非常适合于数据使用量很少甚至没有的项目。</p>
+<p>当数据库开始收集的数据量超出服务器可以存储在内存中的数据量时，仍然会出现问题，而您仍然需要对它们全部进行性能分页。</p>
+<p>为此，每次您请求分页时，数据库都需要执行低效的全表扫描（插入和删除可能同时发生，我们不希望数据过时！）。</p>
+<blockquote>
+<p>什么是全表扫描？全表扫描（又称顺序扫描）是在数据库中进行的扫描，其中顺序读取表中的每一行，然后检查遇到的列是否符合条件。由于从磁盘进行大量的I / O读取（包括多次搜寻）以及昂贵的磁盘到内存传输，这种类型的扫描被认为是最慢的。</p>
+</blockquote>
+<p>这意味着，如果您有100.000.000用户，而您要求的偏移量为50.000.000，则它将需要获取所有这些记录（甚至不需要！），并将它们存储在内存中，只有在获得之后， LIMIT中指定了20个结果。</p>
+<p>因此，要在网站上显示这样的分页：<br>50.000至50.020之100.000<br>它首先需要获取50.000行。看看这效率低下吗？<br>如果您不相信我，请看一下我创建的这个小提琴。在左侧面板中，您有一个基本架构，该架构将为我们的测试插入100.000行，而在右侧，则是有问题的查询和我们的解决方案。只需单击顶部的“运行 ”，然后比较每个执行时间。＃1（问题查询）至少需要30秒钟的时间才能运行。<br>随着更多的数据，情况变得更加糟糕。看看我的1000万行概念证明。<br>现在，这应该使您对幕后发生的事情有所了解。如果您喜欢阅读的内容，请在此处订阅以获取更多类似内容。<br>TLDR；偏移量越高，查询将花费的时间越长。</p>
+<h3 id="您应该使用什么"><a href="#您应该使用什么" class="headerlink" title="您应该使用什么"></a>您应该使用什么</h3><p>这是您应该使用的：</p>
+<p><img src="/images/pasted-31.png" alt="upload successful"></p>
+<p>这是基于游标的分页。<br>您应该存储最后接收到的主键（通常是一个ID）和LIMIT，而不是在本地存储当前的OFFSET和LIMIT并随每个请求传递它，因此查询最终可能与此类似。<br>为什么？因为通过显式传递最新的读取行，您可以根据有效的索引键告诉数据库确切从哪里开始搜索，而不必考虑该范围之外的任何行。<br>以下面的比较为例：</p>
+<p><img src="/images/pasted-32.png" alt="upload successful"><br>针对我们的优化版本：</p>
+<p><img src="/images/pasted-33.png" alt="upload successful"><br>接收到的记录完全相同，但是第一个查询花费了12.80秒，第二个查询花费了0.01秒。你能体会到差异吗？</p>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>为了使Cursor Pagination无缝地工作，您将需要具有一个唯一的顺序列（或多个列），例如唯一的整数ID或时间戳记字段，在某些特定情况下，这可能会破坏交易。</p>
+<p>与往常一样，我的建议是始终考虑每种表体系结构的优缺点以及在每种表体系结构中需要执行哪种查询。</p>
+<p>如果您需要在查询中处理大量相关数据，Rick James的“ 列表”文章可能会为您提供更深入的指导。如果我们遇到的问题与没有主键有关，例如，如果我们有多对多关系表，则在这些情况下始终可以使用传统的OFFSET / LIMIT方法，但这将重新引入潜在的较慢查询。因此，我建议在要分页的表中使用自动递增的主键，即使只是出于分页的目的。</p>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>这样做的主要要点是始终检查查询的性能是1k行还是1M。可伸缩性至关重要，如果从一开始就正确实施，肯定会避免将来出现很多麻烦。<br>哦。并且，请不要忘记学习索引。并解释查询。</p>
+]]></content>
+      <tags>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis - 进阶篇二（持久化）</title>
     <url>/2020/07/24/Redis-%E8%BF%9B%E9%98%B6%E7%AF%87%E4%BA%8C%E6%8C%81%E4%B9%85%E5%8C%96/</url>
     <content><![CDATA[<p><img src="/images/pasted-139.png" alt="upload successful"></p>
@@ -1619,37 +1569,182 @@
       </tags>
   </entry>
   <entry>
-    <title>SQL分页</title>
-    <url>/2020/07/14/SQL%E5%88%86%E9%A1%B5/</url>
-    <content><![CDATA[<h2 id="请不要将OFFSET和LIMIT用于分页"><a href="#请不要将OFFSET和LIMIT用于分页" class="headerlink" title="请不要将OFFSET和LIMIT用于分页"></a>请不要将OFFSET和LIMIT用于分页</h2><p><img src="/images/pasted-27.png" alt="upload successful"></p>
-<p>不再需要担心数据库性能优化的日子已经一去不复返了。</p>
-<p>随着时代的发展，每个新企业家都希望建立下一个Facebook，并结合收集每个可能的数据点以提供更好的机器学习预测的心态，作为开发人员，我们需要比以往更好地准备我们的API，以提供可靠，高效的端点，应该能够毫不费力地浏览大量数据。</p>
-<p>如果您已经进行了一段时间的后端或数据库体系结构，则可能已经完成了分页查询，如下所示：</p>
-<p><img src="/images/pasted-28.png" alt="upload successful"></p>
+    <title>Redis - 进阶篇一</title>
+    <url>/2020/07/24/Redis-%E8%BF%9B%E9%98%B6%E7%AF%87%E4%B8%80/</url>
+    <content><![CDATA[<p><img src="/images/pasted-143.png" alt="upload successful"></p>
 <a id="more"></a>
 
-<p>对？<br>但是，如果您确实建立了这样的分页，很遗憾地说，您做错了。<br>你不同意我吗？你 并不 需要 到。 Slack， Shopify和Mixmax使用我们今天将要讨论的相同概念对API进行分页。<br>我想请您说说一个单一的后端开发人员，该人员从来没有为了分页目的而需要处理OFFSET和LIMIT。对于MVP和低数据列表中的分页，它“有效”。<br>但是，当您想从头开始构建可靠而有效的系统时，也可以直接进行。<br>今天，我们将讨论（错误地）广泛使用的实现所存在的问题以及如何实现高效的分页。</p>
-<h3 id="OFFSET和LIMIT有什么问题？"><a href="#OFFSET和LIMIT有什么问题？" class="headerlink" title="OFFSET和LIMIT有什么问题？"></a>OFFSET和LIMIT有什么问题？</h3><p>正如我们在上几段中简要探讨的那样，OFFSET和LIMIT非常适合于数据使用量很少甚至没有的项目。</p>
-<p>当数据库开始收集的数据量超出服务器可以存储在内存中的数据量时，仍然会出现问题，而您仍然需要对它们全部进行性能分页。</p>
-<p>为此，每次您请求分页时，数据库都需要执行低效的全表扫描（插入和删除可能同时发生，我们不希望数据过时！）。</p>
+<h3 id="Redis-HyperLogLog"><a href="#Redis-HyperLogLog" class="headerlink" title="Redis HyperLogLog"></a>Redis HyperLogLog</h3><h4 id="HyperLogLog-是什么"><a href="#HyperLogLog-是什么" class="headerlink" title="HyperLogLog 是什么"></a>HyperLogLog 是什么</h4><p>Redis HyperLogLog 是用来做基数统计的算法，每个 HyperLoglog 键只需要占用 12KB 内存，就可以计算接近 264 个不同的基数。HyperLogLog 的优点是在应对大量数据事可以利用极小且固定的空间完成对独立总数的统计，但缺点是它的统计并不十分准确，存在一定误差。HyperLogLog 只会根据输入的元素来统计基数，而不会存储输入的元素，因此相比于 Set 集合类型，它不会出现元素越多占用内存多大的情况，但是它也不能像 Set 类型一样返回输入的元素。</p>
 <blockquote>
-<p>什么是全表扫描？全表扫描（又称顺序扫描）是在数据库中进行的扫描，其中顺序读取表中的每一行，然后检查遇到的列是否符合条件。由于从磁盘进行大量的I / O读取（包括多次搜寻）以及昂贵的磁盘到内存传输，这种类型的扫描被认为是最慢的。</p>
+<p>基数： 数据集中不同元素的个数。例如数据集 {8, 7, 3, 1, 0, 2, 1, 0} 中，基数集为 {8, 7, 3, 1, 0 , 2}，基数为 6。</p>
 </blockquote>
-<p>这意味着，如果您有100.000.000用户，而您要求的偏移量为50.000.000，则它将需要获取所有这些记录（甚至不需要！），并将它们存储在内存中，只有在获得之后， LIMIT中指定了20个结果。</p>
-<p>因此，要在网站上显示这样的分页：<br>50.000至50.020之100.000<br>它首先需要获取50.000行。看看这效率低下吗？<br>如果您不相信我，请看一下我创建的这个小提琴。在左侧面板中，您有一个基本架构，该架构将为我们的测试插入100.000行，而在右侧，则是有问题的查询和我们的解决方案。只需单击顶部的“运行 ”，然后比较每个执行时间。＃1（问题查询）至少需要30秒钟的时间才能运行。<br>随着更多的数据，情况变得更加糟糕。看看我的1000万行概念证明。<br>现在，这应该使您对幕后发生的事情有所了解。如果您喜欢阅读的内容，请在此处订阅以获取更多类似内容。<br>TLDR；偏移量越高，查询将花费的时间越长。</p>
-<h3 id="您应该使用什么"><a href="#您应该使用什么" class="headerlink" title="您应该使用什么"></a>您应该使用什么</h3><p>这是您应该使用的：</p>
-<p><img src="/images/pasted-31.png" alt="upload successful"></p>
-<p>这是基于游标的分页。<br>您应该存储最后接收到的主键（通常是一个ID）和LIMIT，而不是在本地存储当前的OFFSET和LIMIT并随每个请求传递它，因此查询最终可能与此类似。<br>为什么？因为通过显式传递最新的读取行，您可以根据有效的索引键告诉数据库确切从哪里开始搜索，而不必考虑该范围之外的任何行。<br>以下面的比较为例：</p>
-<p><img src="/images/pasted-32.png" alt="upload successful"><br>针对我们的优化版本：</p>
-<p><img src="/images/pasted-33.png" alt="upload successful"><br>接收到的记录完全相同，但是第一个查询花费了12.80秒，第二个查询花费了0.01秒。你能体会到差异吗？</p>
-<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>为了使Cursor Pagination无缝地工作，您将需要具有一个唯一的顺序列（或多个列），例如唯一的整数ID或时间戳记字段，在某些特定情况下，这可能会破坏交易。</p>
-<p>与往常一样，我的建议是始终考虑每种表体系结构的优缺点以及在每种表体系结构中需要执行哪种查询。</p>
-<p>如果您需要在查询中处理大量相关数据，Rick James的“ 列表”文章可能会为您提供更深入的指导。如果我们遇到的问题与没有主键有关，例如，如果我们有多对多关系表，则在这些情况下始终可以使用传统的OFFSET / LIMIT方法，但这将重新引入潜在的较慢查询。因此，我建议在要分页的表中使用自动递增的主键，即使只是出于分页的目的。</p>
-<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>这样做的主要要点是始终检查查询的性能是1k行还是1M。可伸缩性至关重要，如果从一开始就正确实施，肯定会避免将来出现很多麻烦。<br>哦。并且，请不要忘记学习索引。并解释查询。</p>
+<h4 id="HyperLogLog-命令"><a href="#HyperLogLog-命令" class="headerlink" title="HyperLogLog 命令"></a>HyperLogLog 命令</h4><ul>
+<li>PFADD key element1 [element2]：向 HyperLogLog 键 key 中添加一个或多个元素。至少有一个元素被添加返回 1，否则返回 0。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; PFADD test1 a b c d</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; PFADD test1 a</span><br><span class="line">(integer) 0</span><br></pre></td></tr></table></figure></li>
+<li>PFCOUNT key1 [key2]：返回给定 HyperLogLog 的基数估算值，多个 HyperLogLog 时返回基数值之和。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; PFCOUNT test1</span><br><span class="line">(integer) 4</span><br><span class="line">&gt; PFADD test2 e f g</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; PFCOUNT test1 test2</span><br><span class="line">(integer) 7</span><br></pre></td></tr></table></figure></li>
+<li>pfmerge destkey sourcekey1[sourcekey2]：将多个 HyperLogLog 合并为一个 HyperLogLog ，合并后的 HyperLogLog 的基数估算值是通过对所有给定 HyperLogLog 进行并集计算得出的。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; PFMERGE test test1 test2</span><br><span class="line">OK</span><br><span class="line">&gt; PFCOUNT test</span><br><span class="line">(integer) 7</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h4><p>由于 HyperLogLog 可以对基数进行统计，因此我们常常用于统计独立访客(Unique Visitor, 简称 UV)。比如今天有多少个人已经进行了签到或访问过，即使一天之内多次访问，对于总数来说还是只增加 1。</p>
+<h3 id="Redis-发布订阅"><a href="#Redis-发布订阅" class="headerlink" title="Redis 发布订阅"></a>Redis 发布订阅</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>由于 Redis 发布订阅机制本身的不足，实际中的消息通信并不常用 Redis 发布订阅完成，因此仅介绍一下。</p>
+<blockquote>
+<p>为什么不用 Redis 发布订阅机制</p>
+<ul>
+<li>数据可靠性原因：Redis 发布订阅要求客户端在线，由 1 个客户端发布消息，n 个客户端接收消息，且消息的发布是无状态的。比如我们使用微信时，消息未发送成功会有红色感叹号提醒，发出去的消息在短时间内仍可以撤回，对方上线后仍可以接收到消息，但 Redis 无法实现这些功能，它无法判断消息是否被接受了还是在传输过程中丢失了。</li>
+<li>稳定性原因：对于旧版的 Redis 来说，如果一个客户端订阅了某个或者某些频道，频道推送了很多消息但是它读取消息的速度不够快，那么不断积压的消息就会使得 Redis 输出缓冲区的体积越来越大，这可能会导致 redis 的速度变慢，甚至直接崩溃。也可能会导致 Redis 服务被操作系统强制杀死，甚至导致操作系统本身不可用。新版的 redis 不会出现这种问题，因为它会自动断开不符合 client-output-buffer-limit pubsub 配置选项要求的订阅客户端。</li>
+<li>资源消耗高：在 pub/sub 中发送者不需要独占一个 Redis 的链接，而订阅者则需要单独占用一个 Redis 的链接，而发布订阅一般对应多个订阅者，此时则有着过高的资源消耗。</li>
+</ul>
+</blockquote>
+<p>Redis 发布订阅(pub/sub)是一种消息通信模式：发送者(pub)发送消息，订阅者(sub)接收消息。Redis 客户端可以订阅任意数量的频道。下图展示了频道 channel 以及订阅了这个频道的三个客户端 client1、client2、client3 之间的关系：<br><img src="/images/pasted-104.png" alt="upload successful"></p>
+<p>当有新消息通过 publish 命令发送给频道 channel 时，这个消息就会被发送给订阅它的三个客户端：<br><img src="/images/pasted-105.png" alt="upload successful"></p>
+<h4 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h4><ul>
+<li>PSUBSCRIBE pattern [pattern …]：订阅一个或多个符合给定模式的频道。</li>
+<li>PUBLISH channel message：将信息发送到指定频道。</li>
+<li>PUNSUBSCRIBE [pattern [pattern …]]：退订所有给定模式的频道。</li>
+<li>SUBSCRIBE channel [channel …]：订阅一个或多个频道。</li>
+<li>UNSUBSCRIBE channel [channel …]：退订一个或多个频道。</li>
+</ul>
+<h4 id="简单实例"><a href="#简单实例" class="headerlink" title="简单实例"></a>简单实例</h4><p>简单演示一下 Redis 发布订阅，首先我们打开一个客户端订阅频道 channel1：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; SUBSCRIBE channel1</span><br><span class="line">Reading messages... (press Ctrl-C to quit)</span><br><span class="line">1) &quot;subscribe&quot;</span><br><span class="line">2) &quot;channel1&quot;</span><br><span class="line">3) (integer) 1</span><br></pre></td></tr></table></figure>
+
+<p>然后，我们再打开一个客户端，并向频道 channel1 发布一条消息：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; PUBLISH channel1 &quot;test message&quot;</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+
+<p>此时，订阅了频道 channel1 的客户端会接受到消息，会多出以下几行：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">1) &quot;message&quot;</span><br><span class="line">2) &quot;channel1&quot;</span><br><span class="line">3) &quot;test message&quot;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-106.png" alt="upload successful"></p>
+<h3 id="Redis-事务"><a href="#Redis-事务" class="headerlink" title="Redis 事务"></a>Redis 事务</h3><h4 id="事务简介"><a href="#事务简介" class="headerlink" title="事务简介"></a>事务简介</h4><p>Redis 事务可以一次执行多个命令，并且带有以下三个重要的保证：</p>
+<ul>
+<li>批量操作在发送 EXEC 命令之前都被放入队列缓存。</li>
+<li>收到 EXEC 命令之后开始执行事务，事务中任意命令执行失败，其余命令依旧执行。</li>
+<li>在事务执行过程中，其他客户端发出的命令请求不会插入到事务执行队列中。<br>由上述三个保证我们可以看出虽然 Redis 保证单个命令的执行是原子性的，但并没有在事务上增加任何保持原子性的机制，所以 Redis 事务的执行并不是原子性的。这不像 MySQL 数据库中的事务，在 MySQL 事务中，若有一条命令执行失败，则会发生事务回滚。Redis 中事务中的某一条命令执行失败既不会造成已完成命令的回滚，也不会影响未完成命令的执行。</li>
+</ul>
+<h4 id="事务命令"><a href="#事务命令" class="headerlink" title="事务命令"></a>事务命令</h4><ul>
+<li>MULTI：标记一个事务块的开始。</li>
+<li>EXEC：执行事务块内的所有命令。</li>
+<li>DISCARD：取消事务，放弃执行事务块内的所有命令。</li>
+<li>WATCH key [key …]：监视一个或多个 key，如果在事务执行之前被监视的 key 被其他命令所改动，则取消执行事务。</li>
+<li>UNWATCH：取消对 WATCH 命令中所有 key 的监视。</li>
+</ul>
+<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><p>一个事务从开始到执行会经历以下三个阶段：<br><img src="/images/pasted-107.png" alt="upload successful"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 监视 key，事务成功执行</span><br><span class="line">&gt; WATCH name1 score1</span><br><span class="line">OK</span><br><span class="line">&gt; MULTI  # 开始事务</span><br><span class="line">OK</span><br><span class="line">&gt; SET name1 &quot;Jack&quot;</span><br><span class="line">QUEUED</span><br><span class="line">&gt; SET score1 80</span><br><span class="line">QUEUED</span><br><span class="line">&gt; EXEC  # 执行事务</span><br><span class="line">1) OK</span><br><span class="line">2) OK</span><br></pre></td></tr></table></figure>
+
+<p>下图演示了监视 key 但事务被打断的情况：<br><img src="/images/pasted-108.png" alt="upload successful"></p>
+<h3 id="Redis-脚本"><a href="#Redis-脚本" class="headerlink" title="Redis 脚本"></a>Redis 脚本</h3><p>Redis 脚本使用 Lua 解释器来执行脚本。由于作者对 Lua 没什么了解，这里就只能网罗些有用的信息，简单介绍。</p>
+<h4 id="脚本命令"><a href="#脚本命令" class="headerlink" title="脚本命令"></a>脚本命令</h4><ul>
+<li>EVAL script numkeys key [key …] arg [arg …]：执行 Lua 脚本。numkeys 指定 key 和 arg 的个数。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; EVAL &quot;return &#123;KEYS[1],KEYS[2],ARGV[1],ARGV[2]&#125;&quot; 2 key1    key2 arg1 agr2</span><br><span class="line">1) &quot;key1&quot;</span><br><span class="line">2) &quot;key2&quot;</span><br><span class="line">3) &quot;arg1&quot;</span><br><span class="line">4) &quot;arg2&quot;</span><br></pre></td></tr></table></figure></li>
+<li>SCRIPT LOAD script：将脚本 script 添加到脚本缓存中，但不立即执行,返回 SHA1 校验和。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; SCRIPT LOAD &quot;return &#39;hello world&#39;&quot;</span><br><span class="line">&quot;5332031c6b470dc5a0dd9b4bf2030dea6d65de91&quot;</span><br></pre></td></tr></table></figure></li>
+<li>EVALSHA sha1 numkeys key [key …] arg [arg …]：根据给定的 sha1 校验码，执行缓存在服务器中的脚本。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; SCRIPT LOAD &quot;return &#123;KEYS[1],KEYS[2],ARGV[1],ARGV[2]&#125;&quot;</span><br><span class="line">&quot;a42059b356c875f0717db19a51f6aaca9ae659ea&quot;</span><br><span class="line">&gt; EVALSHA &quot;a42059b356c875f0717db19a51f6aaca9ae659ea&quot; 2 key1 key2 arg1 arg2</span><br><span class="line">1) &quot;key1&quot;</span><br><span class="line">2) &quot;key2&quot;</span><br><span class="line">3) &quot;arg1&quot;</span><br><span class="line">4) &quot;arg2&quot;</span><br></pre></td></tr></table></figure></li>
+<li>SCRIPT EXISTS script [script …]：通过 SHA1 校验和判断指定脚本是否被保存在缓存中。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; SCRIPT LOAD &quot;return &#39;hello world&#39;&quot;</span><br><span class="line">&quot;5332031c6b470dc5a0dd9b4bf2030dea6d65de91&quot;</span><br><span class="line">&gt; SCRIPT LOAD 5332031c6b470dc5a0dd9b4bf2030dea6d65de91</span><br><span class="line">1) (integer) 1</span><br></pre></td></tr></table></figure></li>
+<li>SCRIPT FLUSH：清空缓存中的所有脚本。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; SCRIPT FLUSH</span><br><span class="line">OK</span><br><span class="line">&gt; SCRIPT LOAD 5332031c6b470dc5a0dd9b4bf2030dea6d65de91  # &quot;return &#39;hello world&#39;&quot;的SHA1校验和</span><br><span class="line">1) (integer) 0</span><br></pre></td></tr></table></figure></li>
+<li>SCRIPT KILL：杀死目前正在运行的脚本。</li>
+</ul>
+<h4 id="使用优势"><a href="#使用优势" class="headerlink" title="使用优势"></a>使用优势</h4><p>开发者可以使用 Lua 语言编写脚本传到 Redis 中执行。在 Lua 脚本中可以调用大部分 Redis 命令。使用 Redis 脚本有以下几个优势：</p>
+<ul>
+<li>减少网络开销：通过脚本可以一次发送多个请求，减少网络延迟。</li>
+<li>原子性：Redis 将脚本作为一个整体执行，过程中不会被其他命令插入，也无需使用事务换言之，事务可以做的，脚本都可以做。</li>
+<li>复用性：客户端发送的脚本永久存储在 Redis 中，其他客户端在实现相同功能时可以直接复用而不必重复编写代码。</li>
+<li>可嵌入性：可嵌入 JAVA，C# 等多种编程语言，支持不同操作系统跨平台交互。</li>
+</ul>
 ]]></content>
       <tags>
-        <tag>数据库</tag>
+        <tag>Redis</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>如何产出规范、安全、高质量的代码</title>
+    <url>/2020/09/30/%E5%A6%82%E4%BD%95%E4%BA%A7%E5%87%BA%E8%A7%84%E8%8C%83%E3%80%81%E5%AE%89%E5%85%A8%E3%80%81%E9%AB%98%E8%B4%A8%E9%87%8F%E7%9A%84%E4%BB%A3%E7%A0%81/</url>
+    <content><![CDATA[<p><img src="/images/pasted-230.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<blockquote>
+<p>对于一个软件开发团队，可以通过哪些代码质量指标和扫描方法让团队产出规范、安全、高质量的代码？让开发团队运行的安全、透明、可靠？本文总结了其中一些实践和工具，包含常见代码质量扫描工具、代码质量指标、第三方依赖管理、安全运维等几个方面，主要适用于 Java/JavaScript 技术栈的 web 项目，希望对于想要规范化自己的项目的 Tech Lead 有所帮助。</p>
+</blockquote>
+<p>对于一个软件开发团队，可以通过哪些代码质量指标和扫描方法让团队产出规范、安全、高质量的代码？让开发团队运行的安全、透明、可靠？</p>
+<p>本文总结了其中一些实践和工具，包含常见代码质量扫描工具、代码质量指标、第三方依赖管理、安全运维等几个方面，主要适用于 Java/JavaScript 技术栈的 web 项目，希望对于想要规范化自己的项目的 Tech Lead 有所帮助。</p>
+<h3 id="代码扫描和常见质量指标"><a href="#代码扫描和常见质量指标" class="headerlink" title="代码扫描和常见质量指标"></a>代码扫描和常见质量指标</h3><p>“祸患常积于忽微”，往往一些奇怪的 bug 都是一些不规范的小问题造成的。德国飞机涡轮机的发明者帕布斯·海恩提出的一个在航空界关于飞行安全的法则，法则指出: 每一起严重事故的背后，必然有 29 次轻微事故和 300 起未遂先兆以及 1000 起事故隐患。应用于软件开发中，如果项目中代码混乱不堪，必然会在某个时候最终爆发大量的问题。</p>
+<p>这里整理了一些常见的扫描工具和代码质量指标，可以在搭建项目基础设施时引入，用于自动化的检查代码中潜在的问题，达到控制代码产出质量的目的。</p>
+<h4 id="扫描工具"><a href="#扫描工具" class="headerlink" title="扫描工具"></a>扫描工具</h4><h5 id="checkstyle"><a href="#checkstyle" class="headerlink" title="checkstyle"></a>checkstyle</h5><p>checkstyle 是常用于 java 项目的扫描工具，检查源代码是否与代码规范相符，检查项目主要包括：Javadoc 注释、imports、过长的类和方法、空格、重复文件、圈复杂度等，默认使用 sun 的代码规则，也可以配置自定义的代码规则，例如阿里就发布了相应的检查规则。</p>
+<h5 id="findbugs"><a href="#findbugs" class="headerlink" title="findbugs"></a>findbugs</h5><p>通过 Bug Patterns 的概念，寻找代码中可能出现的 bug，检查项目主要包括：不良编程习惯导致的问题、性能问题、安全问题、线程问题等。例如，应使用 equals 判断相等，而不是 “ =” 操作符、流需要关闭、线程资源需要释放等问题。findbugs 的模式库对编程经验也有较好的提升作用。还可以导入和编写自己的 Bug Patterns 完善检查机制。</p>
+<h5 id="simian"><a href="#simian" class="headerlink" title="simian"></a>simian</h5><p>simian 是一个用于检查重复和相似代码的工具，它的重复检查类似于论文查重，会提示一定的相似度。可以单独运行，也可以作为 checkstyle 插件来使用，相对来来说比较小众。</p>
+<h5 id="pmd"><a href="#pmd" class="headerlink" title="pmd"></a>pmd</h5><p>pmd 是一款跨语言的通用静态扫描工具，具备一部分 checkstyle、findbugs 的功能，不再赘述。</p>
+<h5 id="ESlint-TSlint"><a href="#ESlint-TSlint" class="headerlink" title="ESlint/TSlint"></a>ESlint/TSlint</h5><p>前端界的 checkstyle , TSlint 设计用来做 TypeScript 类型检查，ESlint 作为代码风格检查工具。不过现在 ESlint 也提供了 TypeScript 类型检查功能，基本上 ESlint 能整合这两个功能。由于性能问题， TypeScript 也采用了 ESLint 作为 TSlint 替代的检查工具。</p>
+<h5 id="SonarQube"><a href="#SonarQube" class="headerlink" title="SonarQube"></a>SonarQube</h5><p>SonarQube 是一款用于代码质量管理的开源工具，它主要用于管理源代码的质量。 SonarQube 和上面的工具不太一样，SonarQube 设计目的是提供一个平台，通过插件的方式提供对各个语言进行支持，也可以和 checkstyle、pmd、simian 等工具进行集成。SonarQube 一般需要单独部署成一个服务，提供数据库，可以记录扫描结果等信息。</p>
+<h5 id="npm-audit"><a href="#npm-audit" class="headerlink" title="npm audit"></a>npm audit</h5><p>npm audit 是 npm 6 之后的版本 自带的一个前端安全扫描工具，可以扫描 npm 依赖中的潜在的漏洞威胁。这些引入的漏洞可能威胁用户开发的机，另外也可能被带入 bundle 文件发布到线上，带来安全问题。目前 npm audit 会在 npm install 完成后自动执行，需要留意安全威胁报告。</p>
+<h5 id="Fortify-SCA"><a href="#Fortify-SCA" class="headerlink" title="Fortify SCA"></a>Fortify SCA</h5><p>Fortify SCA(Source Code Analyzer) 是一款非常优秀的代码安全扫描工具，用于分析代码中潜在的安全问题。通过调用语言的编译器或者解释器把代码（Java、C、C++ 等源代码）转换成一种中间媒体文件 NST（Normal Syntax Trcc），然后通过模式匹配相关的方式抓取存在于漏洞库中的漏洞。例如，上传的文件没有做检查等 XSS 攻击。</p>
+<h5 id="OWASP-Dependency-Track"><a href="#OWASP-Dependency-Track" class="headerlink" title="OWASP Dependency-Track"></a>OWASP Dependency-Track</h5><p>开放式 Web 应用程序安全项目（OWASP）是一个非营利组织，提供了很多安全标准、数据库、社区和培训。其中一个工具就是 OWASP Dependency-Track，可以对第三方依赖包中的知名漏洞进行检查，扫描结果受到漏洞数据库的更新影响。</p>
+<h5 id="archunit-架构规范检查"><a href="#archunit-架构规范检查" class="headerlink" title="archunit 架构规范检查"></a>archunit 架构规范检查</h5><p>前面的检查是代码层面，archunit 可以用于代码架构检查，可以定义规则检查每个包中的实现是否符合规范。例如，controller 包中的类不能实现 service 的接口，repository 下的类必须实现 Repository 接口。通过 archunit 可以减少 codereview 的工作量，避免项目的结构被破坏。</p>
+<h4 id="统计工具"><a href="#统计工具" class="headerlink" title="统计工具"></a>统计工具</h4><p>sloccount、sourcemointor 这两个工具可以用于统计代码数量，包括行数、文件数、注释等。除了在项目中扫描 bug 之外，配置代码统计工具可以对项目有一个整体的认知。</p>
+<p>其他的扫描工具还很多，例如 coverity、codemars、binscope、synk、appscan、retire.js 等工具，不再一一列举。</p>
+<h4 id="最佳搭配"><a href="#最佳搭配" class="headerlink" title="最佳搭配"></a>最佳搭配</h4><p>这几款工具之间的功能有所重叠，在实际工作中，我们可以根据上面推荐的关注的点，重点清除这些问题。这些扫描工具全部用上除了会带来团队压力和维护成本之外，代码质量不会随着引入的插件增多。除开有质量团队的大厂提供这些扫描平台外，敏捷团队往往不会太大，团队持续关注一个精简的扫描组合更好。</p>
+<h5 id="Java-后端-："><a href="#Java-后端-：" class="headerlink" title="Java 后端 ："></a>Java 后端 ：</h5><ol>
+<li>checkstyle Java 代码风格守护，Java 项目至少应该配置一个默认的 checkstyle 规则。至少让项目干净，没有无用、重复的代码，以及超大的类和方法。建议做到每次提交代码前检查。</li>
+<li>findbugs 常见不规范的代码检查，一些空指针、equals 检查非常有用，而且 IDE 的插件也很好用。</li>
+</ol>
+<h5 id="前端-："><a href="#前端-：" class="headerlink" title="前端 ："></a>前端 ：</h5><ol>
+<li>eslint 守护 JavaScript 代码风格，eslint 搭配一个 .editorconfig ，可以方便的让编辑器保持同 eslint 一致的代码风格。</li>
+<li>npm audit 项目中第三方包的威胁扫描，npm 自带无需额外安装，npm 6 以后自运行，需要关注并修复报出的安全问题。</li>
+</ol>
+<h5 id="安全-："><a href="#安全-：" class="headerlink" title="安全 ："></a>安全 ：</h5><ol>
+<li>fortify 扫描代码中的漏洞，用它检查出来的大部分安全问题都是注入攻击、XSS 等攻击，这些问题明显可以在开发过程中避免。可以作为 Jenkins 插件配置，和单元测试作为同一阶段运行。</li>
+<li>OWASP 插件 用来扫描第三方依赖漏洞，因为项目中的依赖不会像源代码一样频繁变化，推荐使用 Jekins 插件，定期执行即可。</li>
+</ol>
+<p>为什么不用 SonarQube 呢，SonarQube 是一个非常优秀的代码质量开放平台，需要单独的配置安装，需要花费额外的时间维护，对于小团队来说成本较高，如果有专门的质量团队可以考虑维护一套。</p>
+<p>常用代码质量指标参考</p>
+<ol>
+<li>编译告警数，大部分程序员基本上忽略 warning，但是编译器出现了告警是一种不好的体现，意味着软件可能工作，但是存在不好的实践，而这种不确定性，会带来不确定的 bug 最终让人一头雾水。编译过程中的告警，尽量消除掉，编译告警的值推荐消除到 0。</li>
+<li>平均函数代码行数，过大的函数会导致阅读困难，而且往往过大的函数职责不够单一，一般将一个方法代码行数控制到 30 - 50 行。</li>
+<li>平均文件代码行，和平均函数代码行一样，过长的文件一样难以维护，一般一个文件 10 多个方法，因此文件的代码行数一般控制到 300 - 500 行。</li>
+<li>冗余代码，有时候我们代码中可能存在未使用的方法、变量等代码，这让维护者一头雾水，通常需要清零。</li>
+<li>总文件重复率，出现重复文件的次数。除了编写单元测试的情况下，业务代码不应该出现重复代码，推荐值为 0。</li>
+<li>总代码重复度，代码的重复度检查，限于扫描工具的识别模式，需要有一定的容忍度，推荐值在 5% - 10%</li>
+<li>平均函数圈复杂度，圈复杂度用来衡量一个模块判定结构的复杂程度。如果一个方法内部有大量的 if 语句嵌套，意味着这个方法的实现质量低下，且程序复杂度高不利于维护，推荐值小于 5%。</li>
+<li>安全告警，如果配置了安全扫描工具，例如 Fortify，安全威胁应该被清零。</li>
+<li>代码缺陷，如果配置了缺陷扫描工具，例如 Findbugs，需要清零。</li>
+</ol>
+<p><img src="/images/pasted-231.png" alt="upload successful"></p>
+<h4 id="第三方依赖规范化"><a href="#第三方依赖规范化" class="headerlink" title="第三方依赖规范化"></a>第三方依赖规范化</h4><p>软件开发过程中，不可避免的需要引入第三方或者开源软件包作为库或者框架引入。“第三方” 其实不是一个软件工程术语，现今在软件行业里面的理解是：第一方为自研的软件，第二方为内部发布的软件，第三方为从社区或者外部商业途径引入的软件包。</p>
+<p>对于个人开发者而言，面向“搜索引擎”编程往往将来源不明的代码片段和程序包引入到项目中。对于企业来说，考虑到的不仅仅是功能是否能实现，还要考虑引入时带来的成本和问题，例如是否需要授权、开源协议是否合理、是否会带来安全威胁。</p>
+<p>企业对于第三方依赖的引入分为几种情况：</p>
+<ol>
+<li>作为开发工具引入 ，例如 gcc、Jenkins，基本没有开源协议问题，但是需要注意开发机、CI 会有安全风险。Jenkins 曾出现过漏洞，CI 服务器被当做远程矿机使用。</li>
+<li>作为服务部署使用（SaaS ），部分开源协议会限制这种使用方式，第三方依赖的安全问题会威胁服务器。</li>
+<li>通过软件包再发布 ，大部分开源软件对这种使用方式有较多要求，例如 GPL 开源协议具有传染性，要求使用了 GPL 的项目也要开源。</li>
+<li>拷贝源代码引入项目 ，非常不推荐这种方式，尽量通过包管理的方式引入。</li>
+</ol>
+<p>引入第三方依赖需要充分考虑，尽可能最小成本的引入。在一个 React 的前端项目中，有不熟悉的工程师，为了使用一个简单的手风琴效果，引入了整套 bootstrap。不仅破坏了使用 React 的最佳实践，而且让输出的 bundle 文件大小激增数倍，造成首屏加载的性能问题。</p>
+<h4 id="常见商业友好的开源协议"><a href="#常见商业友好的开源协议" class="headerlink" title="常见商业友好的开源协议"></a>常见商业友好的开源协议</h4><p>商业用户常用的开源协议实际上只有 6 种左右，即 LGPL、Mozilla、GPL、BSD、MIT、Apache，另外还有极其宽松的 The Unlicense，但采用的开源软件不多。</p>
+<p>GitHub 提供了一个 license 清单的列表 <a href="https://choosealicense.com/licenses/" target="_blank" rel="noopener">https://choosealicense.com/licenses/</a> ，</p>
+<p>我根据开源协议的宽松程度，整理了一个列表，方便查看：</p>
+<p><img src="/images/pasted-232.png" alt="upload successful"></p>
+<p>几乎所有的开源协议有一个共同的注意事项： 采用该开源协议的软件项目，不提供任何责任转移和质量保证 。也就是说采用开源软件造成的法律问题和开源项目无关，另外需要使用者承担因质量问题造成的所有后果。另外，除了引入的程序包之外，字体、图片、特效音、手册等媒体资源也算广义上的“软件”需要考虑开源协议和使用场景。</p>
+<h4 id="第三方依赖管理"><a href="#第三方依赖管理" class="headerlink" title="第三方依赖管理"></a>第三方依赖管理</h4><p>对项目中出现的任何第三方依赖有效的管理有非常重要的意义，通过扫描工具，识别出项目中是否有源码、jar 包、二进制文件是否来源于某个开源项目。</p>
+<ul>
+<li>任何的第三方软件需要申请入库管理（内部其他团队申请通过可以直接使用），质量团队对申请的软件进行评估：</li>
+<li>是否有开源义务需要履行</li>
+<li>引入的第三方依赖是否有 CVEs 等漏洞</li>
+<li>第三方开源软件是否仍然在维护</li>
+</ul>
+<p>质量团队根据上面的一些条件，决定出申请的软件能否在项目中使用，允许被采用的软件会定义出优选级别，优先推荐团队使用较为优选的软件，并对项目整体的优选率有一定要求。如果项目中出现了无法识别的二进制文件、非约定目录下的代码片段，需要报备。通过良好的依赖管理和规范化，能减少不良第三方依赖的引入，让软件项目透明、可信。</p>
+<p>一些商业公司提供这些完整的服务，例如 fossid、blackduck、code-climate 等。</p>
+<h4 id="运维安全"><a href="#运维安全" class="headerlink" title="运维安全"></a>运维安全</h4><p>大的软件公司，往往有一堆流程和要求。虽然一线开发对堡垒机、防火墙、各种安全规范显得不耐烦，但这些安全措施也在保护开发者。</p>
+<h5 id="防火墙用于环境隔离"><a href="#防火墙用于环境隔离" class="headerlink" title="防火墙用于环境隔离"></a>防火墙用于环境隔离</h5><p>往往开发者理解的防火墙用于防止网络入侵、审计、入侵检测等功能，除此之外，防火墙还可以用于各个环境的隔离。一般来说，企业对于生产环境的数据控制比较严格，不会将生产环境的权限交给团队所有开发者，但网络连接有可能疏漏。</p>
+<p>曾经出现过一次线上事故，由于配置文件错误，将原本应该连接到测试的数据库连接到了生产环境，造成大量脏数据写入。如果通过防火墙规则对各个环境进行隔离，这类问题将不会出现。</p>
+<p>另外也可以设计 DMZ 区，将面向用户侧的网关部署到 DMZ 区，仅仅开放必要的端口给网关，实现内外网的物理隔离。同时，对整个系统的防火墙策略应该清晰地记录，否则在做大的基础设施更新时，梳理出所有的防火墙策略，是一件比较困难的事情。</p>
+<h5 id="凭据管理"><a href="#凭据管理" class="headerlink" title="凭据管理"></a>凭据管理</h5><p>项目中会用到大量的凭据，例如数据库、第三方系统对接的 key，使用明文不是一件好事。理想的情况下，对项目中所有的密码信息进行掩盖 (mask)，避免 CI、日志中敏感信息的泄露。</p>
+<p>有很多种方法可以掩盖项目中的密码信息：</p>
+<ol>
+<li>使用环境变量对密码信息进行覆盖。</li>
+<li>使用 Spring boot 的项目可以配置 jasypt，使用 jasypt 将密码加密，将生成的加密串配置 ENC(加密串) 到工程的配置文件中。加密过程可以加盐作为解密的凭据，“盐” 可以不存放到工程中，在工程部署的时候注入即可。</li>
+<li>如果使用 Jenkins 等 CI/CD 工具，可以使用构建平台提供的凭证管理工具。</li>
+<li>如果使用 Spring cloud，可以使用 spring cloud vault 组件部署一个凭证管理服务</li>
+</ol>
+<p>另外，建议不要用任何个人凭据用作系统对接，应该使用一个公共的应用凭据。</p>
+<h5 id="堡垒机"><a href="#堡垒机" class="headerlink" title="堡垒机"></a>堡垒机</h5><p>一般来说我们管理服务器，所有的运维操作需要通过堡垒机进行操作。开放 22 等高危端口，允许开发者直接登录到服务器是一种不安全的做法。</p>
+<p>堡垒机，通俗的来说是跳板机 + 监控。最初使用的跳板机配置了两张网卡，用于连接开发环境和生产环境，并没有监控功能。在此基础上，堡垒机增加了统一运维管理的功能，往往需要两步验证（SMS 或 Email），并对所有的操作进行记录和监控。</p>
+<p>在需要团队参与运维工作的场景中，非常有必要部署一套堡垒机服务，并使用 LDAP 对接到团队成员的 ID 上，便于集中运维管理。</p>
+<p>定期对系统软件扫描<br>Linux 系统往往有云厂商推送安全补丁和风险提示，但是安装到服务器上的软件，例如 JDK、nodejs，需要自己检查安全问题。因此需要在系统中安装并定期运行 CVEs 检查并及时更新。有一款 cvechecker 可以帮助运维人员，编写一个脚本定期运行 cvechecker 检查系统中已知的软件是否存在 CVEs 漏洞，并提醒开发者及时更新。</p>
+]]></content>
   </entry>
   <entry>
     <title>SQL - 命名约定 </title>
@@ -1874,6 +1969,133 @@
       </tags>
   </entry>
   <entry>
+    <title>数据结构与算法 - 开篇</title>
+    <url>/2020/06/30/%E6%95%B0%E6%8D%AE%E6%9C%BA%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><h3 id="为什么要学习数据结构与算法？"><a href="#为什么要学习数据结构与算法？" class="headerlink" title="为什么要学习数据结构与算法？"></a>为什么要学习数据结构与算法？</h3><pre><code>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！
+
+有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？
+
+于是问题来了：为什么还要学习数据结构与算法呢？
+
+理由一：
+    面试的时候，千万不要被数据结构与算法拖了后腿
+理由二：
+    你真的愿意做一辈子CRUD吗
+理由三：
+    不想写出开源框架，中间件的工程师，不是好厨子</code></pre><a id="more"></a>
+
+<h3 id="如何系统化学习数据结构与算法？"><a href="#如何系统化学习数据结构与算法？" class="headerlink" title="如何系统化学习数据结构与算法？"></a>如何系统化学习数据结构与算法？</h3><h4 id="学习方法"><a href="#学习方法" class="headerlink" title="学习方法"></a>学习方法</h4><ol>
+<li>从基础开始，系统化学习</li>
+<li>多动手，每一种数据结构与算法，都自己用代码实现出来</li>
+<li>思路更重要：理解实现思想，不要背代码</li>
+<li>与日常开发结合，对应应用场景</li>
+</ol>
+<h4 id="学习内容："><a href="#学习内容：" class="headerlink" title="学习内容："></a>学习内容：</h4><p>原则：数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法。</p>
+<ol>
+<li>数据结构的定义</li>
+<li>算法的定义</li>
+<li>复杂度分析</li>
+<li>常用数据结构<ul>
+<li>数组、链表、栈、队列</li>
+<li>散列表、二叉树、堆</li>
+<li>跳表、图</li>
+</ul>
+</li>
+<li>常用算法<ul>
+<li>递归、排序、二分查找</li>
+<li>搜索、哈希、贪心、分治</li>
+<li>动态规划、字符串匹配</li>
+</ul>
+</li>
+</ol>
+<h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><ol>
+<li>你能用自己的话给数据结构下定义吗？</li>
+<li>你能用自己的话给算法下定义吗？</li>
+<li>你知道复杂度分析吗？</li>
+<li>你知道时间复杂度分析吗？</li>
+<li>你知道空间复杂度分析吗？</li>
+<li>你知道大O表示法的含义吗？</li>
+</ol>
+<h3 id="分享"><a href="#分享" class="headerlink" title="分享"></a>分享</h3><ol>
+<li><p>你能用自己的话给数据结构下定义吗？</p>
+<ul>
+<li>数据结构，就是【存储数据】的结构</li>
+<li>比如：图书馆将书籍分类、按照规律编号存储</li>
+<li>那么按照规律编号，就是“书籍数据”的存储结构</li>
+</ul>
+</li>
+<li><p>你能用自己的话给算法下定义吗？</p>
+<ul>
+<li>算法，就是【操作数据】的方法</li>
+<li>比如：你要找书，一本一本的找是算法</li>
+<li>比如：你要找书，根据书籍的分类找也是算法</li>
+</ul>
+</li>
+<li><p>你知道复杂度分析吗？</p>
+<ul>
+<li>数据结构与算法核心二字决：快、省</li>
+<li>快，是指执行效率要高</li>
+<li>省，是指消耗的空间要少</li>
+<li>通过复杂度分析，可以衡量算法的执行效率</li>
+<li>通过复杂度分析，可以衡量算法的空间消耗</li>
+</ul>
+</li>
+<li><p>你知道时间复杂度分析吗？</p>
+<ul>
+<li>【时间】复杂度分析，用于衡量算法的执行效率</li>
+</ul>
+</li>
+<li><p>你知道空间复杂度分析吗？</p>
+<ul>
+<li>【空间】复杂度分析，用于衡量算法的空间消耗</li>
+</ul>
+</li>
+<li><p>你知道大O表示法的含义吗？</p>
+<ul>
+<li><p>大O表示法：时间复杂度，表示数据规模的增长，与算法执行时间的增长趋势</p>
+</li>
+<li><p>大O表示法：空间复杂度，表示数据规模的增长，与算法存储空间的增长趋势</p>
+</li>
+<li><p>大O表示法公式：T(n)=O(f(n))</p>
+</li>
+<li><p>公式解读：</p>
+<ul>
+<li>T(n)：代表代码执行时间</li>
+<li>n：代表数据规模</li>
+<li>f(n)：代表每行代码执行的次数总和</li>
+<li>O：表示代码执行时间T(n)，与代码执行次数f(n)成正比</li>
+</ul>
+</li>
+<li><p>案例：</p>
+ <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sum</span><span class="params">(int n)</span>:</span></span><br><span class="line">    sum = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">        sum += i</span><br><span class="line">    <span class="keyword">return</span> sum</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>以上代码时间复杂度是：O(n)</li>
+<li>大O表示法公式：T(n)=O(f(n))</li>
+<li>由于f(n)是一个线性函数，推导出：T(n)=O(n)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>数据结构与算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>库</title>
+    <url>/2020/07/04/%E6%8E%A8%E8%8D%90%E5%BA%93/</url>
+    <content><![CDATA[<h1 id="前端"><a href="#前端" class="headerlink" title="前端"></a>前端</h1><p><a href="https://github.com/sweetalert2/sweetalert2" target="_blank" rel="noopener">sweetalert2</a> 一个自适应，且自定义性强的弹出框（零依赖）</p>
+<h1 id="CSS-amp-amp-动画"><a href="#CSS-amp-amp-动画" class="headerlink" title="CSS &amp;&amp; 动画"></a>CSS &amp;&amp; 动画</h1><h1 id="Vue"><a href="#Vue" class="headerlink" title="Vue"></a>Vue</h1><h1 id="实践库"><a href="#实践库" class="headerlink" title="实践库"></a>实践库</h1><h1 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h1>]]></content>
+      <tags>
+        <tag>推荐库</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>开发者必备的Mysql命令</title>
     <url>/2020/07/10/%E5%BC%80%E5%8F%91%E8%80%85%E5%BF%85%E5%A4%87%E7%9A%84Mysql%E5%91%BD%E4%BB%A4/</url>
     <content><![CDATA[<blockquote>
@@ -2011,182 +2233,6 @@
 ]]></content>
       <tags>
         <tag>数据库</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>项目开发中我用的顺手工具</title>
-    <url>/2020/07/09/%E6%88%91%E7%94%A8%E7%9A%84%E9%A1%BA%E6%89%8B%E7%9A%84%E5%B7%A5%E5%85%B7/</url>
-    <content><![CDATA[<p>之前经常有朋友问我一些常用的工具，比如我的架构图是用什么工具做的？我的数据库是用什么工具设计的？今天给大家介绍下我用的顺手的工具！</p>
-<p>IntelliJ IDEA</p>
-<p><img src="/images/pasted-5.png" alt="upload successful"><br>业界公认最好的Java开发工具，平时用的最多。可以安装大量插件丰富功能，开发前端应用也不在话下！</p>
-<p>X-shell</p>
-<p><img src="/images/pasted-6.png" alt="upload successful"><br>一款强大的安全终端模拟软件，可以用来连接和管理远程Linux服务器。</p>
-<p>Postman</p>
-<p><img src="/images/pasted-7.png" alt="upload successful"><br>API接口调试工具，平时用来测试开发好的接口，有时也用来格式化下JSON字符串。</p>
-<p>PowerDesigner</p>
-<p><img src="/images/pasted-8.png" alt="upload successful"></p>
-<p>数据库设计工具，平时用来设计数据库表，设计完成之后可以直接导出数据库表。</p>
-<p>Navicat</p>
-<p><img src="/images/pasted-9.png" alt="upload successful"><br>数据库可视化工具，支持多种数据库，平时用来连接并管理数据库，项目上线的时候可以用来同步表结构。</p>
-<p>RedisDesktop</p>
-<p><img src="/images/pasted-10.png" alt="upload successful"><br>Redis可视化工具，平时用来查看和管理Redis缓存中的数据，有时候需要清空缓存的时候就用到它了。</p>
-<p>Robomongo</p>
-<p><img src="/images/pasted-11.png" alt="upload successful"><br>MongoDB可视化工具，平时用来查看和管理MongoDB中的数据。</p>
-<p>Typora</p>
-<p><img src="/images/pasted-12.png" alt="upload successful"><br>平时用来写文章的Markdown编辑器，编辑与预览二合一，界面简洁且功能强大！</p>
-<p>ProcessOn</p>
-<p><img src="/images/pasted-13.png" alt="upload successful"><br>作图工具，可以用来制作思维导图和流程图，mall项目的架构图就是用这个画的！</p>
-<p>MindMaster</p>
-<p><img src="/images/pasted-14.png" alt="upload successful"></p>
-<p>好用的思维导图制作工具，设计功能的时候可以用来整理下思路。</p>
-<p>Snipaste</p>
-<p><img src="/images/pasted-15.png" alt="upload successful"><br>一款好用的截屏工具，文章中很多图片都是用这个截的。</p>
-<p>ScreenToGif</p>
-<p><img src="/images/pasted-16.png" alt="upload successful"><br>用来制作Gif的工具，mall项目功能演示的Gif就是用这个做的。</p>
-<h2 id="官网地址"><a href="#官网地址" class="headerlink" title="官网地址"></a>官网地址</h2><ul>
-<li>IntelliJ IDEA：<a href="https://www.jetbrains.com/idea/download" target="_blank" rel="noopener">https://www.jetbrains.com/idea/download</a></li>
-<li>X-shell：<a href="http://www.netsarang.com/download/software.html" target="_blank" rel="noopener">http://www.netsarang.com/download/software.html</a></li>
-<li>Postman：<a href="https://www.postman.com/" target="_blank" rel="noopener">https://www.postman.com/</a></li>
-<li>PowerDesigner：<a href="http://powerdesigner.de/" target="_blank" rel="noopener">http://powerdesigner.de/</a></li>
-<li>Navicat：<a href="http://www.formysql.com/xiazai.html" target="_blank" rel="noopener">http://www.formysql.com/xiazai.html</a></li>
-<li>RedisDesktop：<a href="https://redisdesktop.com/download" target="_blank" rel="noopener">https://redisdesktop.com/download</a></li>
-<li>Robomongo：<a href="https://robomongo.org/download" target="_blank" rel="noopener">https://robomongo.org/download</a></li>
-<li>Typora：<a href="https://typora.io/" target="_blank" rel="noopener">https://typora.io/</a></li>
-<li>ProcessOn：<a href="https://processon.com/" target="_blank" rel="noopener">https://processon.com/</a></li>
-<li>MindMaster：<a href="http://www.edrawsoft.cn/mindmaster" target="_blank" rel="noopener">http://www.edrawsoft.cn/mindmaster</a></li>
-<li>Snipaste：<a href="https://www.snipaste.com/" target="_blank" rel="noopener">https://www.snipaste.com/</a></li>
-<li>ScreenToGif：<a href="https://www.screentogif.com" target="_blank" rel="noopener">https://www.screentogif.com</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>库</title>
-    <url>/2020/07/04/%E6%8E%A8%E8%8D%90%E5%BA%93/</url>
-    <content><![CDATA[<h1 id="前端"><a href="#前端" class="headerlink" title="前端"></a>前端</h1><p><a href="https://github.com/sweetalert2/sweetalert2" target="_blank" rel="noopener">sweetalert2</a> 一个自适应，且自定义性强的弹出框（零依赖）</p>
-<h1 id="CSS-amp-amp-动画"><a href="#CSS-amp-amp-动画" class="headerlink" title="CSS &amp;&amp; 动画"></a>CSS &amp;&amp; 动画</h1><h1 id="Vue"><a href="#Vue" class="headerlink" title="Vue"></a>Vue</h1><h1 id="实践库"><a href="#实践库" class="headerlink" title="实践库"></a>实践库</h1><h1 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h1>]]></content>
-      <tags>
-        <tag>推荐库</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据结构与算法 - 开篇</title>
-    <url>/2020/06/30/%E6%95%B0%E6%8D%AE%E6%9C%BA%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><h3 id="为什么要学习数据结构与算法？"><a href="#为什么要学习数据结构与算法？" class="headerlink" title="为什么要学习数据结构与算法？"></a>为什么要学习数据结构与算法？</h3><pre><code>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！
-
-有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？
-
-于是问题来了：为什么还要学习数据结构与算法呢？
-
-理由一：
-    面试的时候，千万不要被数据结构与算法拖了后腿
-理由二：
-    你真的愿意做一辈子CRUD吗
-理由三：
-    不想写出开源框架，中间件的工程师，不是好厨子</code></pre><a id="more"></a>
-
-<h3 id="如何系统化学习数据结构与算法？"><a href="#如何系统化学习数据结构与算法？" class="headerlink" title="如何系统化学习数据结构与算法？"></a>如何系统化学习数据结构与算法？</h3><h4 id="学习方法"><a href="#学习方法" class="headerlink" title="学习方法"></a>学习方法</h4><ol>
-<li>从基础开始，系统化学习</li>
-<li>多动手，每一种数据结构与算法，都自己用代码实现出来</li>
-<li>思路更重要：理解实现思想，不要背代码</li>
-<li>与日常开发结合，对应应用场景</li>
-</ol>
-<h4 id="学习内容："><a href="#学习内容：" class="headerlink" title="学习内容："></a>学习内容：</h4><p>原则：数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法。</p>
-<ol>
-<li>数据结构的定义</li>
-<li>算法的定义</li>
-<li>复杂度分析</li>
-<li>常用数据结构<ul>
-<li>数组、链表、栈、队列</li>
-<li>散列表、二叉树、堆</li>
-<li>跳表、图</li>
-</ul>
-</li>
-<li>常用算法<ul>
-<li>递归、排序、二分查找</li>
-<li>搜索、哈希、贪心、分治</li>
-<li>动态规划、字符串匹配</li>
-</ul>
-</li>
-</ol>
-<h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><ol>
-<li>你能用自己的话给数据结构下定义吗？</li>
-<li>你能用自己的话给算法下定义吗？</li>
-<li>你知道复杂度分析吗？</li>
-<li>你知道时间复杂度分析吗？</li>
-<li>你知道空间复杂度分析吗？</li>
-<li>你知道大O表示法的含义吗？</li>
-</ol>
-<h3 id="分享"><a href="#分享" class="headerlink" title="分享"></a>分享</h3><ol>
-<li><p>你能用自己的话给数据结构下定义吗？</p>
-<ul>
-<li>数据结构，就是【存储数据】的结构</li>
-<li>比如：图书馆将书籍分类、按照规律编号存储</li>
-<li>那么按照规律编号，就是“书籍数据”的存储结构</li>
-</ul>
-</li>
-<li><p>你能用自己的话给算法下定义吗？</p>
-<ul>
-<li>算法，就是【操作数据】的方法</li>
-<li>比如：你要找书，一本一本的找是算法</li>
-<li>比如：你要找书，根据书籍的分类找也是算法</li>
-</ul>
-</li>
-<li><p>你知道复杂度分析吗？</p>
-<ul>
-<li>数据结构与算法核心二字决：快、省</li>
-<li>快，是指执行效率要高</li>
-<li>省，是指消耗的空间要少</li>
-<li>通过复杂度分析，可以衡量算法的执行效率</li>
-<li>通过复杂度分析，可以衡量算法的空间消耗</li>
-</ul>
-</li>
-<li><p>你知道时间复杂度分析吗？</p>
-<ul>
-<li>【时间】复杂度分析，用于衡量算法的执行效率</li>
-</ul>
-</li>
-<li><p>你知道空间复杂度分析吗？</p>
-<ul>
-<li>【空间】复杂度分析，用于衡量算法的空间消耗</li>
-</ul>
-</li>
-<li><p>你知道大O表示法的含义吗？</p>
-<ul>
-<li><p>大O表示法：时间复杂度，表示数据规模的增长，与算法执行时间的增长趋势</p>
-</li>
-<li><p>大O表示法：空间复杂度，表示数据规模的增长，与算法存储空间的增长趋势</p>
-</li>
-<li><p>大O表示法公式：T(n)=O(f(n))</p>
-</li>
-<li><p>公式解读：</p>
-<ul>
-<li>T(n)：代表代码执行时间</li>
-<li>n：代表数据规模</li>
-<li>f(n)：代表每行代码执行的次数总和</li>
-<li>O：表示代码执行时间T(n)，与代码执行次数f(n)成正比</li>
-</ul>
-</li>
-<li><p>案例：</p>
- <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sum</span><span class="params">(int n)</span>:</span></span><br><span class="line">    sum = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">        sum += i</span><br><span class="line">    <span class="keyword">return</span> sum</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>以上代码时间复杂度是：O(n)</li>
-<li>大O表示法公式：T(n)=O(f(n))</li>
-<li>由于f(n)是一个线性函数，推导出：T(n)=O(n)</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>数据结构与算法</tag>
       </tags>
   </entry>
   <entry>
@@ -2345,6 +2391,55 @@ if( !flag){
       <tags>
         <tag>数据结构与算法</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>项目开发中我用的顺手工具</title>
+    <url>/2020/07/09/%E6%88%91%E7%94%A8%E7%9A%84%E9%A1%BA%E6%89%8B%E7%9A%84%E5%B7%A5%E5%85%B7/</url>
+    <content><![CDATA[<p>之前经常有朋友问我一些常用的工具，比如我的架构图是用什么工具做的？我的数据库是用什么工具设计的？今天给大家介绍下我用的顺手的工具！</p>
+<p>IntelliJ IDEA</p>
+<p><img src="/images/pasted-5.png" alt="upload successful"><br>业界公认最好的Java开发工具，平时用的最多。可以安装大量插件丰富功能，开发前端应用也不在话下！</p>
+<p>X-shell</p>
+<p><img src="/images/pasted-6.png" alt="upload successful"><br>一款强大的安全终端模拟软件，可以用来连接和管理远程Linux服务器。</p>
+<p>Postman</p>
+<p><img src="/images/pasted-7.png" alt="upload successful"><br>API接口调试工具，平时用来测试开发好的接口，有时也用来格式化下JSON字符串。</p>
+<p>PowerDesigner</p>
+<p><img src="/images/pasted-8.png" alt="upload successful"></p>
+<p>数据库设计工具，平时用来设计数据库表，设计完成之后可以直接导出数据库表。</p>
+<p>Navicat</p>
+<p><img src="/images/pasted-9.png" alt="upload successful"><br>数据库可视化工具，支持多种数据库，平时用来连接并管理数据库，项目上线的时候可以用来同步表结构。</p>
+<p>RedisDesktop</p>
+<p><img src="/images/pasted-10.png" alt="upload successful"><br>Redis可视化工具，平时用来查看和管理Redis缓存中的数据，有时候需要清空缓存的时候就用到它了。</p>
+<p>Robomongo</p>
+<p><img src="/images/pasted-11.png" alt="upload successful"><br>MongoDB可视化工具，平时用来查看和管理MongoDB中的数据。</p>
+<p>Typora</p>
+<p><img src="/images/pasted-12.png" alt="upload successful"><br>平时用来写文章的Markdown编辑器，编辑与预览二合一，界面简洁且功能强大！</p>
+<p>ProcessOn</p>
+<p><img src="/images/pasted-13.png" alt="upload successful"><br>作图工具，可以用来制作思维导图和流程图，mall项目的架构图就是用这个画的！</p>
+<p>MindMaster</p>
+<p><img src="/images/pasted-14.png" alt="upload successful"></p>
+<p>好用的思维导图制作工具，设计功能的时候可以用来整理下思路。</p>
+<p>Snipaste</p>
+<p><img src="/images/pasted-15.png" alt="upload successful"><br>一款好用的截屏工具，文章中很多图片都是用这个截的。</p>
+<p>ScreenToGif</p>
+<p><img src="/images/pasted-16.png" alt="upload successful"><br>用来制作Gif的工具，mall项目功能演示的Gif就是用这个做的。</p>
+<h2 id="官网地址"><a href="#官网地址" class="headerlink" title="官网地址"></a>官网地址</h2><ul>
+<li>IntelliJ IDEA：<a href="https://www.jetbrains.com/idea/download" target="_blank" rel="noopener">https://www.jetbrains.com/idea/download</a></li>
+<li>X-shell：<a href="http://www.netsarang.com/download/software.html" target="_blank" rel="noopener">http://www.netsarang.com/download/software.html</a></li>
+<li>Postman：<a href="https://www.postman.com/" target="_blank" rel="noopener">https://www.postman.com/</a></li>
+<li>PowerDesigner：<a href="http://powerdesigner.de/" target="_blank" rel="noopener">http://powerdesigner.de/</a></li>
+<li>Navicat：<a href="http://www.formysql.com/xiazai.html" target="_blank" rel="noopener">http://www.formysql.com/xiazai.html</a></li>
+<li>RedisDesktop：<a href="https://redisdesktop.com/download" target="_blank" rel="noopener">https://redisdesktop.com/download</a></li>
+<li>Robomongo：<a href="https://robomongo.org/download" target="_blank" rel="noopener">https://robomongo.org/download</a></li>
+<li>Typora：<a href="https://typora.io/" target="_blank" rel="noopener">https://typora.io/</a></li>
+<li>ProcessOn：<a href="https://processon.com/" target="_blank" rel="noopener">https://processon.com/</a></li>
+<li>MindMaster：<a href="http://www.edrawsoft.cn/mindmaster" target="_blank" rel="noopener">http://www.edrawsoft.cn/mindmaster</a></li>
+<li>Snipaste：<a href="https://www.snipaste.com/" target="_blank" rel="noopener">https://www.snipaste.com/</a></li>
+<li>ScreenToGif：<a href="https://www.screentogif.com" target="_blank" rel="noopener">https://www.screentogif.com</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
   </entry>
   <entry>
     <title>数据结构与算法 - 插入排序</title>
@@ -2511,88 +2606,62 @@ for(; j &gt;= 0;j--){
       </tags>
   </entry>
   <entry>
-    <title>数据结构与算法 - 栈</title>
-    <url>/2020/07/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%A0%88/</url>
-    <content><![CDATA[<p>2.考考你<br>你还记得在数组那一篇中，我们说过基于线性表的数据结构有哪些吗？它们是：数组、链表、栈、队列。</p>
-<p>前面我们详细了解了数组和链表，数组和链表是很多数据结构和算法的基础数据结构。比如我们今天要学习的栈，就可以通过数组实现：顺序栈；也可以通过链表实现：链式栈。</p>
-<p>那么问题来了：栈到底是什么样的数据结构呢？</p>
-<p>#考考你：<br>1.你能用自己的话描述栈吗？<br>2.你知道栈都有哪些常见的应用场景吗？<br>3.案例<br>3.1.栈的定义<br>栈是一种基于线性表的特殊数据结构，说它特殊，是因为栈是操作受限的。栈只允许在栈顶一端插入数据和删除数据。满足后进先出的特点。</p>
-<p>3.2.代码实现<br>顺序栈代码：</p>
-<p>复制代码<br>package com.anan.struct.linetable;</p>
-<p>/**</p>
+    <title>数据结构与算法 - 递归1</title>
+    <url>/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%92/</url>
+    <content><![CDATA[<p>1.引子<br>1.1.为什么要学习数据结构与算法？<br>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！</p>
+<p>有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？</p>
+<p>于是问题来了：为什么还要学习数据结构与算法呢？</p>
+<p>复制代码<br>#理由一：<br>    面试的时候，千万不要被数据结构与算法拖了后腿<br>#理由二：<br>    你真的愿意做一辈子CRUD Boy吗<br>#理由三：<br>    不想写出开源框架，中间件的工程师，不是好厨子<br>复制代码<br>1.2.如何系统化学习数据结构与算法？<br>我想好了，还是需要学习数据结构与算法。但是我有两个困惑：</p>
+<p>1.如何着手学习呢？</p>
+<p>2.有哪些内容要学习呢？</p>
+<p>学习方法推荐：</p>
+<p>#学习方法<br>1.从基础开始，系统化学习<br>2.多动手，每一种数据结构与算法，都自己用代码实现出来<br>3.思路更重要：理解实现思想，不要背代码<br>4.与日常开发结合，对应应用场景<br>学习内容推荐：</p>
+<p>数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法</p>
+<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>到目前为止，基于线性表的数据结构我们都看完了，简单回顾一下，它们是：数组、链表、栈、队列。这些数据结构是其它数据结构与算法的基础，需要重点关注。</p>
+<p>这一篇开始，我们开启算法的列车了，请系好安全带！第一个要看的算法是：递归。递归这两个字你一定很熟悉，有没有？</p>
+<p>如果没有的话，我们先举一个例子。从2016年开始到如今，知识付费发展的如火如荼。如果你也是其中的一员，比如说在xx平台购买了xx课程。大多数平台都会告诉你，将你购买的课程分享出去，假如有人通过你分享的链接购买了该课程，那么平台会给你佣金返现。</p>
+<p>既然与钱有关系，那就比较麻烦了！对于平台来说，有这么几个问题需要搞清楚。比如说：1.谁是一级推荐人？</p>
+<p>2.谁是二级推荐人……？</p>
+<p>3.谁是最终推荐人？</p>
+<p>因为不同级的推荐人，返现佣金的比例可不一样，千万别返错了，对吧。关于这种类似求推荐人的问题，有请我们今天的主角登场，它就是：递归。</p>
+<p>复制代码<br>#递归稍微有些复杂，我们通过两篇来学习：<br>1.第一篇是见面礼：<br>  1.1.体会两个生活中的小案例</p>
+<p>2.第二篇是重头戏：<br>  2.1.详细分析递归的实现<br>  2.2.递归实现的注意事项<br>复制代码<br>3.案例<br>3.1.求最终推荐人<br>简述：</p>
+<p>1.A在某某知识付费平台购买了课程：xx。并将链接分享到了微信朋友圈</p>
+<p>2.B通过A分享的链接，购买了课程：xx。并且将链接分享到了微信朋友圈</p>
+<p>3.C通过B分享的链接，购买了课程：xx。并且将连接分享到了微信朋友圈</p>
+<p>4.以此类推下去……</p>
+<p>5.假如以C为起点，如何求出课程：xx的最终推荐人？</p>
+<p>6.假设数据库中存储的数据是这样的：</p>
+<p>求解：</p>
+<p>1.你肯定想到了，这个问题好简单，经常写如下类似这样的代码：</p>
+<p>复制代码<br>/**</p>
 <ul>
-<li><p>顺序栈：基于数组实现</p>
+<li><p>求最终推荐人</p>
 </li>
-<li><p>@param <E></p>
-</li>
-<li><p>/<br>public class ArrayStack<E> {</p>
-<p>  private Object[] items;<br>  private int count;// 计数器（统计栈内元素个数）<br>  private int n;// 栈大小</p>
-<p>  public ArrayStack(int capacity){</p>
-<pre><code>this.items = new Object[capacity];
-this.count = 0;
-this.n = capacity;</code></pre><p>  }</p>
-<p>  /**</p>
-<ul>
-<li><p>入栈操作</p>
-</li>
-<li><p>/<br>public boolean push(E e ){</p>
-<p>  // 检查栈是否满<br>  if(count == n){</p>
-<pre><code>return false;</code></pre><p>  }</p>
-<p>  // 将元素放入栈中<br>  items[count ++] = e;<br>  return true;<br>}</p>
-<p>/**</p>
-</li>
-<li><p>出栈操作</p>
-</li>
-<li><p>/<br>public E pop(){<br>  // 判断栈是否空<br>  if(count == 0){</p>
-<pre><code>return null;</code></pre><p>  }</p>
-<p>  // 返回下标为count-1的元素,并且下标-1<br>  E e = (E)items[count - 1];<br>  count –;</p>
-<p>  return e;<br>}</p>
-<p>public int getCount() {<br>  return count;<br>}</p>
-<p>public int getN() {<br>  return n;<br>}<br>}<br>复制代码<br>测试代码：</p>
+<li><p>/<br>public String findRootRecommend(String userId,String xx){<br>   // 根据购买课程用户id、课程  查询数据库，获取推荐用户id<br>   String 【分享用户id】 = select 【分享用户id】 from 【购买课程表】 where 【用户id】 = 【userId】 and 【课程id】 = 【xx】;</p>
+<p>   // 判断是否是根据好友分享购买的课程<br>   if(分享用户id == null){</p>
+<pre><code>return userId;</code></pre><p>   }</p>
+<p>   // 递归查找<br>   return findRootRecommend(分享用户id,xx);<br>}<br>复制代码</p>
 </li>
 </ul>
-</li>
-</ul>
-<p>复制代码<br>package com.anan.struct.linetable;</p>
-<p>/**</p>
-<ul>
-<li><p>测试栈</p>
-</li>
-<li><p>/<br>public class ArrayStackTest {</p>
-<p>  public static void main(String[] args) {</p>
-<pre><code>// 创建栈对象
-ArrayStack&lt;Integer&gt; stack = new ArrayStack&lt;Integer&gt;(10);
-
-// 入栈操作
-System.out.println(&quot;1.入栈操作-----------------------------&quot;);
-for (int i = 0; i &lt; 5; i++) {
-    stack.push(i);
-    System.out.println(&quot;当前入栈元素：&quot; + i);
-}
-System.out.println(&quot;出栈前栈中元素个数：&quot; + stack.getCount());
-
-System.out.println(&quot;2.出栈操作-----------------------------&quot;);
-// 出栈操作
-for (int i = 0; i &lt; 5; i++) {
-    System.out.println(&quot;当前出栈元素：&quot; + stack.pop());
-}
-
-System.out.println(&quot;出栈后栈中元素个数：&quot; + stack.getCount());</code></pre><p>  }<br>}<br>复制代码<br>测试结果：</p>
-</li>
-</ul>
-<p>复制代码<br>D:\02teach\01soft\jdk8\bin\java com.anan.struct.linetable.ArrayStackTest<br>1.入栈操作—————————–<br>当前入栈元素：0<br>当前入栈元素：1<br>当前入栈元素：2<br>当前入栈元素：3<br>当前入栈元素：4<br>出栈前栈中元素个数：5<br>2.出栈操作—————————–<br>当前出栈元素：4<br>当前出栈元素：3<br>当前出栈元素：2<br>当前出栈元素：1<br>当前出栈元素：0<br>出栈后栈中元素个数：0</p>
-<p>Process finished with exit code 0<br>复制代码<br>4.讨论分享<br>复制代码<br>#考考你答案：<br>1.你能用自己的话描述栈吗？<br>  1.1.栈是基于线性表的数据结构<br>  1.2.栈一种操作受限的数据结构<br>  1.3.栈满足后进先出的特点<br>  1.4.栈只允许在栈顶插入元素、和删除元素</p>
-<p>2.你知道栈都有哪些常见的应用场景吗？<br>  2.1.方法调用<br>    a.在jvm内存结构中，有线程共享的：方法区、堆<br>    b.在jvm内存结构中，有线程私有的：程序计数器、本地方法栈、虚拟机栈<br>    c.在虚拟机栈中，每个方法调用都被封装成：栈帧<br>    d.栈帧内容包含：局部变量表、操作数栈、方法出口信息等<br>    e.每个方法的调用过程，就是栈帧在虚拟机栈中入栈和出栈过程</p>
-<p>  2.2.表达式求值<br>    a.假设有一个表达式：1+1024*1-1<br>    b.计算机中，如何求解该表达式的值呢？<br>    c.注意：当然不是人为口算<br>    d.我们的目的是让计算机能够理解任意表达式<br>  2.3.表达式求值过程<br>    a.用两个栈实现表达式求值<br>    b.一个用于存储数据：操作数栈<br>    c.一个用于存储运算符：运算符栈</p>
-<pre><code>d.从左至右，读取表达式内容
-e.如果是数据，入栈到操作数栈中
-f.如果是运算符，入栈到运算符栈中
-
-g.比较运算符的优先级
-h.如果遇到高优先级的运算符，则将操作数栈的数据出栈
-i.进行计算，把新的计算结果重新入栈到操作数栈
-j.以此类推...直到处理完成整个表达式</code></pre><p>复制代码<br>jvm内存结构：</p>
-<p>表达式求值过程：1+1024*1-1</p>
+<p>3.2.电影院看电影<br>简述：</p>
+<p>1.你与女朋友正在电影院看电影，电影已经放映</p>
+<p>2.突然，女朋友问你：我们坐在电影院的第几排？</p>
+<p>3.你一看，坏了：电影院一片漆黑，伸手不见五指</p>
+<p>4.这个问题必须要回答，因为是女朋友问的，你该怎么办？</p>
+<p>求解：</p>
+<p>1.别忘了，你是程序员，对于程序员来说，这个问题太简单了</p>
+<p>2.用递归：先问前一排的人，他们在第几排？</p>
+<p>3.前一排的人，再问他的前一排，在第几排？</p>
+<p>4.以此类推……</p>
+<p>5.一直问到第一排的人，第一排不需要再问了，直接回答在第一排</p>
+<p>6.第二排的人：在第一排的人基础上 + 1</p>
+<p>7.以此类推……</p>
+<p>8.每一排都在前一排的基础上 + 1，最后到了你们这一排，女朋友得到了满意的答案</p>
+<p>9.你很骄傲有没有？用代码回答，类似这样：</p>
+<p>复制代码<br>public int movies(int n){<br>    // 如果是第一排，返回1<br>    if(n == 1){ return 1;}</p>
+<pre><code>// 递归向前一排询问
+return movies(n - 1) + 1;</code></pre><p>}<br>复制代码</p>
 ]]></content>
       <tags>
         <tag>数据结构与算法</tag>
@@ -2670,68 +2739,6 @@ j.以此类推...直到处理完成整个表达式</code></pre><p>复制代码<b
 <p>  3.4.【注意】：选择排序，不是稳定排序算法<br>  3.5.假设有一个待排序序列：int a[]={4,5,6,4,3,2,1}<br>  3.6.待排序序列中，有重复元素：a[0]=4,a[3]=4<br>  3.7.第一轮选择排序，选择最小元素：a[6]=1<br>  3.8.将a[0]=4,a[6]=1进行交换</p>
 <p>  3.9.【注意】：第一轮选择排序后，重复元素4的顺序发生了改变<br>  3.10.待排序序列变成：a[]={1,5,6,4,3,2,4}<br>  3.11.此时重复元素：a[3]=4,a[6]=4<br>  3.12.a[3]还是原来的a[3],a[6]是原来的a[0]</p>
 <p>  3.13.我们说稳定排序算法，是指待排序序列中重复元素，<br>  排序前的顺序，与排序后的顺序保持不变<br>  3.14.可见选择排序，不符合稳定排序算法的定义<br>  3.15.关于选择排序，不是稳定排序算法的分析，你可以结合我们前面的图来理解<br>复制代码</p>
-]]></content>
-      <tags>
-        <tag>数据结构与算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据结构与算法 - 递归1</title>
-    <url>/2020/07/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%80%92%E5%BD%92/</url>
-    <content><![CDATA[<p>1.引子<br>1.1.为什么要学习数据结构与算法？<br>有人说，数据结构与算法，计算机网络，与操作系统都一样，脱离日常开发，除了面试这辈子可能都用不到呀！</p>
-<p>有人说，我是做业务开发的，只要熟练API，熟练框架，熟练各种中间件，写的代码不也能“飞”起来吗？</p>
-<p>于是问题来了：为什么还要学习数据结构与算法呢？</p>
-<p>复制代码<br>#理由一：<br>    面试的时候，千万不要被数据结构与算法拖了后腿<br>#理由二：<br>    你真的愿意做一辈子CRUD Boy吗<br>#理由三：<br>    不想写出开源框架，中间件的工程师，不是好厨子<br>复制代码<br>1.2.如何系统化学习数据结构与算法？<br>我想好了，还是需要学习数据结构与算法。但是我有两个困惑：</p>
-<p>1.如何着手学习呢？</p>
-<p>2.有哪些内容要学习呢？</p>
-<p>学习方法推荐：</p>
-<p>#学习方法<br>1.从基础开始，系统化学习<br>2.多动手，每一种数据结构与算法，都自己用代码实现出来<br>3.思路更重要：理解实现思想，不要背代码<br>4.与日常开发结合，对应应用场景<br>学习内容推荐：</p>
-<p>数据结构与算法内容比较多，我们本着实用原则，学习经典的、常用的数据结构、与常用算法</p>
-<p>复制代码<br>#学习内容：<br>1.数据结构的定义<br>2.算法的定义<br>3.复杂度分析<br>4.常用数据结构<br>    数组、链表、栈、队列<br>    散列表、二叉树、堆<br>    跳表、图<br>5.常用算法<br>    递归、排序、二分查找<br>    搜索、哈希、贪心、分治<br>    动态规划、字符串匹配<br>复制代码<br>2.考考你<br>到目前为止，基于线性表的数据结构我们都看完了，简单回顾一下，它们是：数组、链表、栈、队列。这些数据结构是其它数据结构与算法的基础，需要重点关注。</p>
-<p>这一篇开始，我们开启算法的列车了，请系好安全带！第一个要看的算法是：递归。递归这两个字你一定很熟悉，有没有？</p>
-<p>如果没有的话，我们先举一个例子。从2016年开始到如今，知识付费发展的如火如荼。如果你也是其中的一员，比如说在xx平台购买了xx课程。大多数平台都会告诉你，将你购买的课程分享出去，假如有人通过你分享的链接购买了该课程，那么平台会给你佣金返现。</p>
-<p>既然与钱有关系，那就比较麻烦了！对于平台来说，有这么几个问题需要搞清楚。比如说：1.谁是一级推荐人？</p>
-<p>2.谁是二级推荐人……？</p>
-<p>3.谁是最终推荐人？</p>
-<p>因为不同级的推荐人，返现佣金的比例可不一样，千万别返错了，对吧。关于这种类似求推荐人的问题，有请我们今天的主角登场，它就是：递归。</p>
-<p>复制代码<br>#递归稍微有些复杂，我们通过两篇来学习：<br>1.第一篇是见面礼：<br>  1.1.体会两个生活中的小案例</p>
-<p>2.第二篇是重头戏：<br>  2.1.详细分析递归的实现<br>  2.2.递归实现的注意事项<br>复制代码<br>3.案例<br>3.1.求最终推荐人<br>简述：</p>
-<p>1.A在某某知识付费平台购买了课程：xx。并将链接分享到了微信朋友圈</p>
-<p>2.B通过A分享的链接，购买了课程：xx。并且将链接分享到了微信朋友圈</p>
-<p>3.C通过B分享的链接，购买了课程：xx。并且将连接分享到了微信朋友圈</p>
-<p>4.以此类推下去……</p>
-<p>5.假如以C为起点，如何求出课程：xx的最终推荐人？</p>
-<p>6.假设数据库中存储的数据是这样的：</p>
-<p>求解：</p>
-<p>1.你肯定想到了，这个问题好简单，经常写如下类似这样的代码：</p>
-<p>复制代码<br>/**</p>
-<ul>
-<li><p>求最终推荐人</p>
-</li>
-<li><p>/<br>public String findRootRecommend(String userId,String xx){<br>   // 根据购买课程用户id、课程  查询数据库，获取推荐用户id<br>   String 【分享用户id】 = select 【分享用户id】 from 【购买课程表】 where 【用户id】 = 【userId】 and 【课程id】 = 【xx】;</p>
-<p>   // 判断是否是根据好友分享购买的课程<br>   if(分享用户id == null){</p>
-<pre><code>return userId;</code></pre><p>   }</p>
-<p>   // 递归查找<br>   return findRootRecommend(分享用户id,xx);<br>}<br>复制代码</p>
-</li>
-</ul>
-<p>3.2.电影院看电影<br>简述：</p>
-<p>1.你与女朋友正在电影院看电影，电影已经放映</p>
-<p>2.突然，女朋友问你：我们坐在电影院的第几排？</p>
-<p>3.你一看，坏了：电影院一片漆黑，伸手不见五指</p>
-<p>4.这个问题必须要回答，因为是女朋友问的，你该怎么办？</p>
-<p>求解：</p>
-<p>1.别忘了，你是程序员，对于程序员来说，这个问题太简单了</p>
-<p>2.用递归：先问前一排的人，他们在第几排？</p>
-<p>3.前一排的人，再问他的前一排，在第几排？</p>
-<p>4.以此类推……</p>
-<p>5.一直问到第一排的人，第一排不需要再问了，直接回答在第一排</p>
-<p>6.第二排的人：在第一排的人基础上 + 1</p>
-<p>7.以此类推……</p>
-<p>8.每一排都在前一排的基础上 + 1，最后到了你们这一排，女朋友得到了满意的答案</p>
-<p>9.你很骄傲有没有？用代码回答，类似这样：</p>
-<p>复制代码<br>public int movies(int n){<br>    // 如果是第一排，返回1<br>    if(n == 1){ return 1;}</p>
-<pre><code>// 递归向前一排询问
-return movies(n - 1) + 1;</code></pre><p>}<br>复制代码</p>
 ]]></content>
       <tags>
         <tag>数据结构与算法</tag>
@@ -2839,6 +2846,94 @@ return movies(n - 1) + 1;</code></pre><p>}<br>复制代码</p>
       </tags>
   </entry>
   <entry>
+    <title>数据结构与算法 - 栈</title>
+    <url>/2020/07/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E6%A0%88/</url>
+    <content><![CDATA[<p>2.考考你<br>你还记得在数组那一篇中，我们说过基于线性表的数据结构有哪些吗？它们是：数组、链表、栈、队列。</p>
+<p>前面我们详细了解了数组和链表，数组和链表是很多数据结构和算法的基础数据结构。比如我们今天要学习的栈，就可以通过数组实现：顺序栈；也可以通过链表实现：链式栈。</p>
+<p>那么问题来了：栈到底是什么样的数据结构呢？</p>
+<p>#考考你：<br>1.你能用自己的话描述栈吗？<br>2.你知道栈都有哪些常见的应用场景吗？<br>3.案例<br>3.1.栈的定义<br>栈是一种基于线性表的特殊数据结构，说它特殊，是因为栈是操作受限的。栈只允许在栈顶一端插入数据和删除数据。满足后进先出的特点。</p>
+<p>3.2.代码实现<br>顺序栈代码：</p>
+<p>复制代码<br>package com.anan.struct.linetable;</p>
+<p>/**</p>
+<ul>
+<li><p>顺序栈：基于数组实现</p>
+</li>
+<li><p>@param <E></p>
+</li>
+<li><p>/<br>public class ArrayStack<E> {</p>
+<p>  private Object[] items;<br>  private int count;// 计数器（统计栈内元素个数）<br>  private int n;// 栈大小</p>
+<p>  public ArrayStack(int capacity){</p>
+<pre><code>this.items = new Object[capacity];
+this.count = 0;
+this.n = capacity;</code></pre><p>  }</p>
+<p>  /**</p>
+<ul>
+<li><p>入栈操作</p>
+</li>
+<li><p>/<br>public boolean push(E e ){</p>
+<p>  // 检查栈是否满<br>  if(count == n){</p>
+<pre><code>return false;</code></pre><p>  }</p>
+<p>  // 将元素放入栈中<br>  items[count ++] = e;<br>  return true;<br>}</p>
+<p>/**</p>
+</li>
+<li><p>出栈操作</p>
+</li>
+<li><p>/<br>public E pop(){<br>  // 判断栈是否空<br>  if(count == 0){</p>
+<pre><code>return null;</code></pre><p>  }</p>
+<p>  // 返回下标为count-1的元素,并且下标-1<br>  E e = (E)items[count - 1];<br>  count –;</p>
+<p>  return e;<br>}</p>
+<p>public int getCount() {<br>  return count;<br>}</p>
+<p>public int getN() {<br>  return n;<br>}<br>}<br>复制代码<br>测试代码：</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>复制代码<br>package com.anan.struct.linetable;</p>
+<p>/**</p>
+<ul>
+<li><p>测试栈</p>
+</li>
+<li><p>/<br>public class ArrayStackTest {</p>
+<p>  public static void main(String[] args) {</p>
+<pre><code>// 创建栈对象
+ArrayStack&lt;Integer&gt; stack = new ArrayStack&lt;Integer&gt;(10);
+
+// 入栈操作
+System.out.println(&quot;1.入栈操作-----------------------------&quot;);
+for (int i = 0; i &lt; 5; i++) {
+    stack.push(i);
+    System.out.println(&quot;当前入栈元素：&quot; + i);
+}
+System.out.println(&quot;出栈前栈中元素个数：&quot; + stack.getCount());
+
+System.out.println(&quot;2.出栈操作-----------------------------&quot;);
+// 出栈操作
+for (int i = 0; i &lt; 5; i++) {
+    System.out.println(&quot;当前出栈元素：&quot; + stack.pop());
+}
+
+System.out.println(&quot;出栈后栈中元素个数：&quot; + stack.getCount());</code></pre><p>  }<br>}<br>复制代码<br>测试结果：</p>
+</li>
+</ul>
+<p>复制代码<br>D:\02teach\01soft\jdk8\bin\java com.anan.struct.linetable.ArrayStackTest<br>1.入栈操作—————————–<br>当前入栈元素：0<br>当前入栈元素：1<br>当前入栈元素：2<br>当前入栈元素：3<br>当前入栈元素：4<br>出栈前栈中元素个数：5<br>2.出栈操作—————————–<br>当前出栈元素：4<br>当前出栈元素：3<br>当前出栈元素：2<br>当前出栈元素：1<br>当前出栈元素：0<br>出栈后栈中元素个数：0</p>
+<p>Process finished with exit code 0<br>复制代码<br>4.讨论分享<br>复制代码<br>#考考你答案：<br>1.你能用自己的话描述栈吗？<br>  1.1.栈是基于线性表的数据结构<br>  1.2.栈一种操作受限的数据结构<br>  1.3.栈满足后进先出的特点<br>  1.4.栈只允许在栈顶插入元素、和删除元素</p>
+<p>2.你知道栈都有哪些常见的应用场景吗？<br>  2.1.方法调用<br>    a.在jvm内存结构中，有线程共享的：方法区、堆<br>    b.在jvm内存结构中，有线程私有的：程序计数器、本地方法栈、虚拟机栈<br>    c.在虚拟机栈中，每个方法调用都被封装成：栈帧<br>    d.栈帧内容包含：局部变量表、操作数栈、方法出口信息等<br>    e.每个方法的调用过程，就是栈帧在虚拟机栈中入栈和出栈过程</p>
+<p>  2.2.表达式求值<br>    a.假设有一个表达式：1+1024*1-1<br>    b.计算机中，如何求解该表达式的值呢？<br>    c.注意：当然不是人为口算<br>    d.我们的目的是让计算机能够理解任意表达式<br>  2.3.表达式求值过程<br>    a.用两个栈实现表达式求值<br>    b.一个用于存储数据：操作数栈<br>    c.一个用于存储运算符：运算符栈</p>
+<pre><code>d.从左至右，读取表达式内容
+e.如果是数据，入栈到操作数栈中
+f.如果是运算符，入栈到运算符栈中
+
+g.比较运算符的优先级
+h.如果遇到高优先级的运算符，则将操作数栈的数据出栈
+i.进行计算，把新的计算结果重新入栈到操作数栈
+j.以此类推...直到处理完成整个表达式</code></pre><p>复制代码<br>jvm内存结构：</p>
+<p>表达式求值过程：1+1024*1-1</p>
+]]></content>
+      <tags>
+        <tag>数据结构与算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数据结构与算法 - 链表</title>
     <url>/2020/07/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A8/</url>
     <content><![CDATA[<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>链表与数组一样，都是常用的基础数据结构，它通过“指针”将一组零散的内存块串联起来使用。每一个零散的内存块称为：节点。</p>
@@ -2897,15 +2992,6 @@ return movies(n - 1) + 1;</code></pre><p>}<br>复制代码</p>
       <categories>
         <category>技术</category>
       </categories>
-      <tags>
-        <tag>数据结构与算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据结构与算法 - 链表2</title>
-    <url>/2020/07/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A82/</url>
-    <content><![CDATA[<p><img src="/images/pasted-3.png" alt="upload successful"></p>
-]]></content>
       <tags>
         <tag>数据结构与算法</tag>
       </tags>
@@ -3042,6 +3128,15 @@ n = capacity;</code></pre><p>  }</p>
       </tags>
   </entry>
   <entry>
+    <title>数据结构与算法 - 链表2</title>
+    <url>/2020/07/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95-%E9%93%BE%E8%A1%A82/</url>
+    <content><![CDATA[<p><img src="/images/pasted-3.png" alt="upload successful"></p>
+]]></content>
+      <tags>
+        <tag>数据结构与算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>淘宝服务端高并发分布式架构演进之路</title>
     <url>/2020/09/11/%E6%B7%98%E5%AE%9D%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E4%B9%8B%E8%B7%AF/</url>
     <content><![CDATA[<p><img src="/images/pasted-227.png" alt="upload successful"></p>
@@ -3124,6 +3219,74 @@ n = capacity;</code></pre><p>  }</p>
 <li>快速迭代。系统应该快速开发小功能模块，尽快上线进行验证，早日发现问题大大降低系统交付的风险；</li>
 </ul>
 ]]></content>
+      <tags>
+        <tag>架构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>网页应用架构</title>
+    <url>/2020/07/27/%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84/</url>
+    <content><![CDATA[<h3 id="现代Web应用程序体系结构概述"><a href="#现代Web应用程序体系结构概述" class="headerlink" title="现代Web应用程序体系结构概述"></a>现代Web应用程序体系结构概述</h3><p><img src="/images/pasted-149.png" alt="upload successful"></p>
+<a id="more"></a>
+
+<p>上图很好地表示了Storyblocks上的体系结构。如果您不是经验丰富的Web开发人员，则可能会发现它很复杂。在我们深入研究每个组件的细节之前，下面的逐步操作应该使其更容易上手。</p>
+<blockquote>
+<p>一位用户在Google上搜索“森林中浓烈的美丽雾和阳光”。第一个结果刚好来自Storyblocks，这是我们领先的照片和载体网站。用户单击结果，将其浏览器重定向到图像详细信息页面。在后台，用户的浏览器向DNS服务器发送请求，以查找如何联系Storyblock，然后发送请求。<br>该请求到达我们的负载均衡器，该负载均衡器随机选择我们当时正在运行该站点的10台左右的Web服务器之一来处理该请求。Web服务器从我们的缓存服务中查找有关该图像的一些信息，并从数据库中获取有关该图像的剩余数据。我们注意到尚未计算图像的颜色配置文件，因此我们将“颜色配置文件”作业发送到我们的作业队列，作业服务器将对其进行异步处理，并根据结果适当更新数据库。<br>接下来，我们尝试通过使用照片标题作为输入向我们的全文搜索服务发送请求来查找相似的照片。该用户恰好以成员身份登录到Storyblocks，因此我们从帐户服务中查找其帐户信息。最后，我们向数据防火墙触发页面查看事件，以将其记录在我们的云存储系统中，并最终加载到我们的数据仓库中，分析师使用该事件来帮助回答有关业务的问题。<br>现在，服务器将视图呈现为HTML，并将其发送回用户的浏览器，首先通过负载平衡器。该页面包含我们加载到与CDN连接的云存储系统中的Javascript和CSS资产，因此用户的浏览器与CDN联系以检索内容。最后，浏览器将页面可视化呈现给用户查看。</p>
+</blockquote>
+<p>接下来，我将引导您完成每个组件，并为每个组件提供“ 101”介绍，这将为您提供一个很好的思维模式，以便您思考未来的Web体系结构。我将继续阅读其他系列文章，这些文章根据我在Storyblocks所学的知识提供具体的实施建议。</p>
+<h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><p>DNS代表“域名系统”，它是使万维网成为可能的骨干技术。在最基本的级别，DNS提供从域名（例如google.com）到IP地址（例如85.129.83.120）的键/值查找，这是您的计算机将请求路由到适当地址所必需的服务器。与电话号码类似，域名和IP地址之间的区别是“致电John Doe”和“致电201-867-5309”之间的区别。就像您过去需要一本电话簿来查找John的号码一样，您也需要DNS来查找域的IP地址。因此，您可以将DNS视为互联网的电话簿。</p>
+<p>我们可以在这里进行更多详细介绍，但是我们将跳过它，因为它对于我们的101级介绍并不重要。</p>
+<h3 id="负载均衡器"><a href="#负载均衡器" class="headerlink" title="负载均衡器"></a>负载均衡器</h3><p>在深入研究负载平衡之前，我们需要退后一步来讨论水平与垂直应用程序扩展。它们是什么，有什么区别？非常简单地放在此StackOverflow帖子中，水平缩放意味着通过向资源池中添加更多计算机来进行扩展，而“垂直”缩放意味着通过向现有计算机中添加更多的功能（例如CPU，RAM）来进行扩展。</p>
+<p>在Web开发中，您（几乎）总是想要水平缩放，因为为简单起见，东西会中断。服务器随机崩溃。网络退化。整个数据中心有时会脱机。拥有多台服务器可以使您计划中断，以便应用程序继续运行。换句话说，您的应用程序是“容错的”。其次，水平缩放允许您将应用程序后端的不同部分（分别在Web服务器，数据库，服务X等上）运行在不同的服务器上，以最小的方式耦合它们。最后，您可能无法再进行垂直缩放。世界上没有足够大的计算机来执行您所有应用程序的计算。尽管这适用于规模较小的公司，但可以将Google的搜索平台视为一个典型的例子。例如，故事块 在任何给定时间点运行150到400个AWS EC2实例。通过垂直缩放来提供整个计算能力将是一个挑战。</p>
+<p>好，回到负载平衡器。它们是使水平缩放成为可能的魔术酱。它们将传入请求路由到通常是彼此克隆/镜像的许多应用程序服务器之一，并将响应从应用程序服务器发送回客户端。它们中的任何一个都应该以相同的方式处理请求，因此只需在服务器之间分配请求，这样就不会超载。</p>
+<p>而已。从概念上讲，负载均衡器相当简单。在引擎盖下肯定有复杂之处，但无需深入了解我们的101版本。</p>
+<h3 id="Web应用程序服务器"><a href="#Web应用程序服务器" class="headerlink" title="Web应用程序服务器"></a>Web应用程序服务器</h3><p>在较高级别，Web应用程序服务器的描述相对简单。它们执行处理用户请求的核心业务逻辑，并将HTML发送回用户的浏览器。为了完成工作，他们通常与各种后端基础架构进行通信，例如数据库，缓存层，作业队列，搜索服务，其他微服务，数据/日志记录队列等等。如上所述，为了处理用户请求，通常将至少两个（通常是更多）插入负载平衡器。</p>
+<p>您应该知道，应用服务器的实现需要选择一种特定的语言（Node.js，Ruby，PHP，Scala，Java，C＃.NET等）和该语言的Web MVC框架（Express for Node.js，Ruby on Rails） ，Scala播放，Laravel PHP播放等等）。但是，深入探讨这些语言和框架的细节不在本文的讨论范围之内。</p>
+<h3 id="数据库服务器"><a href="#数据库服务器" class="headerlink" title="数据库服务器"></a>数据库服务器</h3><p>每个现代的Web应用程序都利用一个或多个数据库来存储信息。数据库提供了定义数据结构，插入新数据，查找现有数据，更新或删除现有数据，对数据进行计算等方法。在大多数情况下，Web应用程序服务器与作业服务器直接进行通信。此外，每个后端服务可能都有自己的数据库，该数据库与应用程序的其余部分隔离。</p>
+<p>尽管我避免深入探讨每个体系结构组件的特定技术，但对您而言，更不用说数据库的下一级细节了：SQL和NoSQL。</p>
+<p>SQL代表“结构化查询语言”，并且是在1970年代发明的，旨在提供一种标准的查询关系数据集的方法，该方法可供广大读者访问。SQL数据库将数据存储在通过通用ID（通常为整数）链接在一起的表中。让我们来看一个为用户存储历史地址信息的简单示例。您可能有两个表，用户表和用户地址，通过用户的ID链接在一起。参见下图以获取简化版本。这些表被链接，因为user_addresses中的user_id列是users表中id列的“外键”。<br><img src="/images/pasted-150.png" alt="upload successful"></p>
+<p>如果您对SQL不太了解，我强烈建议您逐步学习一个教程，就像您可以在此处的 Khan Academy上找到的那样。它在Web开发中无处不在，因此您至少想要了解基础知识，以便正确地构建应用程序。</p>
+<p>NoSQL代表“ Non-SQL”，它是一组较新的数据库技术，可以处理大型Web应用程序可能产生的大量数据（大多数SQL变体不能很​​好地水平扩展，并且只能垂直缩放到某个点）。如果您对NoSQL一无所知，建议从以下高级介绍开始：</p>
+<ul>
+<li><a href="https://www.w3resource.com/mongodb/nosql.php" target="_blank" rel="noopener">https://www.w3resource.com/mongodb/nosql.php</a></li>
+<li><a href="http://www.kdnuggets.com/2016/07/seven-steps-understanding-nosql-databases.html" target="_blank" rel="noopener">http://www.kdnuggets.com/2016/07/seven-steps-understanding-nosql-databases.html</a></li>
+<li><a href="https://resources.mongodb.com/getting-started-with-mongodb/back-to-basics-1-introduction-to-nosql" target="_blank" rel="noopener">https://resources.mongodb.com/getting-started-with-mongodb/back-to-basics-1-introduction-to-nosql</a></li>
+</ul>
+<p>我还要牢记，总的来说，整个行业都在将SQL用作NoSQL数据库的接口，因此，如果您不了解SQL，那么您真的应该学习SQL。这些天几乎没有办法避免这种情况。</p>
+<h3 id="缓存服务"><a href="#缓存服务" class="headerlink" title="缓存服务"></a>缓存服务</h3><p>缓存服务提供了一个简单的键/值数据存储，使您可以在接近O（1）的时间内保存和查找信息。应用程序通常利用缓存服务来保存昂贵的计算结果，以便可以从缓存中检索结果，而不必在下次需要时重新计算结果。应用程序可能会缓存数据库查询，对外部服务的调用，给定URL的HTML等结果。这是真实应用程序中的一些示例：</p>
+<ul>
+<li>Google会为“狗”或“泰勒·斯威夫特”之类的常见搜索查询缓存搜索结果，而不是每次都重新计算它们</li>
+<li>Facebook会缓存您登录时看到的许多数据，例如帖子数据，朋友等。在此处阅读有关Facebook缓存技术的详细文章。</li>
+<li>Storyblocks缓存来自服务器端React渲染，搜索结果，预输入结果等的HTML输出。<br>两种最广泛使用的缓存服务器技术是Redis和Memcache。我将在另一篇文章中详细介绍。</li>
+</ul>
+<h3 id="作业队列和服务器"><a href="#作业队列和服务器" class="headerlink" title="作业队列和服务器"></a>作业队列和服务器</h3><p>大多数Web应用程序需要在后台异步执行一些与响应用户请求没有直接关联的工作。例如，Google需要对整个互联网进行爬网并编制索引，以便返回搜索结果。并非每次搜索都这样做。取而代之的是，它异步地爬网，并一路更新搜索索引。</p>
+<p>尽管有不同的体系结构可以完成异步工作，但最普遍的是我称之为“作业队列”体系结构。它由两个部分组成：一个需要运行的“作业”队列和一个或多个运行该队列中作业的作业服务器（通常称为“工人”）。</p>
+<p>作业队列存储需要异步运行的作业列表。最简单的是先进先出（FIFO）队列，尽管大多数应用程序最终需要某种优先级排队系统。无论何时应用程序需要按某种常规计划运行或由用户操作确定运行作业，它都只会将适当的作业添加到队列中。</p>
+<p>例如，Storyblocks利用工作队列来支持支持我们的市场所需的许多幕后工作。我们运行作业来对视频和照片进行编码，处理CSV以进行元数据标记，汇总用户统计信息，发送密码重设电子邮件等。我们从简单的FIFO队列开始，但我们已升级到优先级队列，以确保诸如发送密码重置电子邮件之类的时间敏感操作能尽快完成。</p>
+<p>作业服务器处理作业。他们轮询作业队列以确定是否有工作要做，如果有，他们将作业弹出队列并执行。基本语言和框架的选择与Web服务器一样多，因此在本文中我将不做详细介绍。</p>
+<h3 id="全文检索服务"><a href="#全文检索服务" class="headerlink" title="全文检索服务"></a>全文检索服务</h3><p>许多（如果不是大多数）网络应用程序都支持某种搜索功能，其中用户提供文本输入（通常称为“查询”），并且该应用程序返回最“相关”的结果。支持此功能的技术通常称为“ 全文搜索 ”，它利用反向索引快速查找包含查询关键字的文档。<br><img src="/images/pasted-151.png" alt="upload successful"></p>
+<pre><code>该示例显示了如何将三个文档标题转换为反向索引，以帮助快速查找从特定关键字到标题中带有该关键字的文档。注意，诸如“ in”，“ the”，“ with”等的常用词（称为停用词）通常不包括在倒排索引中。</code></pre><p>尽管可以直接从某些数据库中进行全文搜索（例如，MySQL支持全文搜索），但通常运行单独的“搜索服务”来计算和存储倒排索引并提供查询接口。尽管还有其他选择，例如Sphinx或Apache Solr，但当今最受欢迎的全文搜索平台是Elasticsearch。</p>
+<h3 id="服务"><a href="#服务" class="headerlink" title="服务"></a>服务</h3><p>一旦应用达到一定规模，就有可能将某些“服务”分拆为单独的应用程序运行。它们不会暴露于外部世界，但是应用程序和其他服务会与它们交互。例如，Storyblocks具有多项运营和计划服务：</p>
+<ul>
+<li>帐户服务在我们所有站点上存储用户数据，这使我们能够轻松地提供交叉销售机会并创建更统一的用户体验</li>
+<li>内容服务存储我们所有视频，音频和图像内容的元数据。它还提供了用于下载内容和查看下载历史的界面。</li>
+<li>付款服务提供了用于为客户信用卡开帐单的界面。</li>
+<li>HTML→PDF服务提供了一个简单的界面，该界面接受HTML并返回相应的PDF文档。</li>
+</ul>
+<h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><p>如今，公司的生存与否取决于其如何利用数据。如今，几乎每个应用程序一旦达到一定规模，就会利用数据管道来确保可以收集，存储和分析数据。典型的管道具有三个主要阶段：</p>
+<ol>
+<li>该应用程序将数据（通常是有关用户交互的事件）发送到数据“ firehose”，该“ firehose”提供了流接口以提取和处理数据。通常，原始数据会被转换或扩充并传递给另一个防火墙。AWS Kinesis和Kafka是用于此目的的两种最常见的技术。</li>
+<li>原始数据以及最终的转换/增强数据将保存到云存储中。AWS Kinesis提供了一个称为“ firehose”的设置，该设置使将原始数据保存到其云存储（S3）的过程非常容易配置。</li>
+<li>转换/增强的数据通常被加载到数据仓库中进行分析。我们使用AWS Redshift，并且在新兴世界中越来越大的一部分也使用AWS Redshift，尽管大型公司通常会使用Oracle或其他专有仓库技术。如果数据集足够大，则可能需要类似Hadoop的NoSQL MapReduce技术进行分析。</li>
+</ol>
+<p>架构图中未描绘的另一步骤：将数据从应用程序和服务的操作数据库加载到数据仓库中。例如，在Storyblocks，我们每晚将VideoBlocks，AudioBlocks，Storyblocks，帐户服务和贡献者门户数据库加载到Redshift中。通过将核心业务数据与我们的用户交互事件数据一起定位，从而为我们的分析师提供了一个整体数据集。</p>
+<h3 id="云存储"><a href="#云存储" class="headerlink" title="云存储"></a>云存储</h3><p>根据AWS的说法， “云存储是一种通过Internet存储，访问和共享数据的简单且可扩展的方式” 。您可以使用它来存储或访问或多或少地存储在本地文件系统上的任何内容，其优点是可以通过HTTP上的RESTful API与之交互。到目前为止，Amazon的S3产品是当今最受欢迎的云存储，我们在Storyblocks广泛依赖于此存储来存储我们的视频，照片和音频资产，我们的CSS和Javascript，我们的用户事件数据等等。</p>
+<h3 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h3><p>CDN代表“内容交付网络”，该技术提供了一种在Web上为静态HTML，CSS，Javascript和图像之类的资产提供服务的方法，其速度比从单个原始服务器提供这些资源的速度要快得多。它的工作原理是将内容分布在世界各地的许多“边缘”服务器上，以便用户最终从“边缘”服务器而不是原始服务器下载资产。例如，在下图中，西班牙的用户从具有纽约原始服务器的站点请求网页，但是该页面的静态资产是从英格兰的CDN“边缘”服务器加载的，从而避免了许多缓慢的跨大西洋HTTP要求。<br><img src="/images/pasted-148.png" alt="upload successful"></p>
+<p>查看本文以获得更全面的介绍。通常，Web应用程序应始终使用CDN来提供CSS，Javascript，图像，视频和任何其他资产。某些应用程序也许还可以利用CDN来提供静态HTML页面。</p>
+]]></content>
+      <categories>
+        <category>架构</category>
+      </categories>
       <tags>
         <tag>架构</tag>
       </tags>
@@ -3325,71 +3488,227 @@ n = capacity;</code></pre><p>  }</p>
       </tags>
   </entry>
   <entry>
-    <title>网页应用架构</title>
-    <url>/2020/07/27/%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84/</url>
-    <content><![CDATA[<h3 id="现代Web应用程序体系结构概述"><a href="#现代Web应用程序体系结构概述" class="headerlink" title="现代Web应用程序体系结构概述"></a>现代Web应用程序体系结构概述</h3><p><img src="/images/pasted-149.png" alt="upload successful"></p>
+    <title>项目管理工具-禅道</title>
+    <url>/2020/10/13/%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7-%E7%A6%85%E9%81%93/</url>
+    <content><![CDATA[<blockquote>
+<p>作为一个开发人员，我们也该懂一些项目管理的知识，今天我们来讲一个基于Scrum的项目管理工具禅道。本文将从禅道的安装部署开始讲起，然后讲讲Scrum的核心概念，最后通过禅道的一套操作来实践下Scrum的开发流程。</p>
+</blockquote>
 <a id="more"></a>
 
-<p>上图很好地表示了Storyblocks上的体系结构。如果您不是经验丰富的Web开发人员，则可能会发现它很复杂。在我们深入研究每个组件的细节之前，下面的逐步操作应该使其更容易上手。</p>
-<blockquote>
-<p>一位用户在Google上搜索“森林中浓烈的美丽雾和阳光”。第一个结果刚好来自Storyblocks，这是我们领先的照片和载体网站。用户单击结果，将其浏览器重定向到图像详细信息页面。在后台，用户的浏览器向DNS服务器发送请求，以查找如何联系Storyblock，然后发送请求。<br>该请求到达我们的负载均衡器，该负载均衡器随机选择我们当时正在运行该站点的10台左右的Web服务器之一来处理该请求。Web服务器从我们的缓存服务中查找有关该图像的一些信息，并从数据库中获取有关该图像的剩余数据。我们注意到尚未计算图像的颜色配置文件，因此我们将“颜色配置文件”作业发送到我们的作业队列，作业服务器将对其进行异步处理，并根据结果适当更新数据库。<br>接下来，我们尝试通过使用照片标题作为输入向我们的全文搜索服务发送请求来查找相似的照片。该用户恰好以成员身份登录到Storyblocks，因此我们从帐户服务中查找其帐户信息。最后，我们向数据防火墙触发页面查看事件，以将其记录在我们的云存储系统中，并最终加载到我们的数据仓库中，分析师使用该事件来帮助回答有关业务的问题。<br>现在，服务器将视图呈现为HTML，并将其发送回用户的浏览器，首先通过负载平衡器。该页面包含我们加载到与CDN连接的云存储系统中的Javascript和CSS资产，因此用户的浏览器与CDN联系以检索内容。最后，浏览器将页面可视化呈现给用户查看。</p>
+<h3 id="禅道简介"><a href="#禅道简介" class="headerlink" title="禅道简介"></a>禅道简介</h3><p>禅道由青岛易软天创网络科技有限公司开发，国产开源项目管理软件。它集产品管理、项目管理、质量管理、文档管理、组织管理和事务管理于一体，是一款专业的研发项目管理软件，完整覆盖了研发项目管理的核心流程。禅道项目管理软件的主要管理思想基于国际流行的敏捷项目管理方法—Scrum。Scrum方法注重实效，操作性强，非常适合软件研发项目的快速迭代开发。禅道在遵循其管理方式基础上，结合国内研发现状，整合了Bug管理，测试用例管理，发布管理，文档管理等功能，完整的覆盖了软件研发项目的整个生命周期。</p>
+<h3 id="安装及部署"><a href="#安装及部署" class="headerlink" title="安装及部署"></a>安装及部署</h3><blockquote>
+<p>禅道的安装方式有很多，这里我们使用它在Docker环境下的安装方式。</p>
 </blockquote>
-<p>接下来，我将引导您完成每个组件，并为每个组件提供“ 101”介绍，这将为您提供一个很好的思维模式，以便您思考未来的Web体系结构。我将继续阅读其他系列文章，这些文章根据我在Storyblocks所学的知识提供具体的实施建议。</p>
-<h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><p>DNS代表“域名系统”，它是使万维网成为可能的骨干技术。在最基本的级别，DNS提供从域名（例如google.com）到IP地址（例如85.129.83.120）的键/值查找，这是您的计算机将请求路由到适当地址所必需的服务器。与电话号码类似，域名和IP地址之间的区别是“致电John Doe”和“致电201-867-5309”之间的区别。就像您过去需要一本电话簿来查找John的号码一样，您也需要DNS来查找域的IP地址。因此，您可以将DNS视为互联网的电话簿。</p>
-<p>我们可以在这里进行更多详细介绍，但是我们将跳过它，因为它对于我们的101级介绍并不重要。</p>
-<h3 id="负载均衡器"><a href="#负载均衡器" class="headerlink" title="负载均衡器"></a>负载均衡器</h3><p>在深入研究负载平衡之前，我们需要退后一步来讨论水平与垂直应用程序扩展。它们是什么，有什么区别？非常简单地放在此StackOverflow帖子中，水平缩放意味着通过向资源池中添加更多计算机来进行扩展，而“垂直”缩放意味着通过向现有计算机中添加更多的功能（例如CPU，RAM）来进行扩展。</p>
-<p>在Web开发中，您（几乎）总是想要水平缩放，因为为简单起见，东西会中断。服务器随机崩溃。网络退化。整个数据中心有时会脱机。拥有多台服务器可以使您计划中断，以便应用程序继续运行。换句话说，您的应用程序是“容错的”。其次，水平缩放允许您将应用程序后端的不同部分（分别在Web服务器，数据库，服务X等上）运行在不同的服务器上，以最小的方式耦合它们。最后，您可能无法再进行垂直缩放。世界上没有足够大的计算机来执行您所有应用程序的计算。尽管这适用于规模较小的公司，但可以将Google的搜索平台视为一个典型的例子。例如，故事块 在任何给定时间点运行150到400个AWS EC2实例。通过垂直缩放来提供整个计算能力将是一个挑战。</p>
-<p>好，回到负载平衡器。它们是使水平缩放成为可能的魔术酱。它们将传入请求路由到通常是彼此克隆/镜像的许多应用程序服务器之一，并将响应从应用程序服务器发送回客户端。它们中的任何一个都应该以相同的方式处理请求，因此只需在服务器之间分配请求，这样就不会超载。</p>
-<p>而已。从概念上讲，负载均衡器相当简单。在引擎盖下肯定有复杂之处，但无需深入了解我们的101版本。</p>
-<h3 id="Web应用程序服务器"><a href="#Web应用程序服务器" class="headerlink" title="Web应用程序服务器"></a>Web应用程序服务器</h3><p>在较高级别，Web应用程序服务器的描述相对简单。它们执行处理用户请求的核心业务逻辑，并将HTML发送回用户的浏览器。为了完成工作，他们通常与各种后端基础架构进行通信，例如数据库，缓存层，作业队列，搜索服务，其他微服务，数据/日志记录队列等等。如上所述，为了处理用户请求，通常将至少两个（通常是更多）插入负载平衡器。</p>
-<p>您应该知道，应用服务器的实现需要选择一种特定的语言（Node.js，Ruby，PHP，Scala，Java，C＃.NET等）和该语言的Web MVC框架（Express for Node.js，Ruby on Rails） ，Scala播放，Laravel PHP播放等等）。但是，深入探讨这些语言和框架的细节不在本文的讨论范围之内。</p>
-<h3 id="数据库服务器"><a href="#数据库服务器" class="headerlink" title="数据库服务器"></a>数据库服务器</h3><p>每个现代的Web应用程序都利用一个或多个数据库来存储信息。数据库提供了定义数据结构，插入新数据，查找现有数据，更新或删除现有数据，对数据进行计算等方法。在大多数情况下，Web应用程序服务器与作业服务器直接进行通信。此外，每个后端服务可能都有自己的数据库，该数据库与应用程序的其余部分隔离。</p>
-<p>尽管我避免深入探讨每个体系结构组件的特定技术，但对您而言，更不用说数据库的下一级细节了：SQL和NoSQL。</p>
-<p>SQL代表“结构化查询语言”，并且是在1970年代发明的，旨在提供一种标准的查询关系数据集的方法，该方法可供广大读者访问。SQL数据库将数据存储在通过通用ID（通常为整数）链接在一起的表中。让我们来看一个为用户存储历史地址信息的简单示例。您可能有两个表，用户表和用户地址，通过用户的ID链接在一起。参见下图以获取简化版本。这些表被链接，因为user_addresses中的user_id列是users表中id列的“外键”。<br><img src="/images/pasted-150.png" alt="upload successful"></p>
-<p>如果您对SQL不太了解，我强烈建议您逐步学习一个教程，就像您可以在此处的 Khan Academy上找到的那样。它在Web开发中无处不在，因此您至少想要了解基础知识，以便正确地构建应用程序。</p>
-<p>NoSQL代表“ Non-SQL”，它是一组较新的数据库技术，可以处理大型Web应用程序可能产生的大量数据（大多数SQL变体不能很​​好地水平扩展，并且只能垂直缩放到某个点）。如果您对NoSQL一无所知，建议从以下高级介绍开始：</p>
 <ul>
-<li><a href="https://www.w3resource.com/mongodb/nosql.php" target="_blank" rel="noopener">https://www.w3resource.com/mongodb/nosql.php</a></li>
-<li><a href="http://www.kdnuggets.com/2016/07/seven-steps-understanding-nosql-databases.html" target="_blank" rel="noopener">http://www.kdnuggets.com/2016/07/seven-steps-understanding-nosql-databases.html</a></li>
-<li><a href="https://resources.mongodb.com/getting-started-with-mongodb/back-to-basics-1-introduction-to-nosql" target="_blank" rel="noopener">https://resources.mongodb.com/getting-started-with-mongodb/back-to-basics-1-introduction-to-nosql</a></li>
-</ul>
-<p>我还要牢记，总的来说，整个行业都在将SQL用作NoSQL数据库的接口，因此，如果您不了解SQL，那么您真的应该学习SQL。这些天几乎没有办法避免这种情况。</p>
-<h3 id="缓存服务"><a href="#缓存服务" class="headerlink" title="缓存服务"></a>缓存服务</h3><p>缓存服务提供了一个简单的键/值数据存储，使您可以在接近O（1）的时间内保存和查找信息。应用程序通常利用缓存服务来保存昂贵的计算结果，以便可以从缓存中检索结果，而不必在下次需要时重新计算结果。应用程序可能会缓存数据库查询，对外部服务的调用，给定URL的HTML等结果。这是真实应用程序中的一些示例：</p>
+<li><p>下载禅道的Docker镜像</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker pull idoop&#x2F;zentao:latest</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在Docker容器中运行禅道</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run -d -p 80:80 -p 4306:3306 --name zentao-server \</span><br><span class="line">        -e ADMINER_USER&#x3D;&quot;admin&quot; -e ADMINER_PASSWD&#x3D;&quot;123456&quot; \</span><br><span class="line">        -e BIND_ADDRESS&#x3D;&quot;false&quot; \</span><br><span class="line">        -v &#x2F;mydata&#x2F;zbox&#x2F;:&#x2F;opt&#x2F;zbox&#x2F; \</span><br><span class="line">        --add-host smtp.exmail.qq.com:163.177.90.125 \</span><br><span class="line">        -d idoop&#x2F;zentao:latest</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动参数说明</p>
 <ul>
-<li>Google会为“狗”或“泰勒·斯威夫特”之类的常见搜索查询缓存搜索结果，而不是每次都重新计算它们</li>
-<li>Facebook会缓存您登录时看到的许多数据，例如帖子数据，朋友等。在此处阅读有关Facebook缓存技术的详细文章。</li>
-<li>Storyblocks缓存来自服务器端React渲染，搜索结果，预输入结果等的HTML输出。<br>两种最广泛使用的缓存服务器技术是Redis和Memcache。我将在另一篇文章中详细介绍。</li>
+<li>ADMINER_USER：管理员账号；</li>
+<li>ADMINER_PASSWD：管理员密码；</li>
+<li>BIND_ADDRESS：若设置参数为”false”，禅道数据库启动后允许远程访问,选填；</li>
+<li>SMTP_HOST：设置smtp服务IP和主机名，用于解决无法发送邮件的问题。</li>
 </ul>
-<h3 id="作业队列和服务器"><a href="#作业队列和服务器" class="headerlink" title="作业队列和服务器"></a>作业队列和服务器</h3><p>大多数Web应用程序需要在后台异步执行一些与响应用户请求没有直接关联的工作。例如，Google需要对整个互联网进行爬网并编制索引，以便返回搜索结果。并非每次搜索都这样做。取而代之的是，它异步地爬网，并一路更新搜索索引。</p>
-<p>尽管有不同的体系结构可以完成异步工作，但最普遍的是我称之为“作业队列”体系结构。它由两个部分组成：一个需要运行的“作业”队列和一个或多个运行该队列中作业的作业服务器（通常称为“工人”）。</p>
-<p>作业队列存储需要异步运行的作业列表。最简单的是先进先出（FIFO）队列，尽管大多数应用程序最终需要某种优先级排队系统。无论何时应用程序需要按某种常规计划运行或由用户操作确定运行作业，它都只会将适当的作业添加到队列中。</p>
-<p>例如，Storyblocks利用工作队列来支持支持我们的市场所需的许多幕后工作。我们运行作业来对视频和照片进行编码，处理CSV以进行元数据标记，汇总用户统计信息，发送密码重设电子邮件等。我们从简单的FIFO队列开始，但我们已升级到优先级队列，以确保诸如发送密码重置电子邮件之类的时间敏感操作能尽快完成。</p>
-<p>作业服务器处理作业。他们轮询作业队列以确定是否有工作要做，如果有，他们将作业弹出队列并执行。基本语言和框架的选择与Web服务器一样多，因此在本文中我将不做详细介绍。</p>
-<h3 id="全文检索服务"><a href="#全文检索服务" class="headerlink" title="全文检索服务"></a>全文检索服务</h3><p>许多（如果不是大多数）网络应用程序都支持某种搜索功能，其中用户提供文本输入（通常称为“查询”），并且该应用程序返回最“相关”的结果。支持此功能的技术通常称为“ 全文搜索 ”，它利用反向索引快速查找包含查询关键字的文档。<br><img src="/images/pasted-151.png" alt="upload successful"></p>
-<pre><code>该示例显示了如何将三个文档标题转换为反向索引，以帮助快速查找从特定关键字到标题中带有该关键字的文档。注意，诸如“ in”，“ the”，“ with”等的常用词（称为停用词）通常不包括在倒排索引中。</code></pre><p>尽管可以直接从某些数据库中进行全文搜索（例如，MySQL支持全文搜索），但通常运行单独的“搜索服务”来计算和存储倒排索引并提供查询接口。尽管还有其他选择，例如Sphinx或Apache Solr，但当今最受欢迎的全文搜索平台是Elasticsearch。</p>
-<h3 id="服务"><a href="#服务" class="headerlink" title="服务"></a>服务</h3><p>一旦应用达到一定规模，就有可能将某些“服务”分拆为单独的应用程序运行。它们不会暴露于外部世界，但是应用程序和其他服务会与它们交互。例如，Storyblocks具有多项运营和计划服务：</p>
+</li>
+<li><p>安装成功后，访问该地址即可登录禅道系统，登录用户名和密码为admin:123456：<a href="http://localhost/" target="_blank" rel="noopener">http://localhost/</a></p>
+</li>
+</ul>
+<p><img src="/images/pasted-233.png" alt="upload successful"></p>
+<h3 id="Scrum的核心概念"><a href="#Scrum的核心概念" class="headerlink" title="Scrum的核心概念"></a>Scrum的核心概念</h3><h4 id="敏捷开发的产生"><a href="#敏捷开发的产生" class="headerlink" title="敏捷开发的产生"></a>敏捷开发的产生</h4><p>我们比较熟知的软件项目管理方法是瀑布，其基本流程是需求-&gt;设计-&gt;开发-&gt;测试。基本假设只要每个环节都做正确，那么终得到的结果也是正确的。但从总体来讲，瀑布项目失败率比较高。国外的软件先行者们针对瀑布开发中暴露出来的问题进行了一系列的探索、思考和总结，最终提出了敏捷开发的概念。敏捷开发有很多种方式，其中Scrum是比较流行的一种。</p>
+<h4 id="Scrum中的角色"><a href="#Scrum中的角色" class="headerlink" title="Scrum中的角色"></a>Scrum中的角色</h4><p>Scrum是由产品经理(product owner)、项目经理(scrum master)和研发团队(dev team)组成的。</p>
 <ul>
-<li>帐户服务在我们所有站点上存储用户数据，这使我们能够轻松地提供交叉销售机会并创建更统一的用户体验</li>
-<li>内容服务存储我们所有视频，音频和图像内容的元数据。它还提供了用于下载内容和查看下载历史的界面。</li>
-<li>付款服务提供了用于为客户信用卡开帐单的界面。</li>
-<li>HTML→PDF服务提供了一个简单的界面，该界面接受HTML并返回相应的PDF文档。</li>
+<li>产品经理负责整理用户故事(user story)，定义其商业价值，对其进行排序，制定发布计划，对产品负责；</li>
+<li>项目经理负责召开各种会议，协调项目，为研发团队服务；</li>
+<li>研发团队则由不同技能的成员组成，通过紧密协同，完成每一次迭代的目标，交付产品。</li>
 </ul>
-<h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><p>如今，公司的生存与否取决于其如何利用数据。如今，几乎每个应用程序一旦达到一定规模，就会利用数据管道来确保可以收集，存储和分析数据。典型的管道具有三个主要阶段：</p>
-<ol>
-<li>该应用程序将数据（通常是有关用户交互的事件）发送到数据“ firehose”，该“ firehose”提供了流接口以提取和处理数据。通常，原始数据会被转换或扩充并传递给另一个防火墙。AWS Kinesis和Kafka是用于此目的的两种最常见的技术。</li>
-<li>原始数据以及最终的转换/增强数据将保存到云存储中。AWS Kinesis提供了一个称为“ firehose”的设置，该设置使将原始数据保存到其云存储（S3）的过程非常容易配置。</li>
-<li>转换/增强的数据通常被加载到数据仓库中进行分析。我们使用AWS Redshift，并且在新兴世界中越来越大的一部分也使用AWS Redshift，尽管大型公司通常会使用Oracle或其他专有仓库技术。如果数据集足够大，则可能需要类似Hadoop的NoSQL MapReduce技术进行分析。</li>
-</ol>
-<p>架构图中未描绘的另一步骤：将数据从应用程序和服务的操作数据库加载到数据仓库中。例如，在Storyblocks，我们每晚将VideoBlocks，AudioBlocks，Storyblocks，帐户服务和贡献者门户数据库加载到Redshift中。通过将核心业务数据与我们的用户交互事件数据一起定位，从而为我们的分析师提供了一个整体数据集。</p>
-<h3 id="云存储"><a href="#云存储" class="headerlink" title="云存储"></a>云存储</h3><p>根据AWS的说法， “云存储是一种通过Internet存储，访问和共享数据的简单且可扩展的方式” 。您可以使用它来存储或访问或多或少地存储在本地文件系统上的任何内容，其优点是可以通过HTTP上的RESTful API与之交互。到目前为止，Amazon的S3产品是当今最受欢迎的云存储，我们在Storyblocks广泛依赖于此存储来存储我们的视频，照片和音频资产，我们的CSS和Javascript，我们的用户事件数据等等。</p>
-<h3 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h3><p>CDN代表“内容交付网络”，该技术提供了一种在Web上为静态HTML，CSS，Javascript和图像之类的资产提供服务的方法，其速度比从单个原始服务器提供这些资源的速度要快得多。它的工作原理是将内容分布在世界各地的许多“边缘”服务器上，以便用户最终从“边缘”服务器而不是原始服务器下载资产。例如，在下图中，西班牙的用户从具有纽约原始服务器的站点请求网页，但是该页面的静态资产是从英格兰的CDN“边缘”服务器加载的，从而避免了许多缓慢的跨大西洋HTTP要求。<br><img src="/images/pasted-148.png" alt="upload successful"></p>
-<p>查看本文以获得更全面的介绍。通常，Web应用程序应始终使用CDN来提供CSS，Javascript，图像，视频和任何其他资产。某些应用程序也许还可以利用CDN来提供静态HTML页面。</p>
+<p>这里我们讲下什么是用户故事：所谓用户故事，就是来描述一件事情，作为什么用户，希望如何，这样做的目的或者价值何在，这样有用户角色，有行为，也有目的和价值所在，非常方便与团队成员进行沟通。</p>
+<h4 id="Scrum中的迭代开发"><a href="#Scrum中的迭代开发" class="headerlink" title="Scrum中的迭代开发"></a>Scrum中的迭代开发</h4><p>与瀑布不同，Scrum将产品的开发分解为若干个小迭代(sprint)，其周期从1周到4周不等，但不会超过4周。 参与的团队成员一般是5到9人，每期迭代要完成的用户故事是固定的，每次迭代会产生一定的交付。</p>
+<h4 id="Scrum的基本流程"><a href="#Scrum的基本流程" class="headerlink" title="Scrum的基本流程"></a>Scrum的基本流程</h4><p><img src="/images/pasted-234.png" alt="upload successful"></p>
+<p>Scrum的基本流程如上图所示：</p>
+<ul>
+<li>产品经理负责整理用户故事，形成左侧的产品订单(product backlog)；</li>
+<li>发布计划会议：项目经理负责讲解用户故事，对其进行估算和排序，发布计划会议的产出就是制定出这一期迭代要完成的用户故事列表，即迭代订单(sprint backlog)；</li>
+<li>迭代计划会议：项目团队对每一个用户故事进行任务分解，分解的标准是完成该用户故事的所有任务，最终每个任务都有明确的负责人，并完成工时的初估计；</li>
+<li>每日例会：每天项目经理召集站立会议，团队成员回答昨天做了什么，今天计划做什么，遇到了什么问题；</li>
+<li>演示会议：迭代结束之后，召开演示会议，相关人员都受邀参加，团队负责向大家展示本次迭代取得的成果。期间大家的反馈记录下来，由产品经理整理，形成新的用户故事；</li>
+<li>回顾会议：项目团队对本期迭代进行总结，发现不足，制定改进计划，下一次迭代继续改进，已达到持续改进的效果。</li>
+</ul>
+<h3 id="禅道使用"><a href="#禅道使用" class="headerlink" title="禅道使用"></a>禅道使用</h3><blockquote>
+<p>接下来我们将按角色来讲讲如何使用禅道来实现基于Scrum的项目管理。</p>
+</blockquote>
+<h4 id="管理员"><a href="#管理员" class="headerlink" title="管理员"></a>管理员</h4><blockquote>
+<p>禅道安装成功之后，管理员的第一件要做的事情就是设置部门结构，并添加用户账号。</p>
+</blockquote>
+<ul>
+<li>通过组织-&gt;用户-&gt;维护部门可以为企业添加部门结构</li>
+</ul>
+<p><img src="/images/pasted-235.png" alt="upload successful"></p>
+<ul>
+<li>通过组织-&gt;用户-&gt;添加用户可以为企业添加用户</li>
+</ul>
+<p><img src="/images/pasted-236.png" alt="upload successful"></p>
+<ul>
+<li>注意添加用户是需要添加职位和权限分组的</li>
+</ul>
+<p><img src="/images/pasted-237.png" alt="upload successful"></p>
+<ul>
+<li>这里我们添加了产品经理、项目经理、研发主管、测试主管四个账号以便下面使用</li>
+</ul>
+<p><img src="/images/pasted-238.png" alt="upload successful"></p>
+<h4 id="产品经理"><a href="#产品经理" class="headerlink" title="产品经理"></a>产品经理</h4><blockquote>
+<p>产品经理对于公司来讲，至关重要。只有做出好的产品或者服务出来，才能赢得市场，谋求发展和生存。 下面我们用产品经理的账号登录，来演示下产品经理在敏捷开发中所要做的事情。</p>
+</blockquote>
+<ul>
+<li>通过产品左上角的下拉菜单可以添加产品</li>
+</ul>
+<p><img src="/images/pasted-239.png" alt="upload successful"></p>
+<ul>
+<li>添加产品时需要完善相关信息</li>
+</ul>
+<p><img src="/images/pasted-240.png" alt="upload successful"></p>
+<ul>
+<li>添加完产品后产品经理可以通过产品-&gt;需求-&gt;维护模块来创建产品的模块</li>
+</ul>
+<p><img src="/images/pasted-241.png" alt="upload successful"></p>
+<ul>
+<li>在相应模块中通过产品-&gt;需求-&gt;提需求可以创建需求</li>
+</ul>
+<p><img src="/images/pasted-242.png" alt="upload successful"></p>
+<ul>
+<li>之后可以完善需求的信息并进行创建</li>
+</ul>
+<p><img src="/images/pasted-243.png" alt="upload successful"></p>
+<ul>
+<li>创建完需求后还需要对需求进行评审操作，只有评审通过的需求才会由项目经理进行任务分解，从而转为为开发任务指派给开发团队</li>
+</ul>
+<p><img src="/images/pasted-244.png" alt="upload successful"></p>
+<ul>
+<li>评审时选择评审结果为确认通过后该需求就会被激活了</li>
+</ul>
+<p><img src="/images/pasted-245.png" alt="upload successful"></p>
+<ul>
+<li>当然产品经理也可以对当前的需求进行变更操作，但是变更完的需求需要开发团队确认后才能进行后续开发</li>
+</ul>
+<p><img src="/images/pasted-246.png" alt="upload successful"></p>
+<ul>
+<li>产品经理还可以创建计划，规定需求的完成时间</li>
+</ul>
+<p><img src="/images/pasted-247.png" alt="upload successful"></p>
+<ul>
+<li>完善计划信息时，主要是要完善计划的开始和截止时间</li>
+</ul>
+<p><img src="/images/pasted-248.png" alt="upload successful"></p>
+<ul>
+<li>可以通过关联需求，指定此次产品计划需要完成的需求</li>
+</ul>
+<p><img src="/images/pasted-249.png" alt="upload successful"></p>
+<h4 id="项目经理"><a href="#项目经理" class="headerlink" title="项目经理"></a>项目经理</h4><blockquote>
+<p>项目经理主要负责管理开发团队，将产品经理的需求讲解给开发团队听，确定项目要完成的需求列表，对需求进行任务分解并指派给开发团队，以及各种会议的组织。下面我们用项目经理的账号登录，来演示下项目经理在敏捷开发中所要做的事情。</p>
+</blockquote>
+<ul>
+<li>在禅道中项目其实对应的是敏捷开发里面的迭代的概念，项目经理首先需要创建一个项目</li>
+</ul>
+<p><img src="/images/pasted-250.png" alt="upload successful"></p>
+<ul>
+<li>创建时需要完善项目信息，设定项目开发时间以及关联相关产品与计划</li>
+</ul>
+<p><img src="/images/pasted-251.png" alt="upload successful"></p>
+<ul>
+<li>接下来项目经理要做的就是创建项目团队，可以通过项目-&gt;团队-&gt;团队管理来为项目团队添加成员</li>
+</ul>
+<p><img src="/images/pasted-252.png" alt="upload successful"></p>
+<ul>
+<li>项目团队组建完毕之后，项目经理通过关联产品即可将项目和产品进行关联</li>
+</ul>
+<p><img src="/images/pasted-253.png" alt="upload successful"></p>
+<ul>
+<li>然后通过关联需求即可确定当前项目要做的需求，可以选择关联需求或按计划关联需求</li>
+</ul>
+<p><img src="/images/pasted-254.png" alt="upload successful"></p>
+<ul>
+<li>需求确定之后，项目中几个关键的因素都有了：周期确定、资源确定、需求确定。下面项目经理要做的事情就是为每一个需求做任务分解</li>
+</ul>
+<p><img src="/images/pasted-255.png" alt="upload successful"></p>
+<ul>
+<li>任务分解时需要完善任务详情，明确任务的执行时间</li>
+</ul>
+<p><img src="/images/pasted-256.png" alt="upload successful"></p>
+<ul>
+<li>这里把商品管理功能这个需求分解为了商品列表、添加商品和编辑商品三个任务并指派给了开发人员</li>
+</ul>
+<p><img src="/images/pasted-257.png" alt="upload successful"></p>
+<h4 id="开发团队"><a href="#开发团队" class="headerlink" title="开发团队"></a>开发团队</h4><blockquote>
+<p>项目的任务分解完毕之后，开发团队成员需要领取自己的任务，开始每天的开发。除了日常的编码工作之外，还应当每天花点时间在禅道里面更新下任务的状态以及消耗情况。下面我们用开发人员的账号登录，来演示下开发人员在敏捷开发中所要做的事情。</p>
+</blockquote>
+<ul>
+<li>首先开发人员需要找到自己需要完成的任务，从项目-&gt;任务中可以查看到指派给自己的任务</li>
+</ul>
+<p><img src="/images/pasted-258.png" alt="upload successful"></p>
+<ul>
+<li>开发人员开始做任务时点击开始按钮，完成任务时点击完成按钮</li>
+</ul>
+<p><img src="/images/pasted-259.png" alt="upload successful"></p>
+<ul>
+<li>任务开始时需要填写自己的预计剩余时间，最初预计工时可以在编辑任务里设置</li>
+</ul>
+<p><img src="/images/pasted-260.png" alt="upload successful"></p>
+<ul>
+<li>任务完成时需要填写自己的本次消耗时间</li>
+</ul>
+<p><img src="/images/pasted-261.png" alt="upload successful"></p>
+<ul>
+<li>物理介质的看板比较直观，是Scrum标准的管理工具，禅道里面也有一个电子看板</li>
+</ul>
+<p><img src="/images/pasted-262.png" alt="upload successful"></p>
+<ul>
+<li>当项目的任务都完成以后，开发人员可以创建版本</li>
+</ul>
+<p><img src="/images/pasted-263.png" alt="upload successful"></p>
+<ul>
+<li>完善完版本信息后即可创建版本</li>
+</ul>
+<p><img src="/images/pasted-264.png" alt="upload successful"></p>
+<ul>
+<li>有了版本以后，才可以根据当前版本创建测试单</li>
+</ul>
+<p><img src="/images/pasted-265.png" alt="upload successful"></p>
+<ul>
+<li>创建测试单需要完善版本、负责人、名称等信息</li>
+</ul>
+<p><img src="/images/pasted-266.png" alt="upload successful"></p>
+<h4 id="测试团队"><a href="#测试团队" class="headerlink" title="测试团队"></a>测试团队</h4><blockquote>
+<p>测试团队是项目质量的保证，测试团队主要负责对项目的版本进行测试，提出Bug指派给开发人员，开发人员解决Bug后对Bug进行验证并关闭。下面我们用测试人员的账号登录，来演示下测试人员在敏捷开发中所要做的事情。</p>
+</blockquote>
+<ul>
+<li>测试人员开始测试时，需要把测试单状态设置为进行中</li>
+</ul>
+<p><img src="/images/pasted-267.png" alt="upload successful"></p>
+<ul>
+<li>测试人员可以在测试-&gt;Bug中提出测试过程中发现的Bug</li>
+</ul>
+<p><img src="/images/pasted-268.png" alt="upload successful"></p>
+<ul>
+<li>需要完善BUG信息并指派给相应开发人员</li>
+</ul>
+<p><img src="/images/pasted-269.png" alt="upload successful"></p>
+<ul>
+<li>当开发人员解决完Bug后可以把Bug标记为已经解决</li>
+</ul>
+<p><img src="/images/pasted-270.png" alt="upload successful"></p>
+<ul>
+<li>此时该Bug会自动指派给测试人员，测试人员确认已经解决后可以关闭该问题，如未解决，可以激活该问题</li>
+</ul>
+<p><img src="/images/pasted-271.png" alt="upload successful"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>我们通过在禅道里面的一系列操作完整地演示了一套基于Scrum敏捷开发流程，其实所有角色的职责可以用下图来概况。</p>
+<p><img src="/images/pasted-272.png" alt="upload successful"></p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>更多资料可以参考官方文档：<a href="https://www.zentao.net/book/zentaopmshelp/38.html" target="_blank" rel="noopener">https://www.zentao.net/book/zentaopmshelp/38.html</a></p>
 ]]></content>
-      <categories>
-        <category>架构</category>
-      </categories>
       <tags>
-        <tag>架构</tag>
+        <tag>工具</tag>
       </tags>
   </entry>
   <entry>
@@ -3671,5 +3990,26 @@ n = capacity;</code></pre><p>  }</p>
 <li>接听宝AI电话助手，通过拨打运营商转接电话，把拒接的、飞行模式的来电的全都自动帮你应答。可以自定义助理声音。在某些特定场景中这个工具很好用。</li>
 </ol>
 ]]></content>
+  </entry>
+  <entry>
+    <title>项目结构</title>
+    <url>/2020/09/14/%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E5%88%92%E5%88%86%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>项目结构并没有一套通用的标准，不同公司或团队的使用习惯和规范也不尽相同。</p>
+<a id="more"></a>
+
+<h3 id="web工程"><a href="#web工程" class="headerlink" title="web工程"></a>web工程</h3><h4 id="访问角度"><a href="#访问角度" class="headerlink" title="访问角度"></a>访问角度</h4><p><img src="/images/pasted-228.png" alt="upload successful"></p>
+<p>映射代码目录的流转逻辑（Spring boot示例）</p>
+<p><img src="/images/pasted-229.png" alt="upload successful"></p>
+<h4 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h4><ul>
+<li>Controller层参数传递建议不要使用HashMap,建议使用数据模型定义</li>
+<li>Controller层可以做参数校验，异常抛出等操作，但建议不要放太多的业务逻辑，业务逻辑尽量放Service层去实现</li>
+<li>Service层实现实际业务逻辑，可以按照功能模块做好定义和区分，相互可以调用</li>
+<li>功能模块Service之间引用时，建议不要渗透到DAO层（或mapper层），基于Service层进行调用和复用比较合理</li>
+<li>业务逻辑层Service和数据库DAO层的操作对象不要混用。Cotroller层对象不要直接渗透到DAO（或mapper层）；同理数据表实体对象Entity也不能直接传到Controller层进行输出和展示。</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>Springboot</tag>
+      </tags>
   </entry>
 </search>
